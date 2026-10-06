@@ -1162,3 +1162,132 @@ body {
 .progress-floor-percent {
   font-variant-numeric: tabular-nums;
 }
+
+/* ------------------------------------------------------------------ */
+/* Projects / persistence (P40–P42)                                    */
+/* ------------------------------------------------------------------ */
+
+.project-panel {
+  flex: 0 0 auto;
+  max-height: 32%;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-file-input {
+  display: none;
+}
+
+.autosave-status {
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.project-error {
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+  color: #fca5a5;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.project-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-item.active {
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.project-item-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.project-item-name {
+  font-size: 0.8rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-item-count {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.project-item-time {
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.project-item-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.project-current {
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 17, 21, 0.82);
+  border: 2px dashed var(--accent);
+  pointer-events: none;
+}
+
+.drop-overlay-card {
+  padding: 1.5rem 2rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+}
+
+.drop-overlay-error {
+  border-color: #fca5a5;
+  pointer-events: auto;
+}
+
+.drop-overlay-error .drop-overlay-card {
+  border-color: #fca5a5;
+  color: #fca5a5;
+}
+

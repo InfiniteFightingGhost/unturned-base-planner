@@ -130,6 +130,8 @@ export {
   selectCanRedo,
   selectCanUndo,
   selectPieceById,
+  selectProjectId,
+  selectProjectName,
   selectSelectedPieces,
   useEditorStore,
 } from './store';

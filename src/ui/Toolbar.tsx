@@ -7,6 +7,7 @@
  */
 
 import { selectCanRedo, selectCanUndo, useEditorStore } from '@/editor';
+import { flushAutosave } from '@/persistence';
 import { useEngineStore } from '@/engine';
 import type { CameraMode } from '@/engine';
 import { useToolStore } from '@/editor/tools/toolStore';
@@ -75,6 +76,17 @@ export function Toolbar() {
           onClick={() => redo()}
         >
           Redo
+        </button>
+      </div>
+
+      <div className="toolbar-group" role="group" aria-label="Document">
+        <button
+          type="button"
+          className="tool-button"
+          data-testid="save-project"
+          onClick={() => void flushAutosave()}
+        >
+          Save
         </button>
       </div>
 

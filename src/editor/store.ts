@@ -83,6 +83,7 @@ import {
   createSetZoneVisibleCommand,
 } from './zone-commands';
 import { zoneById } from './zones';
+import { importProjectFile } from '@/persistence/project-file';
 
 export interface EditorState {
   /** The immutable document. Mutated only through commands. */
@@ -114,6 +115,15 @@ export interface EditorState {
    * clipboard. Do not use it for edits — use `executeCommand`.
    */
   setProject(project: Project): void;
+  /** Replace the document with a fresh empty project (load-only). */
+  newProject(name?: string): void;
+  /**
+   * Parse a project from a file's text (envelope or bare JSON, migrating old
+   * schema versions) and load it via the load-only path. Throws on invalid input.
+   */
+  loadProjectFromJson(text: string): Project;
+  /** Alias for `setProject`, used when swapping in a migrated document. */
+  replaceProject(project: Project): void;
   /** Apply a command through history and refresh undo/redo flags. */
   executeCommand(command: Command): void;
   undo(): void;
@@ -290,6 +300,20 @@ export function createEditorStore(initialProject: Project): EditorStore {
             activeFloorId: reconcileActiveFloorId(project),
             activeZoneId: null,
           });
+        },
+
+        newProject: (name) => {
+          get().setProject(createEmptyProject(name ?? 'Untitled'));
+        },
+
+        loadProjectFromJson: (text) => {
+          const project = importProjectFile(text);
+          get().setProject(project);
+          return project;
+        },
+
+        replaceProject: (project) => {
+          get().setProject(project);
         },
 
         executeCommand: execute,
@@ -700,3 +724,13 @@ export const canUndo = selectCanUndo;
 
 /** Alias selector matching the `canRedo` state flag name. */
 export const canRedo = selectCanRedo;
+
+/** The current project's stable id. */
+export function selectProjectId(state: EditorState): string {
+  return state.project.metadata.id;
+}
+
+/** The current project's display name. */
+export function selectProjectName(state: EditorState): string {
+  return state.project.metadata.name;
+}
