@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { useEditorStore } from '@/editor';
+import { Panel } from './Panel';
 
 export function PrefabPanel() {
   const prefabs = useEditorStore((state) => state.project.prefabs);
@@ -30,14 +31,16 @@ export function PrefabPanel() {
   };
 
   return (
-    <aside className="panel prefab-panel" data-testid="prefab-panel" aria-label="Prefabs">
-      <div className="panel-header">
-        <h2>Prefabs</h2>
-      </div>
-
-      <div className="prefab-controls">
+    <Panel
+      title="Prefabs"
+      testId="prefab-panel"
+      ariaLabel="Prefabs"
+      className="prefab-panel"
+      actions={<span className="panel-count mono">{prefabs.length}</span>}
+    >
+      <div className="panel-toolbar">
         <input
-          className="prefab-name-input"
+          className="input"
           data-testid="prefab-name"
           placeholder="Prefab name"
           aria-label="Prefab name"
@@ -46,37 +49,33 @@ export function PrefabPanel() {
         />
         <button
           type="button"
-          className="prefab-save"
+          className="button primary"
           data-testid="prefab-save"
           disabled={!hasSelection}
           onClick={save}
         >
-          Save selection as prefab
+          Save selection
         </button>
       </div>
 
       {prefabs.length === 0 ? (
-        <p className="panel-placeholder" data-testid="prefab-empty">
+        <p className="empty" data-testid="prefab-empty">
           No prefabs saved.
         </p>
       ) : (
-        <ul className="prefab-list">
+        <ul className="list">
           {prefabs.map((prefab) => (
-            <li
-              key={prefab.id}
-              className="prefab-item"
-              data-testid={`prefab-item-${prefab.id}`}
-            >
-              <div className="prefab-item-main">
-                <span className="prefab-item-name">{prefab.name}</span>
-                <span className="prefab-item-count" data-testid={`prefab-count-${prefab.id}`}>
+            <li key={prefab.id} className="list-item static" data-testid={`prefab-item-${prefab.id}`}>
+              <div className="list-item-main">
+                <span className="list-item-name">{prefab.name}</span>
+                <span className="list-item-meta mono" data-testid={`prefab-count-${prefab.id}`}>
                   {prefab.pieces.length} {prefab.pieces.length === 1 ? 'piece' : 'pieces'}
                 </span>
               </div>
-              <div className="prefab-item-controls">
+              <div className="list-item-controls">
                 <button
                   type="button"
-                  className="prefab-action"
+                  className="button small"
                   data-testid={`prefab-instantiate-${prefab.id}`}
                   onClick={() => instantiatePrefab(prefab.id)}
                 >
@@ -84,7 +83,7 @@ export function PrefabPanel() {
                 </button>
                 <button
                   type="button"
-                  className="prefab-action prefab-delete"
+                  className="button small danger"
                   data-testid={`prefab-delete-${prefab.id}`}
                   onClick={() => deletePrefab(prefab.id)}
                 >
@@ -95,6 +94,6 @@ export function PrefabPanel() {
           ))}
         </ul>
       )}
-    </aside>
+    </Panel>
   );
 }

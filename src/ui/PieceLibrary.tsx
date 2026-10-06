@@ -1,14 +1,15 @@
 /**
- * Left piece library (P51 partial): a searchable, category-filterable catalog of
- * every `PieceDefinition` in the dataset. Clicking an entry arms the placement
- * tool with that definition. 112 items render un-virtualized, which is well
- * within budget for a single flat list.
+ * Left piece library: a searchable, category-filterable catalog of every
+ * `PieceDefinition` in the dataset. Clicking an entry arms the placement tool
+ * with that definition. 112 items render un-virtualized, which is well within
+ * budget for a single flat list.
  */
 
 import { useMemo, useState } from 'react';
 import type { PieceCategory, PieceDefinition } from '@/domain';
 import { DATASET } from '@/data';
 import { useToolStore } from '@/editor/tools/toolStore';
+import { Panel } from './Panel';
 
 interface CategoryGroup {
   readonly category: PieceCategory;
@@ -61,24 +62,30 @@ export function PieceLibrary() {
     setActiveTool('place');
   };
 
-  return (
-    <aside className="panel piece-library" data-testid="piece-library" aria-label="Piece library">
-      <div className="panel-header">
-        <h2>Pieces</h2>
-      </div>
+  const resultCount = groups.reduce((total, group) => total + group.definitions.length, 0);
 
-      <div className="library-controls">
+  return (
+    <Panel
+      title="Library"
+      testId="piece-library"
+      ariaLabel="Piece library"
+      className="piece-library"
+      actions={<span className="panel-count mono">{resultCount}</span>}
+    >
+      <div className="panel-toolbar">
         <input
           type="search"
-          className="library-search"
+          className="input"
           data-testid="piece-search"
           placeholder="Search name or id…"
+          aria-label="Search pieces"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
         <select
-          className="library-filter"
+          className="select"
           data-testid="category-filter"
+          aria-label="Filter by category"
           value={category}
           onChange={(event) => setCategory(event.target.value as PieceCategory | 'all')}
         >
@@ -93,12 +100,12 @@ export function PieceLibrary() {
 
       <div className="library-scroll">
         {groups.length === 0 ? (
-          <p className="library-empty">No pieces match.</p>
+          <p className="empty">No pieces match.</p>
         ) : (
           groups.map((group) => (
             <section key={group.category} className="library-group">
-              <h3>{group.category}</h3>
-              <ul>
+              <h3 className="list-caption">{group.category}</h3>
+              <ul className="list">
                 {group.definitions.map((definition) => (
                   <li key={definition.id}>
                     <button
@@ -106,13 +113,13 @@ export function PieceLibrary() {
                       data-testid={`piece-item-${definition.id}`}
                       className={
                         activeDefinitionId === definition.id
-                          ? 'library-item active'
-                          : 'library-item'
+                          ? 'list-item library-item active'
+                          : 'list-item library-item'
                       }
                       onClick={() => armDefinition(definition.id)}
                     >
                       <span className="library-item-name">{definition.name}</span>
-                      <span className="library-item-id">{definition.id}</span>
+                      <span className="library-item-id mono">{definition.id}</span>
                     </button>
                   </li>
                 ))}
@@ -121,6 +128,6 @@ export function PieceLibrary() {
           ))
         )}
       </div>
-    </aside>
+    </Panel>
   );
 }

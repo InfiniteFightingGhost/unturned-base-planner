@@ -10,6 +10,7 @@ import { useMemo } from 'react';
 import type { Floor } from '@/domain';
 import { computeConstructionProgress, filterPiecesByFloor } from '@/resources';
 import { useEditorStore } from '@/editor';
+import { Panel } from './Panel';
 
 function sortFloors(floors: readonly Floor[]): Floor[] {
   return [...floors].sort((a, b) => a.index - b.index || a.id.localeCompare(b.id));
@@ -30,31 +31,38 @@ export function ProgressPanel() {
   );
 
   return (
-    <aside className="panel progress-panel" data-testid="progress-panel" aria-label="Progress">
-      <div className="panel-header">
-        <h2>Progress</h2>
-      </div>
-
+    <Panel title="Progress" testId="progress-panel" ariaLabel="Progress" className="progress-panel">
       <div className="progress-body">
         <div className="progress-summary">
           <span className="progress-stat">
-            Total: <strong data-testid="progress-total">{progress.total}</strong>
+            Total <strong className="mono" data-testid="progress-total">{progress.total}</strong>
           </span>
           <span className="progress-stat">
-            Built: <strong data-testid="progress-built">{progress.built}</strong>
+            Built <strong className="mono" data-testid="progress-built">{progress.built}</strong>
           </span>
           <span className="progress-stat">
-            Collected: <strong data-testid="progress-collected">{progress.collected}</strong>
+            Collected{' '}
+            <strong className="mono" data-testid="progress-collected">
+              {progress.collected}
+            </strong>
           </span>
           <span className="progress-stat">
-            Planned: <strong data-testid="progress-planned">{progress.planned}</strong>
+            Planned{' '}
+            <strong className="mono" data-testid="progress-planned">
+              {progress.planned}
+            </strong>
           </span>
           <span className="progress-stat">
-            Remaining: <strong data-testid="progress-remaining">{progress.remaining}</strong>
+            Remaining{' '}
+            <strong className="mono" data-testid="progress-remaining">
+              {progress.remaining}
+            </strong>
           </span>
           <span className="progress-stat">
-            Complete:{' '}
-            <strong data-testid="progress-percent">{progress.percentComplete}%</strong>
+            Complete{' '}
+            <strong className="mono" data-testid="progress-percent">
+              {progress.percentComplete}%
+            </strong>
           </span>
         </div>
 
@@ -74,7 +82,7 @@ export function ProgressPanel() {
         </div>
 
         {floorProgress.length > 0 ? (
-          <ul className="progress-floor-list" data-testid="progress-floor-list">
+          <ul className="list tight" data-testid="progress-floor-list">
             {floorProgress.map(({ floor, progress: floorStats }) => (
               <li
                 key={floor.id}
@@ -82,13 +90,10 @@ export function ProgressPanel() {
                 data-testid={`progress-floor-${floor.id}`}
               >
                 <span className="progress-floor-name">{floor.name}</span>
-                <span className="progress-floor-counts">
+                <span className="mono">
                   {floorStats.built} / {floorStats.total}
                 </span>
-                <span
-                  className="progress-floor-percent"
-                  data-testid={`progress-floor-percent-${floor.id}`}
-                >
+                <span className="mono" data-testid={`progress-floor-percent-${floor.id}`}>
                   {floorStats.percentComplete}%
                 </span>
               </li>
@@ -96,6 +101,6 @@ export function ProgressPanel() {
           </ul>
         ) : null}
       </div>
-    </aside>
+    </Panel>
   );
 }

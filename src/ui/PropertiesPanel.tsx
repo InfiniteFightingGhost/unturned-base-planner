@@ -7,6 +7,7 @@
 import type { BuildState } from '@/domain';
 import { useEditorStore } from '@/editor';
 import { DATASET } from '@/data';
+import { Panel } from './Panel';
 
 const BUILD_STATES: readonly BuildState[] = ['planned', 'collected', 'built'];
 
@@ -32,17 +33,14 @@ export function PropertiesPanel() {
   const tags = piece?.metadata.tags ?? [];
 
   return (
-    <aside
-      className="panel properties-panel"
-      data-testid="properties-panel"
-      aria-label="Properties"
+    <Panel
+      title="Properties"
+      testId="properties-panel"
+      ariaLabel="Properties"
+      className="properties-panel"
     >
-      <div className="panel-header">
-        <h2>Properties</h2>
-      </div>
-
       {piece === undefined ? (
-        <p className="panel-placeholder">
+        <p className="empty">
           {selection.length === 0 ? 'Nothing selected.' : `${selection.length} pieces selected.`}
         </p>
       ) : (
@@ -55,19 +53,18 @@ export function PropertiesPanel() {
           </div>
           <div className="property-row">
             <span className="property-label">Position</span>
-            <span className="property-value">
+            <span className="property-value mono">
               {piece.position.map((component) => formatNumber(component)).join(', ')}
             </span>
           </div>
           <div className="property-row">
             <span className="property-label">Rotation</span>
-            <span className="property-value">{formatDegrees(piece.rotation[1])}</span>
+            <span className="property-value mono">{formatDegrees(piece.rotation[1])}</span>
           </div>
           <div className="property-row">
             <span className="property-label">Floor</span>
             <span className="property-value">
               {floors.find((floor) => floor.id === piece.floorId)?.name ?? 'floor'}
-              {` (${piece.floorId})`}
             </span>
           </div>
           <div className="property-row">
@@ -85,8 +82,9 @@ export function PropertiesPanel() {
           <div className="property-row">
             <span className="property-label">Build state</span>
             <select
-              className="property-select"
+              className="select"
               data-testid="prop-build-state"
+              aria-label="Build state"
               value={piece.buildState}
               onChange={(event) => setSelectedBuildState(event.target.value as BuildState)}
             >
@@ -99,6 +97,6 @@ export function PropertiesPanel() {
           </div>
         </div>
       )}
-    </aside>
+    </Panel>
   );
 }

@@ -13,6 +13,7 @@
 import { useEffect, useState } from 'react';
 import type { Zone } from '@/domain';
 import { normalizeTags, sortedZones, useEditorStore, zoneStats } from '@/editor';
+import { Panel } from './Panel';
 
 function ZoneRow({
   zone,
@@ -49,12 +50,12 @@ function ZoneRow({
 
   return (
     <li
-      className={active ? 'zone-item active' : 'zone-item'}
+      className={active ? 'list-item active' : 'list-item'}
       data-testid={`zone-item-${zone.id}`}
       data-active={active}
       onClick={() => setActiveZone(zone.id)}
     >
-      <div className="zone-item-main">
+      <div className="list-item-main">
         <input
           type="color"
           className="zone-color-input"
@@ -65,7 +66,7 @@ function ZoneRow({
           onChange={(event) => setZoneColor(zone.id, event.target.value)}
         />
         <input
-          className="zone-name-input"
+          className="input"
           data-testid={`zone-name-${zone.id}`}
           value={name}
           aria-label={`Name of ${zone.name}`}
@@ -78,15 +79,15 @@ function ZoneRow({
             }
           }}
         />
-        <span className="zone-count" data-testid={`zone-count-${zone.id}`}>
+        <span className="badge mono" data-testid={`zone-count-${zone.id}`}>
           {pieceCount}
         </span>
       </div>
 
-      <div className="zone-item-controls" onClick={(event) => event.stopPropagation()}>
+      <div className="list-item-controls" onClick={(event) => event.stopPropagation()}>
         <button
           type="button"
-          className={zone.visible ? 'zone-toggle active' : 'zone-toggle'}
+          className={zone.visible ? 'button small active' : 'button small'}
           data-testid={`zone-visible-${zone.id}`}
           aria-pressed={zone.visible}
           onClick={() => setZoneVisible(zone.id, !zone.visible)}
@@ -95,7 +96,7 @@ function ZoneRow({
         </button>
         <button
           type="button"
-          className={zone.locked ? 'zone-toggle active' : 'zone-toggle'}
+          className={zone.locked ? 'button small active' : 'button small'}
           data-testid={`zone-locked-${zone.id}`}
           aria-pressed={zone.locked}
           onClick={() => setZoneLocked(zone.id, !zone.locked)}
@@ -104,7 +105,7 @@ function ZoneRow({
         </button>
         <button
           type="button"
-          className="zone-delete"
+          className="button small danger"
           data-testid={`zone-delete-${zone.id}`}
           disabled={!canDelete}
           onClick={() => deleteZone(zone.id)}
@@ -143,14 +144,14 @@ function ZoneSelectionControls({ zones }: { readonly zones: readonly Zone[] }) {
   };
 
   return (
-    <div className="zone-selection">
-      <div className="zone-field">
-        <label className="zone-field-label" htmlFor="selection-zone-select">
+    <div className="zone-selection section">
+      <div className="field">
+        <label className="field-label" htmlFor="selection-zone-select">
           Selection zone
         </label>
         <select
           id="selection-zone-select"
-          className="zone-select"
+          className="select"
           data-testid="selection-zone-select"
           value={zoneSelectValue}
           disabled={!hasSelection}
@@ -167,11 +168,11 @@ function ZoneSelectionControls({ zones }: { readonly zones: readonly Zone[] }) {
         </select>
       </div>
 
-      <div className="zone-field">
-        <span className="zone-field-label">Tags</span>
-        <div className="zone-tag-input-row">
+      <div className="field">
+        <span className="field-label">Tags</span>
+        <div className="row">
           <input
-            className="zone-tag-input"
+            className="input"
             data-testid="tag-input"
             value={tagDraft}
             placeholder="Add tag"
@@ -186,7 +187,7 @@ function ZoneSelectionControls({ zones }: { readonly zones: readonly Zone[] }) {
           />
           <button
             type="button"
-            className="zone-tag-add"
+            className="button small"
             data-testid="tag-add"
             disabled={!hasSelection}
             onClick={commitTag}
@@ -195,15 +196,15 @@ function ZoneSelectionControls({ zones }: { readonly zones: readonly Zone[] }) {
           </button>
         </div>
         {tags.length === 0 ? (
-          <p className="zone-tag-empty">No tags.</p>
+          <p className="empty">No tags.</p>
         ) : (
-          <ul className="zone-tag-list">
+          <ul className="chip-list">
             {tags.map((tag) => (
-              <li key={tag} className="zone-tag-chip" data-testid={`tag-chip-${tag}`}>
+              <li key={tag} className="chip" data-testid={`tag-chip-${tag}`}>
                 <span>{tag}</span>
                 <button
                   type="button"
-                  className="zone-tag-remove"
+                  className="chip-remove"
                   data-testid={`tag-remove-${tag}`}
                   aria-label={`Remove tag ${tag}`}
                   onClick={() => removeTagFromSelection(tag)}
@@ -228,23 +229,21 @@ export function ZonePanel() {
   const canDelete = zones.length > 0;
 
   return (
-    <aside className="panel zone-panel" data-testid="zone-panel" aria-label="Zones">
-      <div className="panel-header zone-panel-header">
-        <h2>Zones</h2>
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="add-zone"
-          onClick={() => addZone()}
-        >
+    <Panel
+      title="Zones"
+      testId="zone-panel"
+      ariaLabel="Zones"
+      className="zone-panel"
+      actions={
+        <button type="button" className="button small" data-testid="add-zone" onClick={() => addZone()}>
           Add zone
         </button>
-      </div>
-
+      }
+    >
       {zones.length === 0 ? (
-        <p className="panel-placeholder">No zones.</p>
+        <p className="empty">No zones.</p>
       ) : (
-        <ul className="zone-list">
+        <ul className="list">
           {zones.map((zone) => (
             <ZoneRow
               key={zone.id}
@@ -258,6 +257,6 @@ export function ZonePanel() {
       )}
 
       <ZoneSelectionControls zones={zones} />
-    </aside>
+    </Panel>
   );
 }

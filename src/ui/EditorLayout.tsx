@@ -1,13 +1,17 @@
 /**
- * Editor shell layout: toolbar, piece library, viewport (with the batched piece
- * field and interaction controllers), properties inspector and status bar.
+ * Editor shell layout.
+ *
+ * Blender/CAD-inspired arrangement: a thin top bar (identity + document
+ * lifecycle + grouped command bar), a vertical icon tool rail, a collapsible
+ * left dock (Library / Prefabs), the filling 3D viewport, a collapsible,
+ * scrollable right inspector dock, and a monospace status bar.
  *
  * The imperative `PieceField` handle is shared with the controllers through
  * context so they can pick without lifting transforms into React state. The
  * global shortcut hook is installed once here.
  */
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { BlueprintOverlay, PieceField, Viewport } from '@/engine';
 import type { PieceFieldHandle } from '@/engine';
 import { PlacementController } from '@/editor/tools/PlacementController';
@@ -28,38 +32,36 @@ import { MeasurementPanel } from './MeasurementPanel';
 import { ResourcePanel } from './ResourcePanel';
 import { InventoryPanel } from './InventoryPanel';
 import { ProgressPanel } from './ProgressPanel';
-import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
+import { TopBar } from './TopBar';
+import { ToolStrip } from './ToolStrip';
 
 export function EditorLayout() {
   useGlobalShortcuts();
   const pieceFieldRef = useRef<PieceFieldHandle | null>(null);
   const contextRef: PieceFieldRef = pieceFieldRef;
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
 
   return (
     <div className="editor-shell">
-      <header className="app-header">
-        <h1>Unturned Base Planner</h1>
-        <p className="app-tagline">Local-first 3D base planning for Unturned.</p>
-      </header>
-
-      <Toolbar />
+      <TopBar
+        leftOpen={leftOpen}
+        rightOpen={rightOpen}
+        onToggleLeft={() => setLeftOpen((value) => !value)}
+        onToggleRight={() => setRightOpen((value) => !value)}
+      />
 
       <div className="editor-body">
-        <div className="editor-sidebar">
-          <PieceLibrary />
-          <ProjectPanel />
-          <FloorSelector />
-          <ZonePanel />
-          <PatternPanel />
-          <PrefabPanel />
-          <BlueprintPanel />
-          <MeasurementPanel />
-          <ResourcePanel />
-          <InventoryPanel />
-          <ProgressPanel />
-        </div>
+        <ToolStrip />
+
+        {leftOpen ? (
+          <div className="dock dock-left">
+            <PieceLibrary />
+            <PrefabPanel />
+          </div>
+        ) : null}
 
         <section className="viewport-panel" aria-label="3D viewport">
           <Viewport>
@@ -74,7 +76,20 @@ export function EditorLayout() {
           </Viewport>
         </section>
 
-        <PropertiesPanel />
+        {rightOpen ? (
+          <div className="dock dock-right">
+            <PropertiesPanel />
+            <FloorSelector />
+            <ZonePanel />
+            <PatternPanel />
+            <ResourcePanel />
+            <InventoryPanel />
+            <ProgressPanel />
+            <BlueprintPanel />
+            <MeasurementPanel />
+            <ProjectPanel />
+          </div>
+        ) : null}
       </div>
 
       <StatusBar />

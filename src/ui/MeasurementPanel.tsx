@@ -9,6 +9,7 @@
 import type { MeasurementKind } from '@/domain';
 import { formatMeasurementValue, useEditorStore } from '@/editor';
 import { useToolStore } from '@/editor/tools/toolStore';
+import { Panel } from './Panel';
 
 const KINDS: ReadonlyArray<{ kind: MeasurementKind; label: string }> = [
   { kind: 'distance', label: 'Distance' },
@@ -27,31 +28,34 @@ export function MeasurementPanel() {
   const activeMeasurementKind = useToolStore((state) => state.activeMeasurementKind);
   const setActiveMeasurementKind = useToolStore((state) => state.setActiveMeasurementKind);
 
+  const measuring = activeTool === 'measure';
+
   return (
-    <aside className="panel measurement-panel" data-testid="measurement-panel">
-      <div className="panel-header measurement-panel-header">
-        <h2>Measurements</h2>
+    <Panel
+      title="Measurements"
+      testId="measurement-panel"
+      ariaLabel="Measurements"
+      className="measurement-panel"
+      actions={
         <button
           type="button"
-          className={activeTool === 'measure' ? 'tool-button active' : 'tool-button'}
+          className={measuring ? 'button small active' : 'button small'}
           data-testid="measurement-tool"
-          aria-pressed={activeTool === 'measure'}
-          onClick={() => setActiveTool(activeTool === 'measure' ? 'select' : 'measure')}
+          aria-pressed={measuring}
+          onClick={() => setActiveTool(measuring ? 'select' : 'measure')}
         >
           Measure
         </button>
-      </div>
-
-      <div className="measurement-body">
-        <label className="measurement-field">
-          <span className="measurement-field-label">Kind</span>
+      }
+    >
+      <div className="panel-toolbar row">
+        <label className="field">
+          <span className="field-label">Kind</span>
           <select
-            className="pattern-select"
+            className="select"
             data-testid="measurement-kind"
             value={activeMeasurementKind}
-            onChange={(event) =>
-              setActiveMeasurementKind(event.target.value as MeasurementKind)
-            }
+            onChange={(event) => setActiveMeasurementKind(event.target.value as MeasurementKind)}
           >
             {KINDS.map((entry) => (
               <option key={entry.kind} value={entry.kind}>
@@ -60,10 +64,9 @@ export function MeasurementPanel() {
             ))}
           </select>
         </label>
-
         <button
           type="button"
-          className="prefab-action"
+          className="button small"
           data-testid="measurement-clear"
           disabled={measurements.length === 0}
           onClick={() => clearMeasurements()}
@@ -73,27 +76,29 @@ export function MeasurementPanel() {
       </div>
 
       {measurements.length === 0 ? (
-        <p className="panel-placeholder" data-testid="measurement-empty">
+        <p className="empty" data-testid="measurement-empty">
           No measurements.
         </p>
       ) : (
-        <ul className="measurement-list" data-testid="measurement-list">
+        <ul className="list" data-testid="measurement-list">
           {measurements.map((measurement) => (
             <li
               key={measurement.id}
-              className="measurement-item"
+              className="list-item static"
               data-testid="measurement-item"
             >
-              <span className="measurement-item-kind">{measurement.kind}</span>
-              <span
-                className="measurement-item-value"
-                data-testid={`measurement-value-${measurement.id}`}
-              >
-                {formatMeasurementValue(measurement.kind, measurement.value)}
-              </span>
+              <div className="list-item-main">
+                <span className="list-item-meta">{measurement.kind}</span>
+                <span
+                  className="list-item-name mono"
+                  data-testid={`measurement-value-${measurement.id}`}
+                >
+                  {formatMeasurementValue(measurement.kind, measurement.value)}
+                </span>
+              </div>
               <button
                 type="button"
-                className="prefab-action"
+                className="button small danger"
                 data-testid={`measurement-delete-${measurement.id}`}
                 onClick={() => deleteMeasurement(measurement.id)}
               >
@@ -103,6 +108,6 @@ export function MeasurementPanel() {
           ))}
         </ul>
       )}
-    </aside>
+    </Panel>
   );
 }

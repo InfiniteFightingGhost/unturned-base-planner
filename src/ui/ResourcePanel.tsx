@@ -16,6 +16,7 @@ import {
   filterPiecesByZone,
 } from '@/resources';
 import { useEditorStore } from '@/editor';
+import { Panel } from './Panel';
 
 type Grouping = 'all' | 'floor' | 'zone' | 'category';
 
@@ -50,10 +51,10 @@ function AmountList({
   testIdPrefix: string;
 }) {
   if (amounts.length === 0) {
-    return <p className="resource-empty">No materials</p>;
+    return <p className="empty">No materials</p>;
   }
   return (
-    <ul className="resource-amounts">
+    <ul className="list tight">
       {amounts.map((entry) => (
         <li
           key={entry.resourceId}
@@ -61,7 +62,7 @@ function AmountList({
           data-testid={`${testIdPrefix}-${entry.resourceId}`}
         >
           <span className="resource-amount-name">{resourceName(entry.resourceId)}</span>
-          <span className="resource-amount-value">{entry.amount}</span>
+          <span className="resource-amount-value mono">{entry.amount}</span>
         </li>
       ))}
     </ul>
@@ -78,16 +79,12 @@ export function ResourcePanel() {
   const totals = useMemo(() => calculator.computeTotals(pieces), [calculator, pieces]);
 
   return (
-    <aside className="panel resource-panel" data-testid="resource-panel" aria-label="Resources">
-      <div className="panel-header resource-panel-header">
-        <h2>Resources</h2>
-      </div>
-
-      <div className="resource-controls">
-        <label className="resource-field">
-          <span className="resource-field-label">Group by</span>
+    <Panel title="Resources" testId="resource-panel" ariaLabel="Resources" className="resource-panel">
+      <div className="panel-toolbar">
+        <label className="field">
+          <span className="field-label">Group by</span>
           <select
-            className="pattern-select"
+            className="select"
             data-testid="resource-grouping"
             value={grouping}
             onChange={(event) => setGrouping(event.target.value as Grouping)}
@@ -105,7 +102,7 @@ export function ResourcePanel() {
         <div className="resource-group" data-testid="resource-group-all">
           <div className="resource-group-header">
             <span className="resource-group-title">All pieces</span>
-            <span className="resource-group-count" data-testid="resource-count-all">
+            <span className="resource-group-count mono" data-testid="resource-count-all">
               {totals.pieceCount} pieces
             </span>
           </div>
@@ -116,7 +113,7 @@ export function ResourcePanel() {
       {grouping === 'category' ? (
         <div className="resource-groups" data-testid="resource-groups-category">
           {totals.byCategory.length === 0 ? (
-            <p className="panel-placeholder">No pieces placed.</p>
+            <p className="empty">No pieces placed.</p>
           ) : (
             totals.byCategory.map((entry) => (
               <div
@@ -126,7 +123,7 @@ export function ResourcePanel() {
               >
                 <div className="resource-group-header">
                   <span className="resource-group-title">{entry.category}</span>
-                  <span className="resource-group-count">{entry.placedCount} pieces</span>
+                  <span className="resource-group-count mono">{entry.placedCount} pieces</span>
                 </div>
                 <AmountList
                   amounts={entry.raw}
@@ -141,7 +138,7 @@ export function ResourcePanel() {
       {grouping === 'floor' ? (
         <div className="resource-groups" data-testid="resource-groups-floor">
           {floors.length === 0 ? (
-            <p className="panel-placeholder">No floors.</p>
+            <p className="empty">No floors.</p>
           ) : (
             sortFloors(floors).map((floor) => {
               const groupPieces = filterPiecesByFloor(pieces, floor.id);
@@ -155,16 +152,13 @@ export function ResourcePanel() {
                   <div className="resource-group-header">
                     <span className="resource-group-title">{floor.name}</span>
                     <span
-                      className="resource-group-count"
+                      className="resource-group-count mono"
                       data-testid={`resource-count-floor-${floor.id}`}
                     >
                       {groupPieces.length} pieces
                     </span>
                   </div>
-                  <AmountList
-                    amounts={raw}
-                    testIdPrefix={`resource-amount-floor-${floor.id}`}
-                  />
+                  <AmountList amounts={raw} testIdPrefix={`resource-amount-floor-${floor.id}`} />
                 </div>
               );
             })
@@ -174,7 +168,7 @@ export function ResourcePanel() {
 
       {grouping === 'zone' ? (
         <div className="resource-groups" data-testid="resource-groups-zone">
-          {zones.length === 0 ? <p className="panel-placeholder">No zones.</p> : null}
+          {zones.length === 0 ? <p className="empty">No zones.</p> : null}
           {sortZones(zones).map((zone) => {
             const groupPieces = filterPiecesByZone(pieces, zone.id);
             const raw = calculator.computeRawRequirements(groupPieces);
@@ -187,7 +181,7 @@ export function ResourcePanel() {
                 <div className="resource-group-header">
                   <span className="resource-group-title">{zone.name}</span>
                   <span
-                    className="resource-group-count"
+                    className="resource-group-count mono"
                     data-testid={`resource-count-zone-${zone.id}`}
                   >
                     {groupPieces.length} pieces
@@ -202,7 +196,7 @@ export function ResourcePanel() {
               <div className="resource-group-header">
                 <span className="resource-group-title">Unassigned</span>
                 <span
-                  className="resource-group-count"
+                  className="resource-group-count mono"
                   data-testid="resource-count-zone-unassigned"
                 >
                   {unassignedCount(pieces)} pieces
@@ -216,6 +210,6 @@ export function ResourcePanel() {
           ) : null}
         </div>
       ) : null}
-    </aside>
+    </Panel>
   );
 }

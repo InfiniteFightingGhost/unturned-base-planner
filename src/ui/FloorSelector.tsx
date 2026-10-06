@@ -12,6 +12,7 @@
 import { useEffect, useState } from 'react';
 import type { Floor } from '@/domain';
 import { sortedFloors, useEditorStore } from '@/editor';
+import { Panel } from './Panel';
 
 function FloorRow({
   floor,
@@ -59,17 +60,17 @@ function FloorRow({
 
   return (
     <li
-      className={active ? 'floor-item active' : 'floor-item'}
+      className={active ? 'list-item active' : 'list-item'}
       data-testid={`floor-item-${floor.id}`}
       data-active={active}
       onClick={() => setActiveFloor(floor.id)}
     >
-      <div className="floor-item-main">
-        <span className="floor-index" aria-hidden="true">
-          {floor.index + 1}
+      <div className="list-item-main">
+        <span className="floor-index mono" aria-hidden="true">
+          {String(floor.index + 1).padStart(2, '0')}
         </span>
         <input
-          className="floor-name-input"
+          className="input"
           data-testid={`floor-name-${floor.id}`}
           value={name}
           aria-label={`Name of ${floor.name}`}
@@ -84,12 +85,12 @@ function FloorRow({
         />
       </div>
 
-      <div className="floor-item-controls" onClick={(event) => event.stopPropagation()}>
-        <label className="floor-field">
-          <span className="floor-field-label">Y</span>
+      <div className="list-item-controls" onClick={(event) => event.stopPropagation()}>
+        <label className="field inline">
+          <span className="field-label">Y</span>
           <input
             type="number"
-            className="floor-elevation-input"
+            className="input mono"
             data-testid={`floor-elevation-${floor.id}`}
             value={elevation}
             step={0.25}
@@ -105,7 +106,7 @@ function FloorRow({
         </label>
         <button
           type="button"
-          className={floor.visible ? 'floor-toggle active' : 'floor-toggle'}
+          className={floor.visible ? 'button small active' : 'button small'}
           data-testid={`floor-visible-${floor.id}`}
           aria-pressed={floor.visible}
           onClick={() => setFloorVisible(floor.id, !floor.visible)}
@@ -114,7 +115,7 @@ function FloorRow({
         </button>
         <button
           type="button"
-          className={floor.locked ? 'floor-toggle active' : 'floor-toggle'}
+          className={floor.locked ? 'button small active' : 'button small'}
           data-testid={`floor-locked-${floor.id}`}
           aria-pressed={floor.locked}
           onClick={() => setFloorLocked(floor.id, !floor.locked)}
@@ -123,7 +124,7 @@ function FloorRow({
         </button>
         <button
           type="button"
-          className="floor-delete"
+          className="button small danger"
           data-testid={`floor-delete-${floor.id}`}
           disabled={!canDelete}
           onClick={() => deleteFloor(floor.id)}
@@ -144,23 +145,21 @@ export function FloorSelector() {
   const canDelete = project.floors.length > 1;
 
   return (
-    <aside className="panel floor-panel" data-testid="floor-selector" aria-label="Floors">
-      <div className="panel-header floor-panel-header">
-        <h2>Floors</h2>
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="add-floor"
-          onClick={() => addFloor()}
-        >
+    <Panel
+      title="Floors"
+      testId="floor-selector"
+      ariaLabel="Floors"
+      className="floor-panel"
+      actions={
+        <button type="button" className="button small" data-testid="add-floor" onClick={() => addFloor()}>
           Add floor
         </button>
-      </div>
-
+      }
+    >
       {floors.length === 0 ? (
-        <p className="panel-placeholder">No floors.</p>
+        <p className="empty">No floors.</p>
       ) : (
-        <ul className="floor-list">
+        <ul className="list">
           {floors.map((floor) => (
             <FloorRow
               key={floor.id}
@@ -171,6 +170,6 @@ export function FloorSelector() {
           ))}
         </ul>
       )}
-    </aside>
+    </Panel>
   );
 }

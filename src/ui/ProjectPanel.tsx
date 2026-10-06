@@ -1,33 +1,18 @@
 /**
- * Project panel (P40/P41): local project management and file I/O.
+ * Project panel (P40/P41): locally stored project list.
  *
- * New / Save now / Export / Import live here, alongside the locally stored
- * project list (load, delete) and the autosave status indicator. All loads go
- * through the store's load-only path, so imported or migrated documents clear
- * history exactly like a fresh project.
+ * Document lifecycle (New / Save / Export / Import) and the autosave read-out
+ * live in the top bar; this inspector lists saved projects, lets the user load
+ * or delete them, and exposes a "Save now" flush. All loads go through the
+ * store's load-only path, so imported or migrated documents clear history
+ * exactly like a fresh project.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ChangeEvent } from 'react';
-import { editorStore, selectProjectId, useEditorStore } from '@/editor';
-import {
-  defaultFileName,
-  downloadTextFile,
-  exportProjectFile,
-  flushAutosave,
-  listProjects,
-  loadProject,
-  deleteProject,
-  useEditorAutosave,
-} from '@/persistence';
+import { useCallback, useEffect, useState } from 'react';
+import { selectProjectId, useEditorStore } from '@/editor';
+import { deleteProject, listProjects, loadProject, useEditorAutosave } from '@/persistence';
 import type { ProjectSummary } from '@/persistence';
-
-function formatClock(at: number | null): string {
-  if (at === null) {
-    return '';
-  }
-  return new Date(at).toLocaleTimeString();
-}
+import { Panel } from './Panel';
 
 function formatTimestamp(iso: string): string {
   const date = new Date(iso);
@@ -37,14 +22,11 @@ function formatTimestamp(iso: string): string {
 export function ProjectPanel() {
   const autosave = useEditorAutosave();
   const currentId = useEditorStore(selectProjectId);
-  const newProject = useEditorStore((state) => state.newProject);
-  const loadProjectFromJson = useEditorStore((state) => state.loadProjectFromJson);
   const replaceProject = useEditorStore((state) => state.replaceProject);
   const pieceCount = useEditorStore((state) => state.project.pieces.length);
 
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const refresh = useCallback(async (): Promise<void> => {
     try {
@@ -75,24 +57,14 @@ export function ProjectPanel() {
     };
   }, [refresh]);
 
-  const handle = useCallback(
-    async (action: () => Promise<void>): Promise<void> => {
-      setError(null);
-      try {
-        await action();
-      } catch (cause) {
-        setError(cause instanceof Error ? cause.message : String(cause));
-      }
-    },
-    [],
-  );
-
-  const onNew = (): void =>
-    void handle(async () => {
-      newProject('Untitled');
-      await flushAutosave();
-      await refresh();
-    });
+  const handle = useCallback(async (action: () => Promise<void>): Promise<void> => {
+    setError(null);
+    try {
+      await action();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    }
+  }, []);
 
   const onSaveNow = (): void =>
     void handle(async () => {
@@ -100,30 +72,10 @@ export function ProjectPanel() {
       await refresh();
     });
 
-  const onExport = (): void =>
-    void handle(async () => {
-      const project = editorStore.getState().project;
-      downloadTextFile(defaultFileName(project), exportProjectFile(project));
-    });
-
-  const onImportChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    if (file === undefined) {
-      return;
-    }
-    void handle(async () => {
-      const text = await file.text();
-      loadProjectFromJson(text);
-      await flushAutosave();
-      await refresh();
-    });
-  };
-
   const onLoad = (id: string): void =>
     void handle(async () => {
       replaceProject(await loadProject(id));
-      await flushAutosave();
+      await autosave.flush();
       await refresh();
     });
 
@@ -134,93 +86,46 @@ export function ProjectPanel() {
     });
 
   return (
-    <aside className="panel project-panel" data-testid="project-panel" aria-label="Projects">
-      <div className="panel-header">
-        <h2>Projects</h2>
-      </div>
-
-      <div className="project-actions">
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="new-project"
-          onClick={onNew}
-        >
-          New
-        </button>
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="save-now"
-          onClick={onSaveNow}
-        >
+    <Panel
+      title="Projects"
+      testId="project-panel"
+      ariaLabel="Projects"
+      className="project-panel"
+      actions={
+        <button type="button" className="button small" data-testid="save-now" onClick={onSaveNow}>
           Save now
         </button>
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="export-project"
-          onClick={onExport}
-        >
-          Export
-        </button>
-        <button
-          type="button"
-          className="tool-button"
-          data-testid="import-project"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          Import
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,.ubp.json,application/json"
-          data-testid="import-input"
-          className="project-file-input"
-          onChange={onImportChange}
-        />
-      </div>
-
-      <p className="autosave-status" data-testid="autosave-status" aria-live="polite">
-        {autosave.status === 'saving'
-          ? 'Saving…'
-          : autosave.status === 'saved'
-            ? `Saved ${formatClock(autosave.lastSavedAt)}`
-            : autosave.status === 'error'
-              ? `Save error: ${autosave.error ?? 'unknown'}`
-              : 'Autosave idle'}
-      </p>
-
+      }
+    >
       {error !== null && (
-        <p className="project-error" data-testid="project-error" role="alert">
+        <p className="error-text" data-testid="project-error" role="alert">
           {error}
         </p>
       )}
 
       {projects.length === 0 ? (
-        <p className="panel-placeholder" data-testid="project-empty">
+        <p className="empty" data-testid="project-empty">
           No saved projects yet.
         </p>
       ) : (
-        <ul className="project-list">
+        <ul className="list">
           {projects.map((project) => (
             <li
               key={project.id}
-              className={project.id === currentId ? 'project-item active' : 'project-item'}
+              className={project.id === currentId ? 'list-item active' : 'list-item static'}
               data-testid={`project-item-${project.id}`}
             >
-              <div className="project-item-main">
-                <span className="project-item-name">{project.name}</span>
-                <span className="project-item-count">
+              <div className="list-item-main">
+                <span className="list-item-name">{project.name}</span>
+                <span className="list-item-meta mono">
                   {project.pieceCount} {project.pieceCount === 1 ? 'piece' : 'pieces'}
                 </span>
               </div>
-              <span className="project-item-time">{formatTimestamp(project.updatedAt)}</span>
-              <div className="project-item-controls">
+              <span className="list-item-sub mono">{formatTimestamp(project.updatedAt)}</span>
+              <div className="list-item-controls">
                 <button
                   type="button"
-                  className="prefab-action"
+                  className="button small"
                   data-testid={`project-load-${project.id}`}
                   onClick={() => onLoad(project.id)}
                 >
@@ -228,7 +133,7 @@ export function ProjectPanel() {
                 </button>
                 <button
                   type="button"
-                  className="prefab-action"
+                  className="button small danger"
                   data-testid={`project-delete-${project.id}`}
                   onClick={() => onDelete(project.id)}
                 >
@@ -240,9 +145,9 @@ export function ProjectPanel() {
         </ul>
       )}
 
-      <p className="project-current" data-testid="project-current">
+      <p className="list-item-sub mono" data-testid="project-current">
         {pieceCount} {pieceCount === 1 ? 'piece' : 'pieces'} in the open project
       </p>
-    </aside>
+    </Panel>
   );
 }

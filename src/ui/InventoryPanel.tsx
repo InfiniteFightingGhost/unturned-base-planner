@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react';
 import { DATASET, RAW_RESOURCES } from '@/data';
 import { computeInventoryBalance } from '@/resources';
 import { useEditorStore } from '@/editor';
+import { Panel } from './Panel';
 
 interface InventoryRow {
   readonly resourceId: string;
@@ -103,25 +104,28 @@ export function InventoryPanel() {
   };
 
   return (
-    <aside className="panel inventory-panel" data-testid="inventory-panel" aria-label="Inventory">
-      <div className="panel-header inventory-panel-header">
-        <h2>Inventory</h2>
+    <Panel
+      title="Inventory"
+      testId="inventory-panel"
+      ariaLabel="Inventory"
+      className="inventory-panel"
+      actions={
         <button
           type="button"
-          className="prefab-action"
+          className="button small"
           data-testid="inventory-clear"
           disabled={inventory.length === 0}
           onClick={() => clearInventory()}
         >
-          Clear inventory
+          Clear
         </button>
-      </div>
-
+      }
+    >
       {rows.length === 0 ? (
-        <p className="panel-placeholder">No raw resources.</p>
+        <p className="empty">No raw resources.</p>
       ) : (
         <div className="inventory-table-wrap">
-          <table className="inventory-table">
+          <table className="data-table">
             <thead>
               <tr>
                 <th scope="col">Resource</th>
@@ -137,14 +141,14 @@ export function InventoryPanel() {
                 const draft = drafts[row.resourceId];
                 return (
                   <tr key={row.resourceId} data-testid={`inventory-row-${row.resourceId}`}>
-                    <td className="inventory-name">
+                    <td className="cell-name">
                       {DATASET.resourceById.get(row.resourceId)?.name ?? row.resourceId}
                     </td>
                     <td>
                       <input
                         type="number"
                         min={0}
-                        className="inventory-input"
+                        className="input mono numeric"
                         data-testid={`inventory-input-${row.resourceId}`}
                         aria-label={`Owned ${row.resourceId}`}
                         value={draft ?? (owned > 0 ? String(owned) : '')}
@@ -152,22 +156,13 @@ export function InventoryPanel() {
                         onBlur={() => handleBlur(row.resourceId)}
                       />
                     </td>
-                    <td
-                      className="inventory-number"
-                      data-testid={`inventory-required-${row.resourceId}`}
-                    >
+                    <td className="mono numeric" data-testid={`inventory-required-${row.resourceId}`}>
                       {row.required}
                     </td>
-                    <td
-                      className="inventory-number"
-                      data-testid={`inventory-remaining-${row.resourceId}`}
-                    >
+                    <td className="mono numeric" data-testid={`inventory-remaining-${row.resourceId}`}>
                       {row.remaining}
                     </td>
-                    <td
-                      className="inventory-number"
-                      data-testid={`inventory-surplus-${row.resourceId}`}
-                    >
+                    <td className="mono numeric" data-testid={`inventory-surplus-${row.resourceId}`}>
                       {row.surplus}
                     </td>
                   </tr>
@@ -177,16 +172,16 @@ export function InventoryPanel() {
             <tfoot>
               <tr data-testid="inventory-totals">
                 <th scope="row">Totals</th>
-                <td className="inventory-number" data-testid="inventory-total-owned">
+                <td className="mono numeric" data-testid="inventory-total-owned">
                   {totals.owned}
                 </td>
-                <td className="inventory-number" data-testid="inventory-total-required">
+                <td className="mono numeric" data-testid="inventory-total-required">
                   {totals.required}
                 </td>
-                <td className="inventory-number" data-testid="inventory-total-remaining">
+                <td className="mono numeric" data-testid="inventory-total-remaining">
                   {totals.remaining}
                 </td>
-                <td className="inventory-number" data-testid="inventory-total-surplus">
+                <td className="mono numeric" data-testid="inventory-total-surplus">
                   {totals.surplus}
                 </td>
               </tr>
@@ -194,6 +189,6 @@ export function InventoryPanel() {
           </table>
         </div>
       )}
-    </aside>
+    </Panel>
   );
 }

@@ -1,8 +1,7 @@
 /**
  * Bottom status/materials bar. Reports document totals, selection size, the
- * active floor and a per-category breakdown. The inventory-ready totals
- * placeholder (real `expandToRaw` call) is explicitly deferred: for now the bar
- * shows piece counts only.
+ * active floor and a per-category breakdown. All numeric cells use the
+ * monospace face so columns stay aligned as counts change.
  */
 
 import { useMemo } from 'react';
@@ -36,29 +35,28 @@ export function StatusBar() {
   return (
     <footer className="status-bar" data-testid="status-bar">
       <span className="status-item">
-        Pieces:{' '}
-        <strong data-testid="piece-count">{pieces.length}</strong>
+        Pieces <strong className="mono" data-testid="piece-count">{pieces.length}</strong>
       </span>
       <span className="status-item">
-        Built:{' '}
-        <strong data-testid="status-built">
+        Built{' '}
+        <strong className="mono" data-testid="status-built">
           {progress.built}/{progress.total}
-        </strong>{' '}
-        ({progress.percentComplete}%)
+        </strong>
+        <span className="status-percent mono">{progress.percentComplete}%</span>
       </span>
       <span className="status-item">
-        Selected: <strong data-testid="selected-count">{selection.length}</strong>
+        Selected <strong className="mono" data-testid="selected-count">{selection.length}</strong>
       </span>
       <span className="status-item">
-        Floor:{' '}
-        <strong data-testid="active-floor">{activeFloor?.name ?? '—'}</strong>
+        Floor <strong data-testid="active-floor">{activeFloor?.name ?? '—'}</strong>
       </span>
       <span className="status-item status-categories" data-testid="category-counts">
         {categoryCounts.length === 0
           ? 'No pieces placed'
-          : categoryCounts.map(([category, count]) => `${category}: ${count}`).join('  ·  ')}
+          : categoryCounts.map(([category, count]) => `${category}:${count}`).join('  ·  ')}
       </span>
-      <span className="status-item status-placeholder">Materials: pending raw expansion</span>
+      <span className="status-spacer" />
+      <span className="status-item status-placeholder mono">Materials: pending raw expansion</span>
     </footer>
   );
 }
