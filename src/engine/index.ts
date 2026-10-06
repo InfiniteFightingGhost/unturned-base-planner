@@ -57,7 +57,7 @@ export type {
   PieceBatchOptions,
 } from './rendering/PieceBatch';
 export { PieceField } from './rendering/PieceField';
-export type { PieceFieldHandle, PieceFieldProps } from './rendering/PieceField';
+export type { PieceFieldHandle, PieceFieldProps, PieceSurfaceHit } from './rendering/PieceField';
 
 export { BlueprintOverlay } from './blueprint/BlueprintOverlay';
 export { activeFloorPieces, boxEdgesFor } from './blueprint/blueprintMath';

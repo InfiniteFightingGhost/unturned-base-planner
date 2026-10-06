@@ -24,12 +24,18 @@ export interface ToolState {
   activeTool: ActiveTool;
   activeDefinitionId: string | null;
   ghost: GhostState | null;
+  /** Whether the current ghost would place a valid piece. */
+  ghostValid: boolean;
+  /** Human-readable reason the ghost is invalid, else `null`. */
+  placementMessage: string | null;
   /** Measurement kind produced by the `measure` tool. UI-only. */
   activeMeasurementKind: MeasurementKind;
 
   setActiveTool(tool: ActiveTool): void;
   setActiveDefinitionId(definitionId: string | null): void;
   setGhost(ghost: GhostState | null): void;
+  setGhostValid(valid: boolean): void;
+  setPlacementMessage(message: string | null): void;
   clearGhost(): void;
   setActiveMeasurementKind(kind: MeasurementKind): void;
   /** Select tool + clear any pending definition/ghost (Escape semantics). */
@@ -41,6 +47,8 @@ export const useToolStore = create<ToolState>()(
     activeTool: 'select',
     activeDefinitionId: null,
     ghost: null,
+    ghostValid: true,
+    placementMessage: null,
     activeMeasurementKind: 'distance',
 
     setActiveTool: (activeTool) => set({ activeTool: activeTool }),
@@ -49,10 +57,21 @@ export const useToolStore = create<ToolState>()(
 
     setGhost: (ghost) => set({ ghost: ghost }),
 
-    clearGhost: () => set({ ghost: null }),
+    setGhostValid: (ghostValid) => set({ ghostValid }),
+
+    setPlacementMessage: (placementMessage) => set({ placementMessage }),
+
+    clearGhost: () => set({ ghost: null, ghostValid: true, placementMessage: null }),
 
     setActiveMeasurementKind: (activeMeasurementKind) => set({ activeMeasurementKind }),
 
-    cancelPlacement: () => set({ activeTool: 'select', activeDefinitionId: null, ghost: null }),
+    cancelPlacement: () =>
+      set({
+        activeTool: 'select',
+        activeDefinitionId: null,
+        ghost: null,
+        ghostValid: true,
+        placementMessage: null,
+      }),
   })),
 );

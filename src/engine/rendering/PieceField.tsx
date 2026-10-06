@@ -85,6 +85,14 @@ interface FloorBatchEntry {
   readonly edges: SelectionEdges;
 }
 
+/** A raycast hit against a placed piece, including the world-space surface. */
+export interface PieceSurfaceHit {
+  readonly pieceId: string;
+  readonly point: [number, number, number];
+  readonly normal: [number, number, number];
+  readonly distance: number;
+}
+
 export interface PieceFieldHandle {
   /**
    * Raycast a normalized device coordinate against the visible, unlocked floor
@@ -93,6 +101,11 @@ export interface PieceFieldHandle {
    * adopted.
    */
   pick(ndc: Vector2, camera: Camera): string | null;
+  /**
+   * Like `pick`, but also returns the world-space hit point, face normal and
+   * distance. Used by placement to resolve attachment surfaces.
+   */
+  pickSurface(ndc: Vector2, camera: Camera): PieceSurfaceHit | null;
   /**
    * Drag preview: shift the given pieces by `delta` without touching the
    * document. Committing the move happens through a command on pointer-up.
@@ -335,8 +348,8 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
 
   useImperativeHandle(
     ref,
-    () => ({
-      pick: (ndc: Vector2, camera: Camera): string | null => {
+    () => {
+      const resolveSurface = (ndc: Vector2, camera: Camera): PieceSurfaceHit | null => {
         const project = editorStore.getState().project;
         const targets: BatchedMesh[] = [];
         for (const [floorId, entry] of batchesRef.current) {
@@ -370,40 +383,53 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
           if (piece === undefined || isZoneLocked(project, piece.zoneId)) {
             continue;
           }
-          return pieceId;
+          const normal = hit.face?.normal;
+          return {
+            pieceId,
+            point: [hit.point.x, hit.point.y, hit.point.z],
+            normal: normal === undefined ? [0, 1, 0] : [normal.x, normal.y, normal.z],
+            distance: hit.distance,
+          };
         }
         return null;
-      },
-      previewTranslate: (pieceIds: readonly string[], delta: [number, number, number]): void => {
-        const wanted = new Set(pieceIds);
-        const batches = batchesRef.current;
-        for (const piece of editorStore.getState().project.pieces) {
-          if (!wanted.has(piece.id)) {
-            continue;
+      };
+
+      return {
+        pick: (ndc: Vector2, camera: Camera): string | null =>
+          resolveSurface(ndc, camera)?.pieceId ?? null,
+        pickSurface: (ndc: Vector2, camera: Camera): PieceSurfaceHit | null =>
+          resolveSurface(ndc, camera),
+        previewTranslate: (pieceIds: readonly string[], delta: [number, number, number]): void => {
+          const wanted = new Set(pieceIds);
+          const batches = batchesRef.current;
+          for (const piece of editorStore.getState().project.pieces) {
+            if (!wanted.has(piece.id)) {
+              continue;
+            }
+            const entry = batches.get(piece.floorId);
+            if (entry === undefined) {
+              continue;
+            }
+            entry.batch.update({
+              ...piece,
+              position: vec3(
+                piece.position[0] + delta[0],
+                piece.position[1] + delta[1],
+                piece.position[2] + delta[2],
+              ),
+            });
           }
-          const entry = batches.get(piece.floorId);
-          if (entry === undefined) {
-            continue;
+          invalidate();
+        },
+        clearPreview: (): void => {
+          const project = editorStore.getState().project;
+          for (const [floorId, entry] of batchesRef.current) {
+            entry.batch.sync(piecesOnFloor(project, floorId));
           }
-          entry.batch.update({
-            ...piece,
-            position: vec3(
-              piece.position[0] + delta[0],
-              piece.position[1] + delta[1],
-              piece.position[2] + delta[2],
-            ),
-          });
-        }
-        invalidate();
-      },
-      clearPreview: (): void => {
-        const project = editorStore.getState().project;
-        for (const [floorId, entry] of batchesRef.current) {
-          entry.batch.sync(piecesOnFloor(project, floorId));
-        }
-        invalidate();
-      },
-    }),
+          invalidate();
+        },
+      };
+    },
     [raycaster, invalidate],
   );
 

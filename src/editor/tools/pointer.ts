@@ -59,3 +59,18 @@ export function groundPointFromEvent(
   directionScratch[2] = ray.direction.z;
   return rayToGroundPlane(originScratch, directionScratch, planeY);
 }
+
+/** Normalized world-space view direction of the pointer ray over `element`. */
+export function viewDirectionFromEvent(
+  event: ClientPoint,
+  element: HTMLElement,
+  camera: Camera,
+): Vec3 | null {
+  const ndc = toNdc(event, element);
+  if (ndc === null) {
+    return null;
+  }
+  raycaster.setFromCamera(ndc, camera);
+  const direction = raycaster.ray.direction;
+  return [direction.x, direction.y, direction.z];
+}

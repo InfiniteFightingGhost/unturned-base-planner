@@ -53,7 +53,7 @@ export function PropertiesPanel() {
           </div>
           <div className="property-row">
             <span className="property-label">Position</span>
-            <span className="property-value mono">
+            <span className="property-value mono" data-testid="prop-position">
               {piece.position.map((component) => formatNumber(component)).join(', ')}
             </span>
           </div>

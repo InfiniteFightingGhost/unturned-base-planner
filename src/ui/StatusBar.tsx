@@ -9,12 +9,14 @@ import type { PieceCategory } from '@/domain';
 import { useEditorStore } from '@/editor';
 import { DATASET } from '@/data';
 import { computeConstructionProgress } from '@/resources';
+import { useToolStore } from '@/editor/tools/toolStore';
 
 export function StatusBar() {
   const pieces = useEditorStore((state) => state.project.pieces);
   const selection = useEditorStore((state) => state.selection);
   const floors = useEditorStore((state) => state.project.floors);
   const activeFloorId = useEditorStore((state) => state.activeFloorId);
+  const placementMessage = useToolStore((state) => state.placementMessage);
 
   const categoryCounts = useMemo(() => {
     const counts = new Map<PieceCategory, number>();
@@ -56,6 +58,11 @@ export function StatusBar() {
           : categoryCounts.map(([category, count]) => `${category}:${count}`).join('  ·  ')}
       </span>
       <span className="status-spacer" />
+      {placementMessage === null ? null : (
+        <span className="status-item status-warning mono" data-testid="placement-message">
+          {placementMessage}
+        </span>
+      )}
       <span className="status-item status-placeholder mono">Materials: pending raw expansion</span>
     </footer>
   );

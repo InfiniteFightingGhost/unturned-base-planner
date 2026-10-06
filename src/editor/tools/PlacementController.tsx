@@ -1,34 +1,51 @@
 /**
- * `PlacementController`: ground-plane placement tool.
+ * `PlacementController`: slot-aware structure + barricade placement.
  *
- * Active only while the tool store reports `activeTool === 'place'` with a
- * definition selected. Pointer moves raycast the ground plane, snap through the
- * editor's placement helper and push a transient ghost into the tool store. A
- * left click commits ONE `piece.add` command through the editor store, so the
- * placement is undoable; Escape (handled by the global shortcuts) simply drops
- * the ghost with no document mutation.
+ * On every pointer move the controller raycasts the ground plane (for a plan
+ * position) and the `PieceField` (for an attachment surface), then asks the pure
+ * `resolveStructurePlacement` / `resolveBarricadePlacement` helpers where the
+ * piece belongs. The resulting ghost transform and validity live in the tool
+ * store; the ghost is tinted green when valid and red when not. A left click
+ * commits ONE `piece.add` command through the editor store only when the
+ * placement is valid, so invalid placements never mutate the document. Escape
+ * (global shortcut) drops the ghost with no mutation.
  */
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { BoxGeometry, MeshStandardMaterial } from 'three';
 import type { Mesh } from 'three';
-import type { PieceDefinition } from '@/domain';
+import type { PieceDefinition, PlacedPiece, SurfaceHit, SurfaceKind, Vec3 } from '@/domain';
+import { barricadeSlotsForPiece } from '@/domain';
 import {
   createAddPiecesCommand,
   editorStore,
   floorById,
+  isBarricadeDefinition,
+  placementMessageFor,
+  resolveBarricadePlacement,
   resolvePlacement,
+  resolveStructurePlacement,
   snapPlacementPosition,
 } from '@/editor';
 import { DATASET } from '@/data';
 import { useEngineStore } from '@/engine';
-import { groundPointFromEvent } from './pointer';
+import type { PieceSurfaceHit } from '@/engine';
+import { groundPointFromEvent, ndcFromEvent, viewDirectionFromEvent } from './pointer';
+import { PieceFieldContext } from './PieceFieldContext';
 import { useToolStore } from './toolStore';
 import type { GhostState } from './toolStore';
 
-const GHOST_COLOR = 0x60a5fa;
+const VALID_COLOR = 0x4ade80;
+const INVALID_COLOR = 0xef4444;
 const GHOST_OPACITY = 0.35;
+const GROUND_NORMAL: [number, number, number] = [0, 1, 0];
+
+interface Candidate {
+  readonly ghost: GhostState;
+  readonly valid: boolean;
+  readonly message: string | null;
+}
 
 /** Translucent preview box, driven imperatively from the tool store. */
 function GhostPreview({ definition }: { definition: PieceDefinition }) {
@@ -45,7 +62,7 @@ function GhostPreview({ definition }: { definition: PieceDefinition }) {
   const material = useMemo(
     () =>
       new MeshStandardMaterial({
-        color: GHOST_COLOR,
+        color: VALID_COLOR,
         transparent: true,
         opacity: GHOST_OPACITY,
         depthWrite: false,
@@ -58,11 +75,13 @@ function GhostPreview({ definition }: { definition: PieceDefinition }) {
   useEffect(() => () => material.dispose(), [material]);
 
   useEffect(() => {
-    const apply = (ghost: GhostState | null): void => {
+    const apply = (): void => {
       const mesh = ref.current;
       if (mesh === null) {
         return;
       }
+      const state = useToolStore.getState();
+      const ghost = state.ghost;
       if (ghost === null) {
         mesh.visible = false;
       } else {
@@ -70,13 +89,49 @@ function GhostPreview({ definition }: { definition: PieceDefinition }) {
         mesh.rotation.y = ghost.rotationY;
         mesh.visible = true;
       }
+      material.color.setHex(state.ghostValid ? VALID_COLOR : INVALID_COLOR);
       invalidate();
     };
-    apply(useToolStore.getState().ghost);
-    return useToolStore.subscribe((state) => state.ghost, apply);
-  }, [invalidate]);
+    apply();
+    const unsubscribeGhost = useToolStore.subscribe((state) => state.ghost, apply);
+    const unsubscribeValid = useToolStore.subscribe((state) => state.ghostValid, apply);
+    return () => {
+      unsubscribeGhost();
+      unsubscribeValid();
+    };
+  }, [invalidate, material]);
 
   return <mesh ref={ref} geometry={geometry} material={material} visible={false} />;
+}
+
+/** Resolve the attachment surface kind exposed by a picked piece. */
+function surfaceKindForPiece(piece: PlacedPiece, definition: PieceDefinition): SurfaceKind {
+  const slots = barricadeSlotsForPiece(piece, definition);
+  const first = slots[0];
+  return first === undefined ? 'any' : first.kind;
+}
+
+/** Build a domain `SurfaceHit` from a picked piece, else a ground hit. */
+function surfaceHitFor(
+  picked: PieceSurfaceHit | null,
+  pieces: readonly PlacedPiece[],
+  groundPoint: Vec3,
+): SurfaceHit {
+  if (picked !== null) {
+    const piece = pieces.find((candidate) => candidate.id === picked.pieceId);
+    const definition =
+      piece === undefined ? undefined : DATASET.definitionById.get(piece.definitionId);
+    if (piece !== undefined && definition !== undefined) {
+      return {
+        point: picked.point,
+        normal: picked.normal,
+        kind: surfaceKindForPiece(piece, definition),
+        sourcePieceId: piece.id,
+        sourceYaw: piece.rotation[1],
+      };
+    }
+  }
+  return { point: groundPoint, normal: GROUND_NORMAL, kind: 'ground' };
 }
 
 export function PlacementController() {
@@ -86,6 +141,7 @@ export function PlacementController() {
   const activeTool = useToolStore((state) => state.activeTool);
   const activeDefinitionId = useToolStore((state) => state.activeDefinitionId);
   const grid = useEngineStore((state) => state.grid);
+  const fieldRef = useContext(PieceFieldContext);
 
   useEffect(() => {
     if (activeTool !== 'place' || activeDefinitionId === null) {
@@ -96,8 +152,9 @@ export function PlacementController() {
       return;
     }
     const element = gl.domElement;
+    const isBarricade = isBarricadeDefinition(definition);
 
-    const computeGhost = (event: MouseEvent): GhostState | null => {
+    const computeCandidate = (event: MouseEvent): Candidate | null => {
       const { project, activeFloorId } = editorStore.getState();
       const elevation = floorById(project, activeFloorId)?.elevation ?? 0;
       const point = groundPointFromEvent(event, element, camera, elevation);
@@ -105,30 +162,74 @@ export function PlacementController() {
         return null;
       }
       const position = snapPlacementPosition(point, grid);
-      // The active floor's elevation is authoritative on Y (the grid snap only
-      // applies to the plan axes), so pieces always sit exactly on the floor.
       position[1] = elevation;
       const rotationY = useToolStore.getState().ghost?.rotationY ?? 0;
-      return { position, rotationY };
+      const viewDir = viewDirectionFromEvent(event, element, camera) ?? [0, 0, 1];
+
+      if (isBarricade) {
+        const ndc = ndcFromEvent(event, element);
+        const picked = ndc === null ? null : (fieldRef?.current?.pickSurface(ndc, camera) ?? null);
+        const hit = surfaceHitFor(picked, project.pieces, position);
+        const resolution = resolveBarricadePlacement(
+          definition,
+          hit,
+          rotationY,
+          project.pieces,
+          DATASET.definitionById,
+        );
+        return {
+          ghost: { position: resolution.position, rotationY: resolution.rotationY },
+          valid: resolution.valid,
+          message: resolution.valid ? null : placementMessageFor(resolution.result),
+        };
+      }
+
+      const resolution = resolveStructurePlacement(
+        definition,
+        position,
+        viewDir,
+        project.pieces,
+        DATASET.definitionById,
+        { rotationY },
+      );
+      return {
+        ghost: { position: resolution.position, rotationY: resolution.rotationY },
+        valid: resolution.valid,
+        message: resolution.valid ? null : placementMessageFor(resolution.result),
+      };
+    };
+
+    const applyCandidate = (candidate: Candidate): void => {
+      const tool = useToolStore.getState();
+      tool.setGhost(candidate.ghost);
+      tool.setGhostValid(candidate.valid);
+      tool.setPlacementMessage(candidate.message);
     };
 
     const onPointerMove = (event: PointerEvent): void => {
-      const ghost = computeGhost(event);
-      if (ghost !== null) {
-        useToolStore.getState().setGhost(ghost);
+      const candidate = computeCandidate(event);
+      if (candidate !== null) {
+        applyCandidate(candidate);
+        invalidate();
       }
     };
 
     const onPointerLeave = (): void => {
       useToolStore.getState().clearGhost();
+      invalidate();
     };
 
     const onClick = (event: MouseEvent): void => {
       if (event.button !== 0) {
         return;
       }
-      const ghost = computeGhost(event) ?? useToolStore.getState().ghost;
-      if (ghost === null) {
+      const candidate = computeCandidate(event);
+      if (candidate === null) {
+        return;
+      }
+      applyCandidate(candidate);
+      if (!candidate.valid) {
+        invalidate();
         return;
       }
       const { project, activeFloorId } = editorStore.getState();
@@ -136,7 +237,12 @@ export function PlacementController() {
       if (floor === undefined) {
         return;
       }
-      const piece = resolvePlacement(definition, ghost.position, ghost.rotationY, floor.id);
+      const piece = resolvePlacement(
+        definition,
+        candidate.ghost.position,
+        candidate.ghost.rotationY,
+        floor.id,
+      );
       editorStore.getState().executeCommand(createAddPiecesCommand([piece]));
       editorStore.getState().select([piece.id], 'replace');
       invalidate();
@@ -150,7 +256,7 @@ export function PlacementController() {
       element.removeEventListener('pointerleave', onPointerLeave);
       element.removeEventListener('click', onClick);
     };
-  }, [gl, camera, invalidate, activeTool, activeDefinitionId, grid]);
+  }, [gl, camera, invalidate, activeTool, activeDefinitionId, grid, fieldRef]);
 
   const definition =
     activeTool === 'place' && activeDefinitionId !== null

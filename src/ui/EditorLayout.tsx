@@ -33,6 +33,7 @@ import { ResourcePanel } from './ResourcePanel';
 import { InventoryPanel } from './InventoryPanel';
 import { ProgressPanel } from './ProgressPanel';
 import { PropertiesPanel } from './PropertiesPanel';
+import { WarningsPanel } from './WarningsPanel';
 import { StatusBar } from './StatusBar';
 import { TopBar } from './TopBar';
 import { ToolStrip } from './ToolStrip';
@@ -79,6 +80,7 @@ export function EditorLayout() {
         {rightOpen ? (
           <div className="dock dock-right">
             <PropertiesPanel />
+            <WarningsPanel />
             <FloorSelector />
             <ZonePanel />
             <PatternPanel />

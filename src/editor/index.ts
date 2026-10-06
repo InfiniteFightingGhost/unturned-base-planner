@@ -123,6 +123,25 @@ export {
 } from './placement';
 
 export {
+  isBarricadeDefinition,
+  placementMessageFor,
+  resolveBarricadePlacement,
+  resolveStructurePlacement,
+} from './buildPlacement';
+export type {
+  BarricadeResolution,
+  ResolveStructureOptions,
+  StructurePlacement,
+} from './buildPlacement';
+
+export { computeDesignWarnings, totalWarningPieces } from './warnings';
+export type {
+  DesignWarning,
+  DesignWarningCode,
+  DesignWarningSeverity,
+} from './warnings';
+
+export {
   canRedo,
   canUndo,
   createEditorStore,
