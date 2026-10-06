@@ -18,6 +18,7 @@ import type { PieceFieldRef } from '@/editor/tools/PieceFieldContext';
 import { useGlobalShortcuts } from '@/editor/tools/shortcuts';
 import { PieceLibrary } from './PieceLibrary';
 import { FloorSelector } from './FloorSelector';
+import { PatternPanel } from './PatternPanel';
 import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
@@ -40,6 +41,7 @@ export function EditorLayout() {
         <div className="editor-sidebar">
           <PieceLibrary />
           <FloorSelector />
+          <PatternPanel />
         </div>
 
         <section className="viewport-panel" aria-label="3D viewport">

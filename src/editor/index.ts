@@ -42,14 +42,25 @@ export type { SelectionMode } from './selection';
 
 export {
   approxEqualVec3,
+  arrayPieces,
   clonePiece,
   duplicatePieces,
   gridArray,
+  gridArrayPieces,
   linearArray,
   mirrorPiece,
+  mirrorPieces,
+  radialArrayPieces,
   rotatePieceY,
   translatePiece,
 } from './transform';
+
+export {
+  createGridArrayCommand,
+  createLinearArrayCommand,
+  createMirrorCommand,
+  createRadialArrayCommand,
+} from './pattern-commands';
 
 export {
   placementIsNoop,

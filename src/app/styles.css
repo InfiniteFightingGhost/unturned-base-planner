@@ -420,3 +420,99 @@ body {
   opacity: 0.4;
   cursor: default;
 }
+
+/* ------------------------------------------------------------------ */
+/* Patterns                                                            */
+/* ------------------------------------------------------------------ */
+
+.pattern-panel {
+  flex: 0 0 auto;
+  max-height: 50%;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.pattern-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pattern-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.pattern-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.pattern-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.pattern-section h3 {
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.pattern-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.pattern-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1 1 3.5rem;
+  min-width: 3.5rem;
+}
+
+.pattern-field-label {
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.pattern-input,
+.pattern-select {
+  width: 100%;
+  padding: 0.25rem 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.pattern-apply {
+  align-self: flex-start;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  background: #1e222a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pattern-apply:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.pattern-apply:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

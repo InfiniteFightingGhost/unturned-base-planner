@@ -18,6 +18,9 @@ export { approxEqual as approxEqualVec3 } from '@/domain';
 
 const TAU = Math.PI * 2;
 
+/** Below this magnitude a vector/angle is treated as degenerate or zero. */
+const DIRECTION_EPSILON = 1e-9;
+
 /** Wrap an angle into `[0, 2π)`. */
 function normalizeAngle(radians: number): number {
   const wrapped = radians % TAU;
@@ -179,4 +182,167 @@ export function gridArray(
     }
   }
   return result;
+}
+
+/**
+ * Replicate an entire selection along a straight line.
+ *
+ * Returns `count` **new** copies of the whole selection: copy `i` (for
+ * `i = 1..count`) is the selection translated by `spacing * i` along
+ * `direction`. The originals are never included in the result and every copy
+ * receives a fresh id from `idFactory`. Ordering is deterministic: copies are
+ * grouped by step (step `1`, then its pieces, then step `2`, ...).
+ *
+ * `count` is floored and clamped to zero, so non-positive/fractional inputs are
+ * handled defensively.
+ */
+export function arrayPieces(
+  pieces: readonly PlacedPiece[],
+  count: number,
+  spacing: number,
+  direction: Vec3,
+  idFactory: () => string = () => createId('piece'),
+): PlacedPiece[] {
+  const total = Math.max(0, Math.floor(count));
+  const result: PlacedPiece[] = [];
+  for (let index = 1; index <= total; index += 1) {
+    const step = spacing * index;
+    result.push(
+      ...duplicatePieces(
+        pieces,
+        vec3(direction[0] * step, direction[1] * step, direction[2] * step),
+        idFactory,
+      ),
+    );
+  }
+  return result;
+}
+
+/**
+ * Replicate an entire selection across a `rows × cols` grid.
+ *
+ * Copy offset for cell `(row, col)` is `(col * spacingX, 0, row * spacingZ)`
+ * — columns advance along +X, rows along +Z. **The original cell `(0, 0)` is
+ * excluded**, so the result contains `rows * cols - 1` copies (or `[]` when
+ * either dimension is less than one). Traversal is row-major and every copy
+ * receives a fresh id; the originals are never included.
+ */
+export function gridArrayPieces(
+  pieces: readonly PlacedPiece[],
+  rows: number,
+  cols: number,
+  spacingX: number,
+  spacingZ: number,
+  idFactory: () => string = () => createId('piece'),
+): PlacedPiece[] {
+  const rowCount = Math.max(0, Math.floor(rows));
+  const colCount = Math.max(0, Math.floor(cols));
+  const result: PlacedPiece[] = [];
+  for (let row = 0; row < rowCount; row += 1) {
+    for (let col = 0; col < colCount; col += 1) {
+      if (row === 0 && col === 0) {
+        continue;
+      }
+      result.push(...duplicatePieces(pieces, vec3(col * spacingX, 0, row * spacingZ), idFactory));
+    }
+  }
+  return result;
+}
+
+/**
+ * Replicate an entire selection around a Y axis through `center`.
+ *
+ * The selection is anchored at the horizontal centroid of its pieces. Copy `i`
+ * (for `i = 0..count-1`) rotates the anchor by `angle = (first + i) * step`
+ * where `step = totalAngleRadians / count`. The anchor is then placed on the
+ * circle of `radius` centred on `center`, so the horizontal distance from
+ * `center` to the anchor is exactly `|radius|`. Every piece in the copy keeps
+ * its relative offset from the anchor and has its yaw increased by the same
+ * `angle` (deterministic, matching `rotatePieceY`).
+ *
+ * Start-point semantics: for a partial arc (`totalAngleRadians` is not a whole
+ * number of turns) the first copy starts at `step`, so it never coincides with
+ * the original. For a full turn the copies start at angle `0` and are spread by
+ * `step`, so exactly `count` distinct slots are produced and the start point
+ * (`angle == totalAngleRadians`) is not repeated. Since `step` is
+ * `totalAngleRadians / count`, a full turn naturally avoids duplicating the
+ * start. The originals are never included; every copy gets a fresh id.
+ *
+ * A selection whose centroid lies on `center` has no defined start direction
+ * and is treated as starting from +X.
+ */
+export function radialArrayPieces(
+  pieces: readonly PlacedPiece[],
+  count: number,
+  radius: number,
+  totalAngleRadians: number,
+  center: Vec3,
+  idFactory: () => string = () => createId('piece'),
+): PlacedPiece[] {
+  const total = Math.max(0, Math.floor(count));
+  if (total === 0 || pieces.length === 0) {
+    return [];
+  }
+
+  let sumX = 0;
+  let sumZ = 0;
+  for (const piece of pieces) {
+    sumX += piece.position[0];
+    sumZ += piece.position[2];
+  }
+  const anchorX = sumX / pieces.length;
+  const anchorZ = sumZ / pieces.length;
+  const offsetX = anchorX - center[0];
+  const offsetZ = anchorZ - center[2];
+  const baseAngle =
+    Math.hypot(offsetX, offsetZ) > DIRECTION_EPSILON ? Math.atan2(offsetZ, offsetX) : 0;
+
+  const wrapped = Math.abs(totalAngleRadians % TAU);
+  const isFullTurn = wrapped < DIRECTION_EPSILON && Math.abs(totalAngleRadians) > DIRECTION_EPSILON;
+  const firstIndex = isFullTurn ? 0 : 1;
+  const step = totalAngleRadians / total;
+
+  const result: PlacedPiece[] = [];
+  for (let index = 0; index < total; index += 1) {
+    const angle = (firstIndex + index) * step;
+    const rotated = baseAngle + angle;
+    const targetX = center[0] + radius * Math.cos(rotated);
+    const targetZ = center[2] + radius * Math.sin(rotated);
+    const deltaX = targetX - anchorX;
+    const deltaZ = targetZ - anchorZ;
+    for (const piece of pieces) {
+      result.push(
+        canonicalizePlacedPiece({
+          ...clonePiece(piece),
+          id: idFactory(),
+          position: vec3(piece.position[0] + deltaX, piece.position[1], piece.position[2] + deltaZ),
+          rotation: vec3(
+            piece.rotation[0],
+            normalizeAngle(piece.rotation[1] + angle),
+            piece.rotation[2],
+          ),
+        }),
+      );
+    }
+  }
+  return result;
+}
+
+/**
+ * Create freshly-id'd mirrored copies of the whole selection using
+ * `mirrorPiece` (position reflected across the plane `axis = planeOffset`, yaw
+ * mirrored accordingly, roll/pitch preserved). The originals are not included;
+ * geometry/order is deterministic (`pieces` order) and every copy receives a
+ * fresh id.
+ */
+export function mirrorPieces(
+  pieces: readonly PlacedPiece[],
+  axis: 'x' | 'z',
+  planeOffset = 0,
+  idFactory: () => string = () => createId('piece'),
+): PlacedPiece[] {
+  return pieces.map((piece) => ({
+    ...clonePiece(mirrorPiece(piece, axis, planeOffset)),
+    id: idFactory(),
+  }));
 }
