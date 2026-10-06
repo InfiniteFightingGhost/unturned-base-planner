@@ -44,11 +44,13 @@ export { useEngineStore, selectBlueprint, selectCameraMode, selectGrid } from '.
 export type { EngineState } from './store';
 
 export {
-  descriptorToGeometry,
+  pieceProxyGeometry,
   disposeGeometryCache,
   geometryCacheSize,
 } from './rendering/proxyGeometry';
-export { PieceBatch } from './rendering/PieceBatch';
+export type { PieceGeometryParams } from './rendering/proxyGeometry';
+export { tierColorForDefinition, NEUTRAL_CAD_COLOR } from './rendering/pieceAppearance';
+export { PieceBatch, composePieceMatrix } from './rendering/PieceBatch';
 export type {
   BatchGeometry,
   BatchSelectionMode,

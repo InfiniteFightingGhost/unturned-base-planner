@@ -25,6 +25,18 @@
  * - `pieceByInstance: Int32Array` (instanceId -> slot, `-1` when free)
  * - `pieceIds: slot -> pieceId`
  * `pieceIdForBatch(batchId)` resolves a raycast's `batchId` back to a piece id.
+ *
+ * Culling (correctness-first)
+ * ---------------------------
+ * `BatchedMesh`'s per-object frustum culling derives each instance's bounds from
+ * the geometry + instance matrix, but those per-geometry bounds are computed
+ * lazily and are NOT invalidated by `setMatrixAt`. A piece that is moved can
+ * therefore keep stale bounds and be culled while still on screen (the reported
+ * "pieces disappear then reappear" bug). Correctness wins here: both
+ * `frustumCulled` and `perObjectFrustumCulled` are disabled so every instance is
+ * always submitted. The floor is still a single draw call, so the cost is
+ * negligible. As defence in depth, `add` re-applies the instance's geometry id
+ * with `setGeometryIdAt` after `addInstance`, which also covers slot reuse.
  */
 
 import { BatchedMesh, Color, Matrix4, Quaternion, Vector3 } from 'three';
@@ -53,6 +65,13 @@ export interface PieceBatchOptions {
   readonly selectedColor?: number;
   /** Tint applied to every non-selected instance. Defaults to white. */
   readonly baseColor?: number;
+  /**
+   * Per-definition base tint. When supplied it overrides `baseColor` for
+   * non-selected instances, which is how material tiers are differentiated
+   * within a single floor material. Unknown definitions fall back to
+   * `baseColor`.
+   */
+  readonly resolveBaseColor?: (definitionId: string) => number;
 }
 
 /** Selection-application mode, mirroring the editor's `SelectionMode`. */
@@ -72,6 +91,19 @@ const scratchPosition = /*@__PURE__*/ new Vector3();
 const scratchScale = /*@__PURE__*/ new Vector3();
 const scratchColor = /*@__PURE__*/ new Color();
 
+/**
+ * Compose a placed piece's local transform (translation + Y rotation + scale)
+ * into `target`. Shared by the batch and the selection-edge overlay so the two
+ * can never drift apart. Uses module-scope scratch vectors: callers must not
+ * rely on the temporaries between calls.
+ */
+export function composePieceMatrix(piece: PlacedPiece, target: Matrix4): Matrix4 {
+  scratchPosition.set(piece.position[0], piece.position[1], piece.position[2]);
+  scratchScale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
+  scratchQuaternion.setFromAxisAngle(Y_AXIS, piece.rotation[1]);
+  return target.compose(scratchPosition, scratchQuaternion, scratchScale);
+}
+
 function indexedVertexCount(geometry: BufferGeometry): number {
   const position = geometry.getAttribute('position');
   if (!position) {
@@ -89,7 +121,9 @@ export class PieceBatch {
 
   private readonly geometryIdByAssetId = new Map<string, number>();
   private readonly resolveAssetId: (definitionId: string) => string | undefined;
+  private readonly resolveBaseColor: ((definitionId: string) => number) | undefined;
   private readonly instanceByPiece = new Map<string, number>();
+  private readonly definitionIdByPiece = new Map<string, string>();
   private readonly pieceByInstance: Int32Array;
   private readonly pieceIds: (string | undefined)[] = [];
   private readonly freeSlots: number[] = [];
@@ -123,11 +157,14 @@ export class PieceBatch {
     const maxIndexCount = Math.max(1, Math.ceil(indexSum * indexHeadroom));
 
     this.mesh = new BatchedMesh(maxInstances, maxVertexCount, maxIndexCount, material);
-    this.mesh.perObjectFrustumCulled = true;
+    // Correctness-first: never let stale per-instance bounds cull a live piece.
+    this.mesh.perObjectFrustumCulled = false;
+    this.mesh.frustumCulled = false;
     this.mesh.sortObjects = false;
 
     this.uniqueGeometryCount = geometries.length;
     this.resolveAssetId = options.resolveAssetId ?? ((definitionId) => definitionId);
+    this.resolveBaseColor = options.resolveBaseColor;
     this.selectedColor = options.selectedColor ?? DEFAULT_SELECTED_COLOR;
     this.baseColor = options.baseColor ?? DEFAULT_BASE_COLOR;
 
@@ -193,13 +230,18 @@ export class PieceBatch {
       );
     }
 
-    const instanceId = this.mesh.addInstance(this.geometryIdForPiece(piece));
+    const geometryId = this.geometryIdForPiece(piece);
+    const instanceId = this.mesh.addInstance(geometryId);
+    // Explicitly re-assert the geometry after slot reuse: `addInstance` uses the
+    // requested id, but re-setting removes any doubt and keeps the batch honest.
+    this.mesh.setGeometryIdAt(instanceId, geometryId);
     const slot = this.allocateSlot(piece.id);
     this.pieceByInstance[instanceId] = slot;
     this.instanceByPiece.set(piece.id, instanceId);
+    this.definitionIdByPiece.set(piece.id, piece.definitionId);
 
     this.writeMatrix(instanceId, piece);
-    this.writeColor(instanceId, this.selectedIds.has(piece.id));
+    this.writeColor(instanceId, piece.definitionId, this.selectedIds.has(piece.id));
   }
 
   /** Update an existing instance's transform. Unknown ids are ignored. */
@@ -224,6 +266,7 @@ export class PieceBatch {
       this.freeSlots.push(slot);
     }
     this.instanceByPiece.delete(pieceId);
+    this.definitionIdByPiece.delete(pieceId);
     this.selectedIds.delete(pieceId);
     this.mesh.deleteInstance(instanceId);
   }
@@ -337,19 +380,20 @@ export class PieceBatch {
     if (instanceId === undefined) {
       return;
     }
-    this.writeColor(instanceId, selected);
+    const definitionId = this.definitionIdByPiece.get(pieceId) ?? '';
+    this.writeColor(instanceId, definitionId, selected);
   }
 
   private writeMatrix(instanceId: number, piece: PlacedPiece): void {
-    scratchPosition.set(piece.position[0], piece.position[1], piece.position[2]);
-    scratchScale.set(piece.scale[0], piece.scale[1], piece.scale[2]);
-    scratchQuaternion.setFromAxisAngle(Y_AXIS, piece.rotation[1]);
-    scratchMatrix.compose(scratchPosition, scratchQuaternion, scratchScale);
+    composePieceMatrix(piece, scratchMatrix);
     this.mesh.setMatrixAt(instanceId, scratchMatrix);
   }
 
-  private writeColor(instanceId: number, selected: boolean): void {
-    scratchColor.setHex(selected ? this.selectedColor : this.baseColor);
+  private writeColor(instanceId: number, definitionId: string, selected: boolean): void {
+    const hex = selected
+      ? this.selectedColor
+      : (this.resolveBaseColor?.(definitionId) ?? this.baseColor);
+    scratchColor.setHex(hex);
     this.mesh.setColorAt(instanceId, scratchColor);
   }
 

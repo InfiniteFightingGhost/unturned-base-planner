@@ -7,7 +7,7 @@
  * React StrictMode's simulated remount disposes and rebuilds cleanly). Each
  * visible floor owns its OWN `BatchedMesh` and its OWN `MeshStandardMaterial`
  * instance, while sharing the globally cached proxy geometries (one buffer per
- * distinct `model.assetId`) through `descriptorToGeometry`. The shared
+ * distinct `model.assetId`) through `pieceProxyGeometry`. The shared
  * geometries are borrowed from the module cache and are NOT disposed per batch;
  * `disposeGeometryCache()` runs once on field teardown.
  *
@@ -51,7 +51,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useThree } from '@react-three/fiber';
-import { MeshStandardMaterial, Raycaster } from 'three';
+import { Matrix4, MeshStandardMaterial, Raycaster } from 'three';
 import type { BatchedMesh, BufferGeometry, Camera, Vector2 } from 'three';
 import type { AssetDescriptor, AssetResolver, PlacedPiece, Project } from '@/domain';
 import { vec3 } from '@/domain';
@@ -66,8 +66,11 @@ import {
   sortedFloors,
   visibleFloors,
 } from '@/editor';
-import { descriptorToGeometry, disposeGeometryCache } from './proxyGeometry';
-import { PieceBatch } from './PieceBatch';
+import { pieceProxyGeometry, disposeGeometryCache } from './proxyGeometry';
+import { tierColorForDefinition } from './pieceAppearance';
+import { SelectionEdges } from './selectionEdges';
+import type { SelectionEdgeItem } from './selectionEdges';
+import { PieceBatch, composePieceMatrix } from './PieceBatch';
 import type { BatchGeometry } from './PieceBatch';
 
 const defaultAssetResolver: AssetResolver = createProxyAssetResolver(DATASET);
@@ -75,10 +78,11 @@ const defaultAssetResolver: AssetResolver = createProxyAssetResolver(DATASET);
 /** Instance budget for each per-floor batch. */
 const DEFAULT_MAX_INSTANCES = 4096;
 
-/** One floor's batch plus its independent material instance. */
+/** One floor's batch plus its independent material instance and edge overlay. */
 interface FloorBatchEntry {
   readonly batch: PieceBatch;
   readonly material: MeshStandardMaterial;
+  readonly edges: SelectionEdges;
 }
 
 export interface PieceFieldHandle {
@@ -115,7 +119,10 @@ function resolveDescriptor(
 }
 
 /** One geometry per distinct `model.assetId` in the dataset. */
-function buildGeometries(resolver: AssetResolver): BatchGeometry[] {
+function buildGeometries(resolver: AssetResolver): {
+  entries: BatchGeometry[];
+  byAssetId: Map<string, BufferGeometry>;
+} {
   const byAssetId = new Map<string, BufferGeometry>();
   for (const definition of DATASET.definitions) {
     const assetId = definition.model.assetId;
@@ -128,9 +135,19 @@ function buildGeometries(resolver: AssetResolver): BatchGeometry[] {
       dimensions: { ...definition.dimensions },
     };
     const descriptor = resolveDescriptor(resolver, assetId, fallback);
-    byAssetId.set(assetId, descriptorToGeometry(descriptor));
+    byAssetId.set(
+      assetId,
+      pieceProxyGeometry({
+        assetId,
+        category: definition.category,
+        dimensions: descriptor.dimensions,
+      }),
+    );
   }
-  return [...byAssetId].map(([assetId, geometry]) => ({ assetId, geometry }));
+  return {
+    entries: [...byAssetId].map(([assetId, geometry]) => ({ assetId, geometry })),
+    byAssetId,
+  };
 }
 
 /** Apply a ghost opacity to a floor's material, keeping flags consistent. */
@@ -154,7 +171,7 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
   const [meshes, setMeshes] = useState<BatchedMesh[]>([]);
 
   useEffect(() => {
-    const geometries = buildGeometries(resolver);
+    const { entries, byAssetId } = buildGeometries(resolver);
     const batches = new Map<string, FloorBatchEntry>();
     const meshToFloor = new Map<BatchedMesh, string>();
     batchesRef.current = batches;
@@ -166,11 +183,17 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
     const createEntry = (): FloorBatchEntry => {
       const material = new MeshStandardMaterial({
         color: 0xffffff,
-        roughness: 0.85,
-        metalness: 0.05,
+        roughness: 0.7,
+        metalness: 0.15,
       });
-      const batch = new PieceBatch(geometries, material, { maxInstances, resolveAssetId });
-      return { batch, material };
+      const batch = new PieceBatch(entries, material, {
+        maxInstances,
+        resolveAssetId,
+        resolveBaseColor: tierColorForDefinition,
+      });
+      const edges = new SelectionEdges();
+      batch.mesh.add(edges.object);
+      return { batch, material, edges };
     };
 
     const removeBatch = (floorId: string): void => {
@@ -180,6 +203,8 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       }
       batches.delete(floorId);
       meshToFloor.delete(entry.batch.mesh);
+      entry.batch.mesh.remove(entry.edges.object);
+      entry.edges.dispose();
       entry.batch.dispose();
       entry.material.dispose();
     };
@@ -187,10 +212,33 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
     const renderableOnFloor = (project: Project, floorId: string): PlacedPiece[] =>
       piecesOnFloor(project, floorId).filter((piece) => isPieceVisible(piece, project));
 
+    const rebuildEdges = (project: Project): void => {
+      const selection = new Set(editorStore.getState().selection);
+      for (const [floorId, entry] of batches) {
+        const items: SelectionEdgeItem[] = [];
+        for (const piece of renderableOnFloor(project, floorId)) {
+          if (!selection.has(piece.id)) {
+            continue;
+          }
+          const assetId = resolveAssetId(piece.definitionId);
+          if (assetId === undefined) {
+            continue;
+          }
+          const geometry = byAssetId.get(assetId);
+          if (geometry === undefined) {
+            continue;
+          }
+          items.push({ geometry, matrix: composePieceMatrix(piece, new Matrix4()) });
+        }
+        entry.edges.update(items);
+      }
+    };
+
     const syncPieces = (project: Project): void => {
       for (const [floorId, entry] of batches) {
         entry.batch.sync(renderableOnFloor(project, floorId));
       }
+      rebuildEdges(project);
     };
 
     const applySelection = (selection: readonly string[]): void => {
@@ -198,6 +246,7 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       for (const entry of batches.values()) {
         entry.batch.setSelection(ids, 'replace');
       }
+      rebuildEdges(editorStore.getState().project);
     };
 
     const reconcileFloors = (project: Project, activeFloorId: string): void => {

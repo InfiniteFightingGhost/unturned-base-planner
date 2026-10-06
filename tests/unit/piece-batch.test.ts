@@ -156,6 +156,74 @@ describe('PieceBatch', () => {
     }
   });
 
+  it('applies a per-definition base colour when a resolver is provided', () => {
+    const geometry = new BoxGeometry(1, 1, 1);
+    const material = new MeshBasicMaterial();
+    const batch = new PieceBatch([{ assetId: 'asset.a', geometry }], material, {
+      maxInstances: 4,
+      resolveBaseColor: (definitionId) => (definitionId === 'asset.a' ? 0xff0000 : 0x00ff00),
+    });
+    try {
+      batch.add(piece(defA, 'a'));
+      const tinted = new Color();
+      batch.mesh.getColorAt(0, tinted);
+      expect(tinted.getHex()).toBe(0xff0000);
+
+      batch.setSelection(new Set(['a']), 'replace');
+      const selected = new Color();
+      batch.mesh.getColorAt(0, selected);
+      expect(selected.getHex()).not.toBe(0xff0000);
+
+      batch.setSelection(new Set(), 'replace');
+      const restored = new Color();
+      batch.mesh.getColorAt(0, restored);
+      expect(restored.getHex()).toBe(0xff0000);
+    } finally {
+      batch.dispose();
+      material.dispose();
+      geometry.dispose();
+    }
+  });
+
+  it('keeps instances visible and geometry-stable across add/update/remove/re-add cycles', () => {
+    const { batch, geometries, material } = makeBatch();
+    try {
+      // Correctness-first culling: never let stale bounds hide a live instance.
+      expect(batch.mesh.perObjectFrustumCulled).toBe(false);
+      expect(batch.mesh.frustumCulled).toBe(false);
+
+      batch.add(piece(defA, 'a', 0, 0, 0));
+      expect(batch.pieceIdForBatch(0)).toBe('a');
+      expect(batch.mesh.getGeometryIdAt(0)).toBe(0);
+
+      batch.update(piece(defA, 'a', 40, 0, 40));
+      const moved = new Matrix4();
+      batch.mesh.getMatrixAt(0, moved);
+      expect(moved.elements[12]).toBeCloseTo(40, 6);
+      expect(batch.pieceIdForBatch(0)).toBe('a');
+      expect(batch.mesh.getGeometryIdAt(0)).toBe(0);
+
+      batch.remove('a');
+      expect(batch.has('a')).toBe(false);
+      expect(batch.pieceIdForBatch(0)).toBeNull();
+
+      batch.add(piece(defB, 'a', -3, 0, -3));
+      expect(batch.has('a')).toBe(true);
+      expect(batch.pieceIdForBatch(0)).toBe('a');
+      expect(batch.mesh.getGeometryIdAt(0)).toBe(1);
+
+      batch.sync([]);
+      expect(batch.instanceCount).toBe(0);
+      expect(batch.pieceIdForBatch(0)).toBeNull();
+    } finally {
+      batch.dispose();
+      material.dispose();
+      for (const geometry of geometries) {
+        geometry.dispose();
+      }
+    }
+  });
+
   it('throws a clear error when the instance budget is exceeded', () => {
     const geometry = new BoxGeometry(1, 1, 1);
     const material = new MeshBasicMaterial();
