@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CURRENT_SCHEMA_VERSION,
   PrefabSchema,
   createEmptyProject,
   parseProject,
@@ -43,7 +44,7 @@ describe('prefab schema', () => {
     expect(prefab.pieces[0]?.metadata).toEqual({ tags: [] });
   });
 
-  it('migrates a v1 project to v2 with an empty prefab library', () => {
+  it('migrates a v1 project to the current version with an empty prefab library', () => {
     const v1 = {
       schemaVersion: 1,
       metadata: { id: 'p1', name: 'Base', createdAt: ISO, updatedAt: ISO },
@@ -57,11 +58,12 @@ describe('prefab schema', () => {
 
     const migrated = parseProject(v1);
 
-    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.schemaVersion).toBe(CURRENT_SCHEMA_VERSION);
     expect(migrated.prefabs).toEqual([]);
+    expect(migrated.inventory).toEqual([]);
   });
 
-  it('round-trips a v2 project containing a prefab through serialize/parse', () => {
+  it('round-trips a project containing a prefab through serialize/parse', () => {
     const base = createEmptyProject('Base', { id: 'p1', now: ISO });
     const withPrefab = { ...base, prefabs: [makePrefab()] };
 

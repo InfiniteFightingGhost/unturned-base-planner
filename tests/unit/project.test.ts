@@ -74,9 +74,10 @@ describe('migration', () => {
     expect(migrated.measurements).toEqual([]);
     expect(migrated.pieces).toEqual([]);
     expect(migrated.prefabs).toEqual([]);
+    expect(migrated.inventory).toEqual([]);
   });
 
-  it('migrates a v1 project to v2 by adding an empty prefab library', () => {
+  it('migrates a v1 project to v3 by adding prefabs and inventory', () => {
     const legacy = {
       schemaVersion: 1,
       metadata: { id: 'legacy', name: 'Legacy', createdAt: ISO, updatedAt: ISO },
@@ -90,7 +91,28 @@ describe('migration', () => {
 
     const migrated = parseProject(legacy);
 
-    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.schemaVersion).toBe(CURRENT_SCHEMA_VERSION);
+    expect(migrated.prefabs).toEqual([]);
+    expect(migrated.inventory).toEqual([]);
+  });
+
+  it('migrates a v2 project to v3 by adding an empty inventory', () => {
+    const legacy = {
+      schemaVersion: 2,
+      metadata: { id: 'legacy', name: 'Legacy', createdAt: ISO, updatedAt: ISO },
+      settings: {},
+      floors: [],
+      zones: [],
+      pieces: [],
+      measurements: [],
+      annotations: [],
+      prefabs: [],
+    };
+
+    const migrated = parseProject(legacy);
+
+    expect(migrated.schemaVersion).toBe(3);
+    expect(migrated.inventory).toEqual([]);
     expect(migrated.prefabs).toEqual([]);
   });
 

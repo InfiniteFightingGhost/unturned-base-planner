@@ -97,6 +97,11 @@ export {
 } from './measurement-commands';
 
 export {
+  createSetInventoryCommand,
+  createSetInventoryResourceCommand,
+} from './inventory-commands';
+
+export {
   area,
   computeMeasurement,
   distance,

@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import type { PieceCategory } from '@/domain';
 import { useEditorStore } from '@/editor';
 import { DATASET } from '@/data';
+import { computeConstructionProgress } from '@/resources';
 
 export function StatusBar() {
   const pieces = useEditorStore((state) => state.project.pieces);
@@ -30,11 +31,20 @@ export function StatusBar() {
 
   const activeFloor = floors.find((floor) => floor.id === activeFloorId);
 
+  const progress = useMemo(() => computeConstructionProgress(pieces), [pieces]);
+
   return (
     <footer className="status-bar" data-testid="status-bar">
       <span className="status-item">
         Pieces:{' '}
         <strong data-testid="piece-count">{pieces.length}</strong>
+      </span>
+      <span className="status-item">
+        Built:{' '}
+        <strong data-testid="status-built">
+          {progress.built}/{progress.total}
+        </strong>{' '}
+        ({progress.percentComplete}%)
       </span>
       <span className="status-item">
         Selected: <strong data-testid="selected-count">{selection.length}</strong>

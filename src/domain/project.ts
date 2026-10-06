@@ -3,6 +3,7 @@ import { IdSchema, createId } from './ids';
 import { Vec3Schema } from './primitives';
 import { PlacedPieceSchema, canonicalizePlacedPiece } from './placed-piece';
 import { PrefabSchema, canonicalizePrefab } from './prefab';
+import { ResourceAmountSchema } from './resources';
 import { migrate } from './migration';
 
 /**
@@ -13,7 +14,7 @@ import { migrate } from './migration';
  * mutates a project in place.
  */
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 export const FloorSchema = z.object({
   id: IdSchema,
@@ -97,6 +98,7 @@ export const ProjectSchema = z.object({
   measurements: z.array(MeasurementSchema).default([]),
   annotations: z.array(AnnotationSchema).default([]),
   prefabs: z.array(PrefabSchema).default([]),
+  inventory: z.array(ResourceAmountSchema).default([]),
 });
 
 export type Project = z.infer<typeof ProjectSchema>;
@@ -139,6 +141,7 @@ export function createEmptyProject(name: string, opts: CreateProjectOptions = {}
     measurements: [],
     annotations: [],
     prefabs: [],
+    inventory: [],
   };
   return ProjectSchema.parse(candidate);
 }

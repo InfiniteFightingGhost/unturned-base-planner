@@ -72,9 +72,24 @@ function migrateV1ToV2(raw: Record<string, unknown>): Record<string, unknown> {
   return next;
 }
 
+/**
+ * Version 2 had no inventory. Version 3 adds `inventory`, the raw-material
+ * counts the player already owns. The migration is additive: every other field
+ * is preserved untouched and no existing inventory is invented.
+ */
+function migrateV2ToV3(raw: Record<string, unknown>): Record<string, unknown> {
+  const next: Record<string, unknown> = { ...raw };
+  if (next.inventory === undefined) {
+    next.inventory = [];
+  }
+  next.schemaVersion = 3;
+  return next;
+}
+
 export const migrations: Record<number, Migration> = {
   0: migrateV0ToV1,
   1: migrateV1ToV2,
+  2: migrateV2ToV3,
 };
 
 function readVersion(raw: Record<string, unknown>): number {

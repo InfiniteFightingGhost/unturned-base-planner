@@ -28,3 +28,14 @@ export type {
   ResourceCalculator,
   ResourceCalculatorDataset,
 } from './calculator';
+
+export {
+  filterPiecesByFloor,
+  filterPiecesByZone,
+  filterPiecesByBuildState,
+  filterUnbuiltPieces,
+  computeConstructionProgress,
+  computeRemainingMaterials,
+  computeInventoryBalance,
+} from './filters';
+export type { ConstructionProgress, InventoryBalance } from './filters';

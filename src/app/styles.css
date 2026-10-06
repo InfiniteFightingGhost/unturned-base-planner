@@ -939,3 +939,226 @@ body {
 .blueprint-label-measure {
   color: #fbbf24;
 }
+
+/* ------------------------------------------------------------------ */
+/* Resources                                                           */
+/* ------------------------------------------------------------------ */
+
+.resource-panel,
+.inventory-panel,
+.progress-panel {
+  flex: 0 0 auto;
+  max-height: 45%;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.resource-panel-header,
+.inventory-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.resource-controls {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.resource-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.resource-field-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.resource-groups {
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-group {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.resource-group-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.resource-group-title {
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.resource-group-count {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.resource-amounts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resource-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+}
+
+.resource-amount-name {
+  color: var(--muted);
+}
+
+.resource-amount-value {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-empty {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* Inventory                                                           */
+/* ------------------------------------------------------------------ */
+
+.inventory-table-wrap {
+  overflow-x: auto;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+
+.inventory-table th,
+.inventory-table td {
+  padding: 0.25rem 0.4rem;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.inventory-table thead th {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.inventory-table th:first-child,
+.inventory-table td:first-child,
+.inventory-name {
+  text-align: left;
+}
+
+.inventory-name {
+  color: var(--text);
+}
+
+.inventory-input {
+  width: 4.5rem;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.72rem;
+  text-align: right;
+  color: var(--text);
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.inventory-number {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.inventory-table tfoot th,
+.inventory-table tfoot td {
+  font-weight: 600;
+  border-bottom: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------------ */
+/* Progress                                                            */
+/* ------------------------------------------------------------------ */
+
+.progress-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.progress-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.progress-stat strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.15s ease-out;
+}
+
+.progress-floor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.progress-floor-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.progress-floor-name {
+  color: var(--text);
+}
+
+.progress-floor-percent {
+  font-variant-numeric: tabular-nums;
+}

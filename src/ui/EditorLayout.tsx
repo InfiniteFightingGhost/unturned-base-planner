@@ -24,6 +24,9 @@ import { PatternPanel } from './PatternPanel';
 import { PrefabPanel } from './PrefabPanel';
 import { BlueprintPanel } from './BlueprintPanel';
 import { MeasurementPanel } from './MeasurementPanel';
+import { ResourcePanel } from './ResourcePanel';
+import { InventoryPanel } from './InventoryPanel';
+import { ProgressPanel } from './ProgressPanel';
 import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
@@ -51,6 +54,9 @@ export function EditorLayout() {
           <PrefabPanel />
           <BlueprintPanel />
           <MeasurementPanel />
+          <ResourcePanel />
+          <InventoryPanel />
+          <ProgressPanel />
         </div>
 
         <section className="viewport-panel" aria-label="3D viewport">

@@ -35,6 +35,8 @@ export function Toolbar() {
   const redo = useEditorStore((state) => state.redo);
   const deleteSelected = useEditorStore((state) => state.deleteSelected);
   const duplicateSelected = useEditorStore((state) => state.duplicateSelected);
+  const selectionCount = useEditorStore((state) => state.selection.length);
+  const setSelectedBuildState = useEditorStore((state) => state.setSelectedBuildState);
   const cameraMode = useEngineStore((state) => state.cameraMode);
   const setCameraMode = useEngineStore((state) => state.setCameraMode);
 
@@ -92,6 +94,27 @@ export function Toolbar() {
           onClick={() => deleteSelected()}
         >
           Delete
+        </button>
+      </div>
+
+      <div className="toolbar-group" role="group" aria-label="Build state">
+        <button
+          type="button"
+          className="tool-button"
+          data-testid="mark-built"
+          disabled={selectionCount === 0}
+          onClick={() => setSelectedBuildState('built')}
+        >
+          Mark built
+        </button>
+        <button
+          type="button"
+          className="tool-button"
+          data-testid="mark-planned"
+          disabled={selectionCount === 0}
+          onClick={() => setSelectedBuildState('planned')}
+        >
+          Mark planned
         </button>
       </div>
 

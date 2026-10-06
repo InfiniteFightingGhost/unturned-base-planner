@@ -21,6 +21,7 @@ import type {
   PlacedPiece,
   Prefab,
   Project,
+  ResourceAmount,
   Vec3,
   Zone,
 } from '@/domain';
@@ -47,6 +48,10 @@ import {
   createSetFloorVisibleCommand,
 } from './floor-commands';
 import { floorById, nextFloorElevation, sortedFloors } from './floors';
+import {
+  createSetInventoryCommand,
+  createSetInventoryResourceCommand,
+} from './inventory-commands';
 import { measurementFromPoints } from './measurement';
 import {
   createAddMeasurementCommand,
@@ -177,6 +182,13 @@ export interface EditorState {
   deleteMeasurement(id: string): void;
   /** Remove every measurement in a single undo step. No-op when already empty. */
   clearMeasurements(): void;
+
+  /** Replace the whole stored inventory in one undoable step. */
+  setInventory(amounts: readonly ResourceAmount[]): void;
+  /** Set one raw resource's owned amount. `0` (or less) removes it. Undoable. */
+  setInventoryResource(resourceId: string, amount: number): void;
+  /** Empty the stored inventory in one undoable step. No-op when already empty. */
+  clearInventory(): void;
 }
 
 export type EditorStore = StoreApi<EditorState>;
@@ -630,6 +642,21 @@ export function createEditorStore(initialProject: Project): EditorStore {
             return;
           }
           execute(createClearMeasurementsCommand());
+        },
+
+        setInventory: (amounts) => {
+          execute(createSetInventoryCommand(amounts));
+        },
+
+        setInventoryResource: (resourceId, amount) => {
+          execute(createSetInventoryResourceCommand(resourceId, amount));
+        },
+
+        clearInventory: () => {
+          if (get().project.inventory.length === 0) {
+            return;
+          }
+          execute(createSetInventoryCommand([]));
         },
       };
     }),
