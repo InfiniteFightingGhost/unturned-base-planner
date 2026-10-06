@@ -13,7 +13,16 @@
  */
 
 import { createEmptyProject, createId, History } from '@/domain';
-import type { BuildState, Command, Floor, PlacedPiece, Prefab, Project, Vec3 } from '@/domain';
+import type {
+  BuildState,
+  Command,
+  Floor,
+  MeasurementKind,
+  PlacedPiece,
+  Prefab,
+  Project,
+  Vec3,
+} from '@/domain';
 import { DEFAULT_GRID_CONFIG } from '@/engine';
 import type { GridConfig } from '@/engine';
 import { useStore } from 'zustand';
@@ -35,6 +44,12 @@ import {
   createSetFloorVisibleCommand,
 } from './floor-commands';
 import { floorById, nextFloorElevation, sortedFloors } from './floors';
+import { measurementFromPoints } from './measurement';
+import {
+  createAddMeasurementCommand,
+  createClearMeasurementsCommand,
+  createDeleteMeasurementCommand,
+} from './measurement-commands';
 import { instantiatePrefab as instantiatePrefabPieces, prefabFromPieces } from './prefab';
 import {
   createDeletePrefabCommand,
@@ -111,6 +126,13 @@ export interface EditorState {
    * floor origin `[0, elevation, 0]` and `floorId` is the active floor.
    */
   instantiatePrefab(prefabId: string, position?: Vec3, floorId?: string): string[];
+
+  /** Add a measurement between two points through one undoable command. */
+  addMeasurement(kind: MeasurementKind, points: readonly [Vec3, Vec3]): void;
+  /** Delete a measurement by id. Unknown ids are ignored. Undoable. */
+  deleteMeasurement(id: string): void;
+  /** Remove every measurement in a single undo step. No-op when already empty. */
+  clearMeasurements(): void;
 }
 
 export type EditorStore = StoreApi<EditorState>;
@@ -388,6 +410,25 @@ export function createEditorStore(initialProject: Project): EditorStore {
           const ids = placed.map((piece) => piece.id);
           set({ selection: ids });
           return ids;
+        },
+
+        addMeasurement: (kind, points) => {
+          const measurement = measurementFromPoints(kind, points);
+          execute(createAddMeasurementCommand(measurement));
+        },
+
+        deleteMeasurement: (id) => {
+          if (!get().project.measurements.some((measurement) => measurement.id === id)) {
+            return;
+          }
+          execute(createDeleteMeasurementCommand(id));
+        },
+
+        clearMeasurements: () => {
+          if (get().project.measurements.length === 0) {
+            return;
+          }
+          execute(createClearMeasurementsCommand());
         },
       };
     }),

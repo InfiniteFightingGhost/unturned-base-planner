@@ -298,11 +298,20 @@ body {
   flex-direction: column;
   min-height: 0;
   background: var(--panel);
+  overflow-y: auto;
 }
 
+/*
+ * The piece library is the primary control. Give it a definite, usable height
+ * and forbid it from shrinking, otherwise the newer panels below (which are all
+ * `flex: 0 0 auto`) collectively starve it to zero height and its items overflow
+ * underneath the floor panel, where they are covered and unclickable. The
+ * sidebar itself scrolls when the stacked panels exceed the available height.
+ */
 .editor-sidebar > .piece-library {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 0 0 auto;
+  height: 45%;
+  min-height: 220px;
 }
 
 .floor-panel {
@@ -617,4 +626,102 @@ body {
 
 .prefab-action:hover:not(:disabled) {
   border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Blueprint                                                           */
+/* ------------------------------------------------------------------ */
+
+.blueprint-panel,
+.measurement-panel {
+  flex: 0 0 auto;
+  max-height: 40%;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.blueprint-panel-header,
+.measurement-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.blueprint-body,
+.measurement-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.blueprint-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.measurement-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.measurement-field-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.measurement-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.measurement-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.measurement-item-kind {
+  min-width: 4.5rem;
+  font-size: 0.72rem;
+  text-transform: capitalize;
+  color: var(--muted);
+}
+
+.measurement-item-value {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.measurement-item .prefab-action {
+  flex: 0 0 auto;
+}
+
+.measurement-label,
+.blueprint-label {
+  padding: 0.1rem 0.35rem;
+  font-size: 0.68rem;
+  color: var(--text);
+  background: rgba(15, 17, 21, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.blueprint-label-floor {
+  color: #9fb3d1;
+}
+
+.blueprint-label-measure {
+  color: #fbbf24;
 }

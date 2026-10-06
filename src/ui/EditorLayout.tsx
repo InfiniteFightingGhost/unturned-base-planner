@@ -8,11 +8,12 @@
  */
 
 import { useRef } from 'react';
-import { PieceField, Viewport } from '@/engine';
+import { BlueprintOverlay, PieceField, Viewport } from '@/engine';
 import type { PieceFieldHandle } from '@/engine';
 import { PlacementController } from '@/editor/tools/PlacementController';
 import { SelectionController } from '@/editor/tools/SelectionController';
 import { TransformController } from '@/editor/tools/TransformController';
+import { MeasurementController } from '@/editor/tools/MeasurementController';
 import { PieceFieldContext } from '@/editor/tools/PieceFieldContext';
 import type { PieceFieldRef } from '@/editor/tools/PieceFieldContext';
 import { useGlobalShortcuts } from '@/editor/tools/shortcuts';
@@ -20,6 +21,8 @@ import { PieceLibrary } from './PieceLibrary';
 import { FloorSelector } from './FloorSelector';
 import { PatternPanel } from './PatternPanel';
 import { PrefabPanel } from './PrefabPanel';
+import { BlueprintPanel } from './BlueprintPanel';
+import { MeasurementPanel } from './MeasurementPanel';
 import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
@@ -44,15 +47,19 @@ export function EditorLayout() {
           <FloorSelector />
           <PatternPanel />
           <PrefabPanel />
+          <BlueprintPanel />
+          <MeasurementPanel />
         </div>
 
         <section className="viewport-panel" aria-label="3D viewport">
           <Viewport>
             <PieceFieldContext.Provider value={contextRef}>
               <PieceField ref={pieceFieldRef} />
+              <BlueprintOverlay />
               <PlacementController />
               <SelectionController />
               <TransformController />
+              <MeasurementController />
             </PieceFieldContext.Provider>
           </Viewport>
         </section>

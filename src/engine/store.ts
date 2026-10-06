@@ -18,6 +18,8 @@ import type { GridConfig } from './grid/gridConfig';
 export interface EngineState {
   grid: GridConfig;
   cameraMode: CameraMode;
+  /** Whether the blueprint (outline) overlay is drawn. UI-only, never persisted. */
+  blueprint: boolean;
   setGridConfig: (patch: Partial<GridConfig>) => void;
   toggleGrid: () => void;
   setGridVisible: (visible: boolean) => void;
@@ -26,12 +28,15 @@ export interface EngineState {
   setSnapStep: (step: number) => void;
   setPrecision: (precision: number) => void;
   setCameraMode: (mode: CameraMode) => void;
+  toggleBlueprint: () => void;
+  setBlueprint: (enabled: boolean) => void;
 }
 
 export const useEngineStore = create<EngineState>()(
   subscribeWithSelector((set) => ({
     grid: { ...DEFAULT_GRID_CONFIG },
     cameraMode: 'ORBIT',
+    blueprint: false,
     setGridConfig: (patch) => set((state) => ({ grid: { ...state.grid, ...patch } })),
     toggleGrid: () => set((state) => ({ grid: { ...state.grid, visible: !state.grid.visible } })),
     setGridVisible: (visible) => set((state) => ({ grid: { ...state.grid, visible } })),
@@ -41,6 +46,8 @@ export const useEngineStore = create<EngineState>()(
     setSnapStep: (snapStep) => set((state) => ({ grid: { ...state.grid, snapStep } })),
     setPrecision: (precision) => set((state) => ({ grid: { ...state.grid, precision } })),
     setCameraMode: (cameraMode) => set({ cameraMode }),
+    toggleBlueprint: () => set((state) => ({ blueprint: !state.blueprint })),
+    setBlueprint: (blueprint) => set({ blueprint }),
   })),
 );
 
@@ -50,4 +57,8 @@ export function selectGrid(state: EngineState): GridConfig {
 
 export function selectCameraMode(state: EngineState): CameraMode {
   return state.cameraMode;
+}
+
+export function selectBlueprint(state: EngineState): boolean {
+  return state.blueprint;
 }

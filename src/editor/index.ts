@@ -68,6 +68,24 @@ export {
   createSavePrefabCommand,
 } from './prefab-commands';
 
+export {
+  createAddMeasurementCommand,
+  createClearMeasurementsCommand,
+  createDeleteMeasurementCommand,
+} from './measurement-commands';
+
+export {
+  area,
+  computeMeasurement,
+  distance,
+  formatMeasurementValue,
+  height,
+  measurementFromPoints,
+  perimeter,
+  width,
+} from './measurement';
+export type { MeasurementIdFactory } from './measurement';
+
 export { clonePrefab, instantiatePrefab, prefabFromPieces } from './prefab';
 
 export {

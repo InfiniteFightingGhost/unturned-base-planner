@@ -40,7 +40,7 @@ export {
 } from './grid/gridConfig';
 export type { GridConfig } from './grid/gridConfig';
 
-export { useEngineStore, selectCameraMode, selectGrid } from './store';
+export { useEngineStore, selectBlueprint, selectCameraMode, selectGrid } from './store';
 export type { EngineState } from './store';
 
 export {
@@ -56,3 +56,7 @@ export type {
 } from './rendering/PieceBatch';
 export { PieceField } from './rendering/PieceField';
 export type { PieceFieldHandle, PieceFieldProps } from './rendering/PieceField';
+
+export { BlueprintOverlay } from './blueprint/BlueprintOverlay';
+export { activeFloorPieces, boxEdgesFor } from './blueprint/blueprintMath';
+export type { Segment } from './blueprint/blueprintMath';

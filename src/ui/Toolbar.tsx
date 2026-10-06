@@ -17,6 +17,7 @@ const TOOLS: ReadonlyArray<{ id: ActiveTool; label: string }> = [
   { id: 'place', label: 'Place' },
   { id: 'move', label: 'Move' },
   { id: 'rotate', label: 'Rotate' },
+  { id: 'measure', label: 'Measure' },
 ];
 
 const CAMERA_VIEWS: ReadonlyArray<{ mode: CameraMode; label: string }> = [
