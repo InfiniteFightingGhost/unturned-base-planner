@@ -7,7 +7,7 @@ describe('ProxyAssetResolver', () => {
     const descriptor = await resolver.resolve('asset.wall');
     expect(descriptor.kind).toBe('box');
     expect(descriptor.id).toBe('asset.wall');
-    expect(descriptor.dimensions).toEqual({ width: 4.0, height: 4.25, depth: 0.5 });
+    expect(descriptor.dimensions).toEqual({ width: 6.0, height: 4.25, depth: 0.5 });
   });
 
   it('returns a fallback box for an unknown asset without throwing', async () => {

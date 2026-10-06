@@ -1,6 +1,8 @@
 import { DEFAULT_ALLOWED_ROTATIONS } from '@/domain';
 import type {
   CraftingRecipe,
+  EBuild,
+  EConstruct,
   PieceCategory,
   PieceDefinition,
   PieceDimensions,
@@ -10,44 +12,45 @@ import type {
 /**
  * Piece definitions for every structure and barricade, grouped by material tier.
  *
- * PROXY DIMENSIONS
- * ----------------
- * The values in `PROXY_DIMENSIONS` are documented estimates, not extracted
- * asset bounds. They are derived from SDG's structural slot metrics (the
- * vanilla building grid is nominally a 4 m square) together with the observed
- * proportions of the corresponding vanilla meshes. They exist so the resolver
- * can hand the renderer a believable box silhouette when no real model is
- * available; replace them wholesale once real bounds are measured.
+ * GAME-ACCURATE DIMENSIONS
+ * ------------------------
+ * The values in `PROXY_DIMENSIONS` are game-accurate approximations derived
+ * from the U3-SDK `HousingConnections` constants (`EDGE_LENGTH = 6`,
+ * `WALL_HEIGHT = 4.25`, `ROOF_THICKNESS = 0.5`), not extracted asset bounds.
+ * They exist so the resolver can hand the renderer a believable box silhouette
+ * when no real model is available. Every tier of a piece family shares the same
+ * box, because the vanilla meshes share the same structural slot footprint.
  *
  * `width x height x depth`, in metres.
  */
 export const PROXY_DIMENSIONS = {
-  floor: { width: 4.0, height: 0.2, depth: 4.0 },
-  triFloor: { width: 4.0, height: 0.2, depth: 4.0 },
-  wall: { width: 4.0, height: 4.25, depth: 0.5 },
-  window: { width: 4.0, height: 4.25, depth: 0.5 },
-  doorway: { width: 4.0, height: 4.25, depth: 0.5 },
-  garage: { width: 4.0, height: 4.25, depth: 0.5 },
-  rampWall: { width: 4.0, height: 4.25, depth: 0.5 },
+  floor: { width: 6.0, height: 0.5, depth: 6.0 },
+  triFloor: { width: 6.0, height: 0.5, depth: 6.0 },
+  wall: { width: 6.0, height: 4.25, depth: 0.5 },
+  window: { width: 6.0, height: 4.25, depth: 0.5 },
+  doorway: { width: 6.0, height: 4.25, depth: 0.5 },
+  garage: { width: 6.0, height: 4.25, depth: 0.5 },
+  rampWall: { width: 6.0, height: 4.25, depth: 0.5 },
   pillar: { width: 0.5, height: 4.25, depth: 0.5 },
   post: { width: 0.5, height: 2.125, depth: 0.5 },
-  ramp: { width: 4.0, height: 4.25, depth: 4.0 },
-  stair: { width: 4.0, height: 4.25, depth: 4.0 },
-  roof: { width: 4.0, height: 0.2, depth: 4.0 },
-  roofVariant: { width: 4.0, height: 0.2, depth: 4.0 },
-  hole: { width: 4.0, height: 0.2, depth: 4.0 },
+  ramp: { width: 6.0, height: 4.25, depth: 6.0 },
+  stair: { width: 6.0, height: 4.25, depth: 6.0 },
+  roof: { width: 6.0, height: 0.5, depth: 6.0 },
+  roofVariant: { width: 6.0, height: 0.5, depth: 6.0 },
+  hole: { width: 6.0, height: 4.25, depth: 0.5 },
   door: { width: 2.5, height: 2.75, depth: 0.15 },
   doubleDoor: { width: 4.0, height: 3.75, depth: 0.15 },
   hatch: { width: 1.8, height: 0.15, depth: 1.8 },
   shutter: { width: 2.5, height: 2.75, depth: 0.15 },
-  fortification: { width: 2.5, height: 2.75, depth: 0.1 },
-  rampart: { width: 4.0, height: 1.0, depth: 0.5 },
+  fortification: { width: 2.5, height: 2.75, depth: 0.15 },
+  rampart: { width: 6.0, height: 1.8, depth: 0.5 },
   barricade: { width: 2.0, height: 1.0, depth: 0.2 },
   sandbag: { width: 1.5, height: 0.75, depth: 1.0 },
-  fence: { width: 4.0, height: 1.0, depth: 0.2 },
+  fence: { width: 6.0, height: 1.0, depth: 0.2 },
   ladder: { width: 0.6, height: 4.0, depth: 0.2 },
-  spikes: { width: 4.0, height: 0.5, depth: 1.0 },
+  spikes: { width: 6.0, height: 0.5, depth: 1.0 },
   crate: { width: 1.5, height: 1.5, depth: 1.5 },
+  caltrop: { width: 0.5, height: 0.2, depth: 0.5 },
   doorFrame: { width: 2.5, height: 2.75, depth: 0.15 },
   garageFrame: { width: 4.0, height: 3.75, depth: 0.15 },
 } as const satisfies Record<string, PieceDimensions>;
@@ -83,55 +86,59 @@ interface StructureSpec {
   readonly dimensions: PieceDimensions;
   readonly cost: number;
   readonly outputAmount: number;
+  /** Explicit EConstruct for a structure piece. Absent for barricade-style frames. */
+  readonly construct?: EConstruct;
+  /** Explicit EBuild for a barricade-style frame that lives in a structure tier. */
+  readonly build?: EBuild;
 }
 
 const WOOD_STRUCTURES: StructureSpec[] = [
-  { key: 'floor', name: 'Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.floor, cost: 3, outputAmount: 1 },
-  { key: 'tri_floor', name: 'Triangular Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.triFloor, cost: 2, outputAmount: 1 },
-  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 3, outputAmount: 1 },
-  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 3, outputAmount: 1 },
-  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 3, outputAmount: 1 },
-  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 3, outputAmount: 1 },
-  { key: 'hole', name: 'Hole', category: 'floor', dimensions: PROXY_DIMENSIONS.hole, cost: 3, outputAmount: 1 },
-  { key: 'roof', name: 'Roof', category: 'roof', dimensions: PROXY_DIMENSIONS.roof, cost: 3, outputAmount: 1 },
-  { key: 'tri_roof', name: 'Triangular Roof', category: 'roof_variant', dimensions: PROXY_DIMENSIONS.roofVariant, cost: 2, outputAmount: 1 },
-  { key: 'ramp', name: 'Ramp', category: 'ramp', dimensions: PROXY_DIMENSIONS.ramp, cost: 3, outputAmount: 1 },
-  { key: 'stairs', name: 'Stairs', category: 'stair', dimensions: PROXY_DIMENSIONS.stair, cost: 3, outputAmount: 1 },
-  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 2, outputAmount: 1 },
-  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 2, outputAmount: 2 },
-  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 3, outputAmount: 2 },
-  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 3, outputAmount: 1 },
+  { key: 'floor', name: 'Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.floor, cost: 3, outputAmount: 1, construct: 'FLOOR' },
+  { key: 'tri_floor', name: 'Triangular Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.triFloor, cost: 2, outputAmount: 1, construct: 'FLOOR_POLY' },
+  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'hole', name: 'Hole', category: 'floor', dimensions: PROXY_DIMENSIONS.hole, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'roof', name: 'Roof', category: 'roof', dimensions: PROXY_DIMENSIONS.roof, cost: 3, outputAmount: 1, construct: 'ROOF' },
+  { key: 'tri_roof', name: 'Triangular Roof', category: 'roof_variant', dimensions: PROXY_DIMENSIONS.roofVariant, cost: 2, outputAmount: 1, construct: 'ROOF_POLY' },
+  { key: 'ramp', name: 'Ramp', category: 'ramp', dimensions: PROXY_DIMENSIONS.ramp, cost: 3, outputAmount: 1, construct: 'ROOF' },
+  { key: 'stairs', name: 'Stairs', category: 'stair', dimensions: PROXY_DIMENSIONS.stair, cost: 3, outputAmount: 1, construct: 'ROOF' },
+  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 2, outputAmount: 1, construct: 'PILLAR' },
+  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 2, outputAmount: 2, construct: 'POST' },
+  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 3, outputAmount: 2, construct: 'RAMPART' },
+  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 3, outputAmount: 1, construct: 'WALL' },
 ];
 
 const METAL_STRUCTURES: StructureSpec[] = [
-  { key: 'floor', name: 'Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.floor, cost: 5, outputAmount: 1 },
-  { key: 'tri_floor', name: 'Triangular Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.triFloor, cost: 3, outputAmount: 1 },
-  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 5, outputAmount: 1 },
-  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 5, outputAmount: 1 },
-  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 5, outputAmount: 1 },
-  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 5, outputAmount: 1 },
-  { key: 'hole', name: 'Hole', category: 'floor', dimensions: PROXY_DIMENSIONS.hole, cost: 5, outputAmount: 1 },
-  { key: 'roof', name: 'Roof', category: 'roof', dimensions: PROXY_DIMENSIONS.roof, cost: 5, outputAmount: 1 },
-  { key: 'tri_roof', name: 'Triangular Roof', category: 'roof_variant', dimensions: PROXY_DIMENSIONS.roofVariant, cost: 3, outputAmount: 1 },
-  { key: 'ramp', name: 'Ramp', category: 'ramp', dimensions: PROXY_DIMENSIONS.ramp, cost: 5, outputAmount: 1 },
-  { key: 'stairs', name: 'Stairs', category: 'stair', dimensions: PROXY_DIMENSIONS.stair, cost: 5, outputAmount: 1 },
-  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 3, outputAmount: 1 },
-  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 3, outputAmount: 2 },
-  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 5, outputAmount: 2 },
-  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 5, outputAmount: 1 },
+  { key: 'floor', name: 'Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.floor, cost: 5, outputAmount: 1, construct: 'FLOOR' },
+  { key: 'tri_floor', name: 'Triangular Floor', category: 'floor', dimensions: PROXY_DIMENSIONS.triFloor, cost: 3, outputAmount: 1, construct: 'FLOOR_POLY' },
+  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 5, outputAmount: 1, construct: 'WALL' },
+  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 5, outputAmount: 1, construct: 'WALL' },
+  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 5, outputAmount: 1, construct: 'WALL' },
+  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 5, outputAmount: 1, construct: 'WALL' },
+  { key: 'hole', name: 'Hole', category: 'floor', dimensions: PROXY_DIMENSIONS.hole, cost: 5, outputAmount: 1, construct: 'WALL' },
+  { key: 'roof', name: 'Roof', category: 'roof', dimensions: PROXY_DIMENSIONS.roof, cost: 5, outputAmount: 1, construct: 'ROOF' },
+  { key: 'tri_roof', name: 'Triangular Roof', category: 'roof_variant', dimensions: PROXY_DIMENSIONS.roofVariant, cost: 3, outputAmount: 1, construct: 'ROOF_POLY' },
+  { key: 'ramp', name: 'Ramp', category: 'ramp', dimensions: PROXY_DIMENSIONS.ramp, cost: 5, outputAmount: 1, construct: 'ROOF' },
+  { key: 'stairs', name: 'Stairs', category: 'stair', dimensions: PROXY_DIMENSIONS.stair, cost: 5, outputAmount: 1, construct: 'ROOF' },
+  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 3, outputAmount: 1, construct: 'PILLAR' },
+  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 3, outputAmount: 2, construct: 'POST' },
+  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 5, outputAmount: 2, construct: 'RAMPART' },
+  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 5, outputAmount: 1, construct: 'WALL' },
 ];
 
 const BRICK_STRUCTURES: StructureSpec[] = [
-  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 3, outputAmount: 1 },
-  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 3, outputAmount: 1 },
-  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 3, outputAmount: 1 },
-  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 3, outputAmount: 1 },
-  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 3, outputAmount: 1 },
-  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 3, outputAmount: 2 },
-  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 2, outputAmount: 1 },
-  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 2, outputAmount: 2 },
-  { key: 'doorframe', name: 'Doorframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorFrame, cost: 2, outputAmount: 1 },
-  { key: 'garageframe', name: 'Garageframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.garageFrame, cost: 2, outputAmount: 1 },
+  { key: 'wall', name: 'Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.wall, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'window', name: 'Window', category: 'window', dimensions: PROXY_DIMENSIONS.window, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'doorway', name: 'Doorway', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorway, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'garage', name: 'Garage', category: 'doorway', dimensions: PROXY_DIMENSIONS.garage, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'ramp_wall', name: 'Ramp Wall', category: 'wall', dimensions: PROXY_DIMENSIONS.rampWall, cost: 3, outputAmount: 1, construct: 'WALL' },
+  { key: 'rampart', name: 'Rampart', category: 'railing', dimensions: PROXY_DIMENSIONS.rampart, cost: 3, outputAmount: 2, construct: 'RAMPART' },
+  { key: 'pillar', name: 'Pillar', category: 'pillar', dimensions: PROXY_DIMENSIONS.pillar, cost: 2, outputAmount: 1, construct: 'PILLAR' },
+  { key: 'post', name: 'Post', category: 'post', dimensions: PROXY_DIMENSIONS.post, cost: 2, outputAmount: 2, construct: 'POST' },
+  { key: 'doorframe', name: 'Doorframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorFrame, cost: 2, outputAmount: 1, build: 'FREEFORM' },
+  { key: 'garageframe', name: 'Garageframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.garageFrame, cost: 2, outputAmount: 1, build: 'FREEFORM' },
 ];
 
 type WoodInputKind = 'plank' | 'stick' | 'scrap.metal' | 'tape';
@@ -143,20 +150,21 @@ interface WoodBarricadeSpec {
   readonly dimensions: PieceDimensions;
   readonly assetKey: string;
   readonly outputAmount: number;
+  readonly build: EBuild;
   readonly inputs: ReadonlyArray<{ readonly kind: WoodInputKind; readonly amount: number }>;
 }
 
 const WOOD_BARRICADES: WoodBarricadeSpec[] = [
-  { idBase: 'door.wood', name: 'Wooden Door', category: 'door', dimensions: PROXY_DIMENSIONS.door, assetKey: 'door', outputAmount: 1, inputs: [{ kind: 'plank', amount: 5 }, { kind: 'scrap.metal', amount: 1 }] },
-  { idBase: 'doubledoor.wood', name: 'Wooden Double Door', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'doubledoor', outputAmount: 1, inputs: [{ kind: 'plank', amount: 8 }, { kind: 'scrap.metal', amount: 2 }] },
-  { idBase: 'gate.wood', name: 'Wooden Gate', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'gate', outputAmount: 1, inputs: [{ kind: 'plank', amount: 8 }, { kind: 'scrap.metal', amount: 2 }] },
-  { idBase: 'hatch.wood', name: 'Wooden Hatch', category: 'door', dimensions: PROXY_DIMENSIONS.hatch, assetKey: 'hatch', outputAmount: 1, inputs: [{ kind: 'plank', amount: 4 }, { kind: 'scrap.metal', amount: 1 }] },
-  { idBase: 'shutter.wood', name: 'Wooden Shutter', category: 'door', dimensions: PROXY_DIMENSIONS.shutter, assetKey: 'shutter', outputAmount: 1, inputs: [{ kind: 'plank', amount: 6 }, { kind: 'scrap.metal', amount: 1 }] },
-  { idBase: 'barricade.wood', name: 'Wooden Barricade', category: 'defensive', dimensions: PROXY_DIMENSIONS.barricade, assetKey: 'barricade', outputAmount: 1, inputs: [{ kind: 'plank', amount: 4 }, { kind: 'stick', amount: 2 }] },
-  { idBase: 'fortification.wood', name: 'Wooden Fortification', category: 'defensive', dimensions: PROXY_DIMENSIONS.fortification, assetKey: 'fortification', outputAmount: 1, inputs: [{ kind: 'plank', amount: 7 }] },
-  { idBase: 'ladder.wood', name: 'Wooden Ladder', category: 'decorative', dimensions: PROXY_DIMENSIONS.ladder, assetKey: 'ladder', outputAmount: 1, inputs: [{ kind: 'stick', amount: 6 }, { kind: 'tape', amount: 1 }] },
-  { idBase: 'spikes.wood', name: 'Wooden Spikes', category: 'defensive', dimensions: PROXY_DIMENSIONS.spikes, assetKey: 'spikes', outputAmount: 1, inputs: [{ kind: 'stick', amount: 6 }] },
-  { idBase: 'crate.wood', name: 'Wooden Crate', category: 'decorative', dimensions: PROXY_DIMENSIONS.crate, assetKey: 'crate', outputAmount: 1, inputs: [{ kind: 'plank', amount: 7 }, { kind: 'stick', amount: 3 }] },
+  { idBase: 'door.wood', name: 'Wooden Door', category: 'door', dimensions: PROXY_DIMENSIONS.door, assetKey: 'door', outputAmount: 1, build: 'DOOR', inputs: [{ kind: 'plank', amount: 5 }, { kind: 'scrap.metal', amount: 1 }] },
+  { idBase: 'doubledoor.wood', name: 'Wooden Double Door', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'doubledoor', outputAmount: 1, build: 'GATE', inputs: [{ kind: 'plank', amount: 8 }, { kind: 'scrap.metal', amount: 2 }] },
+  { idBase: 'gate.wood', name: 'Wooden Gate', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'gate', outputAmount: 1, build: 'GATE', inputs: [{ kind: 'plank', amount: 8 }, { kind: 'scrap.metal', amount: 2 }] },
+  { idBase: 'hatch.wood', name: 'Wooden Hatch', category: 'door', dimensions: PROXY_DIMENSIONS.hatch, assetKey: 'hatch', outputAmount: 1, build: 'HATCH', inputs: [{ kind: 'plank', amount: 4 }, { kind: 'scrap.metal', amount: 1 }] },
+  { idBase: 'shutter.wood', name: 'Wooden Shutter', category: 'door', dimensions: PROXY_DIMENSIONS.shutter, assetKey: 'shutter', outputAmount: 1, build: 'SHUTTER', inputs: [{ kind: 'plank', amount: 6 }, { kind: 'scrap.metal', amount: 1 }] },
+  { idBase: 'barricade.wood', name: 'Wooden Barricade', category: 'defensive', dimensions: PROXY_DIMENSIONS.barricade, assetKey: 'barricade', outputAmount: 1, build: 'BARRICADE', inputs: [{ kind: 'plank', amount: 4 }, { kind: 'stick', amount: 2 }] },
+  { idBase: 'fortification.wood', name: 'Wooden Fortification', category: 'defensive', dimensions: PROXY_DIMENSIONS.fortification, assetKey: 'fortification', outputAmount: 1, build: 'FORTIFICATION', inputs: [{ kind: 'plank', amount: 7 }] },
+  { idBase: 'ladder.wood', name: 'Wooden Ladder', category: 'decorative', dimensions: PROXY_DIMENSIONS.ladder, assetKey: 'ladder', outputAmount: 1, build: 'LADDER', inputs: [{ kind: 'stick', amount: 6 }, { kind: 'tape', amount: 1 }] },
+  { idBase: 'spikes.wood', name: 'Wooden Spikes', category: 'defensive', dimensions: PROXY_DIMENSIONS.spikes, assetKey: 'spikes', outputAmount: 1, build: 'SPIKE', inputs: [{ kind: 'stick', amount: 6 }] },
+  { idBase: 'crate.wood', name: 'Wooden Crate', category: 'decorative', dimensions: PROXY_DIMENSIONS.crate, assetKey: 'crate', outputAmount: 1, build: 'STORAGE', inputs: [{ kind: 'plank', amount: 7 }, { kind: 'stick', amount: 3 }] },
 ];
 
 interface FixedPieceSpec {
@@ -166,24 +174,25 @@ interface FixedPieceSpec {
   readonly dimensions: PieceDimensions;
   readonly assetKey: string;
   readonly outputAmount: number;
+  readonly build: EBuild;
   readonly inputs: ResourceAmount[];
   readonly source: string;
   readonly workstation?: string;
 }
 
 const FIXED_PIECES: FixedPieceSpec[] = [
-  { id: 'door.metal', name: 'Metal Door', category: 'door', dimensions: PROXY_DIMENSIONS.door, assetKey: 'door', outputAmount: 1, inputs: [amount('metal.sheet', 2), amount('scrap.metal', 1)], source: wiki('Metal Door') },
-  { id: 'doubledoor.metal', name: 'Metal Double Door', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'doubledoor', outputAmount: 1, inputs: [amount('metal.sheet', 4), amount('scrap.metal', 1)], source: wiki('Metal Double Door') },
-  { id: 'gate.metal', name: 'Metal Gate', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'gate', outputAmount: 1, inputs: [amount('metal.sheet', 4), amount('scrap.metal', 1)], source: wiki('Metal Gate') },
-  { id: 'hatch.metal', name: 'Metal Hatch', category: 'door', dimensions: PROXY_DIMENSIONS.hatch, assetKey: 'hatch', outputAmount: 1, inputs: [amount('metal.sheet', 1), amount('scrap.metal', 2)], source: wiki('Metal Hatch') },
-  { id: 'shutter.metal', name: 'Metal Shutter', category: 'door', dimensions: PROXY_DIMENSIONS.shutter, assetKey: 'shutter', outputAmount: 1, inputs: [amount('metal.sheet', 3), amount('scrap.metal', 1)], source: wiki('Metal Shutter') },
-  { id: 'ladder.metal', name: 'Metal Ladder', category: 'decorative', dimensions: PROXY_DIMENSIONS.ladder, assetKey: 'ladder', outputAmount: 1, inputs: [amount('scrap.metal', 6)], source: wiki('Metal Ladder') },
-  { id: 'doorframe.metal', name: 'Metal Doorframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorFrame, assetKey: 'doorframe', outputAmount: 1, inputs: [amount('metal.sheet', 3)], source: wiki('Metal Doorframe') },
-  { id: 'garageframe.metal', name: 'Metal Garageframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.garageFrame, assetKey: 'garageframe', outputAmount: 1, inputs: [amount('metal.sheet', 3)], source: wiki('Metal Garageframe') },
-  { id: 'fortification.bars.metal', name: 'Metal Bars Fortification', category: 'defensive', dimensions: PROXY_DIMENSIONS.fortification, assetKey: 'fortification', outputAmount: 1, inputs: [amount('metal.bar', 6)], source: wiki('Metal Bars Fortification') },
-  { id: 'sandbag', name: 'Sandbag', category: 'defensive', dimensions: PROXY_DIMENSIONS.sandbag, assetKey: 'sandbag', outputAmount: 1, inputs: [amount('cloth', 5)], source: wiki('Sandbag') },
-  { id: 'fence.barbed.wire', name: 'Barbed Wire Fence', category: 'fence', dimensions: PROXY_DIMENSIONS.fence, assetKey: 'fence', outputAmount: 1, inputs: [amount('scrap.metal', 2), amount('barbed.wire', 5)], source: wiki('Barbed Wire Fence') },
-  { id: 'caltrop', name: 'Caltrop', category: 'defensive', dimensions: { width: 0.5, height: 0.2, depth: 0.5 }, assetKey: 'caltrop', outputAmount: 1, inputs: [amount('nails', 2)], source: wiki('Caltrop') },
+  { id: 'door.metal', name: 'Metal Door', category: 'door', dimensions: PROXY_DIMENSIONS.door, assetKey: 'door', outputAmount: 1, build: 'DOOR', inputs: [amount('metal.sheet', 2), amount('scrap.metal', 1)], source: wiki('Metal Door') },
+  { id: 'doubledoor.metal', name: 'Metal Double Door', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'doubledoor', outputAmount: 1, build: 'GATE', inputs: [amount('metal.sheet', 4), amount('scrap.metal', 1)], source: wiki('Metal Double Door') },
+  { id: 'gate.metal', name: 'Metal Gate', category: 'door', dimensions: PROXY_DIMENSIONS.doubleDoor, assetKey: 'gate', outputAmount: 1, build: 'GATE', inputs: [amount('metal.sheet', 4), amount('scrap.metal', 1)], source: wiki('Metal Gate') },
+  { id: 'hatch.metal', name: 'Metal Hatch', category: 'door', dimensions: PROXY_DIMENSIONS.hatch, assetKey: 'hatch', outputAmount: 1, build: 'HATCH', inputs: [amount('metal.sheet', 1), amount('scrap.metal', 2)], source: wiki('Metal Hatch') },
+  { id: 'shutter.metal', name: 'Metal Shutter', category: 'door', dimensions: PROXY_DIMENSIONS.shutter, assetKey: 'shutter', outputAmount: 1, build: 'SHUTTER', inputs: [amount('metal.sheet', 3), amount('scrap.metal', 1)], source: wiki('Metal Shutter') },
+  { id: 'ladder.metal', name: 'Metal Ladder', category: 'decorative', dimensions: PROXY_DIMENSIONS.ladder, assetKey: 'ladder', outputAmount: 1, build: 'LADDER', inputs: [amount('scrap.metal', 6)], source: wiki('Metal Ladder') },
+  { id: 'doorframe.metal', name: 'Metal Doorframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.doorFrame, assetKey: 'doorframe', outputAmount: 1, build: 'FREEFORM', inputs: [amount('metal.sheet', 3)], source: wiki('Metal Doorframe') },
+  { id: 'garageframe.metal', name: 'Metal Garageframe', category: 'doorway', dimensions: PROXY_DIMENSIONS.garageFrame, assetKey: 'garageframe', outputAmount: 1, build: 'FREEFORM', inputs: [amount('metal.sheet', 3)], source: wiki('Metal Garageframe') },
+  { id: 'fortification.bars.metal', name: 'Metal Bars Fortification', category: 'defensive', dimensions: PROXY_DIMENSIONS.fortification, assetKey: 'fortification', outputAmount: 1, build: 'FORTIFICATION', inputs: [amount('metal.bar', 6)], source: wiki('Metal Bars Fortification') },
+  { id: 'sandbag', name: 'Sandbag', category: 'defensive', dimensions: PROXY_DIMENSIONS.sandbag, assetKey: 'sandbag', outputAmount: 1, build: 'BARRICADE', inputs: [amount('cloth', 5)], source: wiki('Sandbag') },
+  { id: 'fence.barbed.wire', name: 'Barbed Wire Fence', category: 'fence', dimensions: PROXY_DIMENSIONS.fence, assetKey: 'fence', outputAmount: 1, build: 'WIRE', inputs: [amount('scrap.metal', 2), amount('barbed.wire', 5)], source: wiki('Barbed Wire Fence') },
+  { id: 'caltrop', name: 'Caltrop', category: 'defensive', dimensions: PROXY_DIMENSIONS.caltrop, assetKey: 'caltrop', outputAmount: 1, build: 'SPIKE', inputs: [amount('nails', 2)], source: wiki('Caltrop') },
 ];
 
 interface PendingDefinition {
@@ -202,6 +211,8 @@ function makeDefinition(params: {
   dimensions: PieceDimensions;
   assetId: string;
   group: string;
+  construct?: EConstruct;
+  build?: EBuild;
 }): PendingDefinition {
   return {
     group: params.group,
@@ -216,6 +227,8 @@ function makeDefinition(params: {
       allowedRotations: [...DEFAULT_ALLOWED_ROTATIONS],
       collision: { enabled: true, shape: 'box' },
       resourceRecipe: recipeIdFor(params.id),
+      ...(params.construct !== undefined ? { construct: params.construct } : {}),
+      ...(params.build !== undefined ? { build: params.build } : {}),
     },
   };
 }
@@ -253,6 +266,8 @@ function addStructureTier(spec: StructureSpec, id: string, name: string, group: 
       dimensions: spec.dimensions,
       assetId: `asset.${spec.key}`,
       group,
+      ...(spec.construct !== undefined ? { construct: spec.construct } : {}),
+      ...(spec.build !== undefined ? { build: spec.build } : {}),
     }),
   );
   pieceRecipes.push(
@@ -307,6 +322,7 @@ for (const spec of WOOD_BARRICADES) {
         dimensions: spec.dimensions,
         assetId: `asset.${spec.assetKey}`,
         group: spec.idBase,
+        build: spec.build,
       }),
     );
     pieceRecipes.push(makeRecipe({ outputId: id, outputAmount: spec.outputAmount, inputs, source: wiki(name) }));
@@ -322,6 +338,7 @@ for (const spec of FIXED_PIECES) {
       dimensions: spec.dimensions,
       assetId: `asset.${spec.assetKey}`,
       group: spec.id,
+      build: spec.build,
     }),
   );
   pieceRecipes.push(

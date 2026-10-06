@@ -1,6 +1,7 @@
-import { ResourceGraphSchema, detectRecipeCycles } from '@/domain';
+import { EBuildSchema, EConstructSchema, ResourceGraphSchema, detectRecipeCycles } from '@/domain';
 import type {
   CraftingRecipe,
+  PieceCategory,
   PieceDefinition,
   Resource,
   ResourceGraph,
@@ -10,7 +11,7 @@ import { RECIPES } from './recipes';
 import { PIECE_DEFINITIONS } from './piece-definitions';
 
 /** Semver of the composed data layer (resources + recipes + definitions). */
-export const DATASET_VERSION = '0.1.0';
+export const DATASET_VERSION = '0.2.0';
 
 /** Version of the `ResourceGraph` wire shape itself. */
 export const RESOURCE_GRAPH_SCHEMA_VERSION = 1;
@@ -55,12 +56,36 @@ export type DatasetIssueCode =
   | 'unknown_recipe_input'
   | 'missing_recipe_source'
   | 'recipe_cycle'
-  | 'non_positive_dimension';
+  | 'non_positive_dimension'
+  | 'missing_construct'
+  | 'missing_build';
 
 export interface DatasetIssue {
   readonly code: DatasetIssueCode;
   readonly message: string;
   readonly id: string;
+}
+
+/**
+ * Categories whose pieces are barricades in Unturned (they resolve to an
+ * `EBuild`) rather than structures (which resolve to an `EConstruct`).
+ * `doorway` is intentionally absent: doorframes/garageframes share that category
+ * with real walls but are barricades, so their explicit `build` is what
+ * classifies them.
+ *
+ * The shipped dataset intentionally leaves no piece unclassified: every
+ * structure carries an explicit `construct` and every barricade carries an
+ * explicit `build`, so `validateDataset` reports zero issues.
+ */
+const BARRICADE_CATEGORIES: ReadonlySet<PieceCategory> = new Set<PieceCategory>([
+  'door',
+  'defensive',
+  'decorative',
+  'fence',
+]);
+
+function isBarricadeLike(definition: PieceDefinition): boolean {
+  return definition.build !== undefined || BARRICADE_CATEGORIES.has(definition.category);
 }
 
 function duplicates(ids: readonly string[]): string[] {
@@ -111,6 +136,22 @@ export function validateDataset(dataset: BuildDataset): DatasetIssue[] {
       issues.push({
         code: 'non_positive_dimension',
         message: `Piece "${definition.id}" has non-positive dimensions`,
+        id: definition.id,
+      });
+    }
+
+    if (isBarricadeLike(definition)) {
+      if (!EBuildSchema.safeParse(definition.build).success) {
+        issues.push({
+          code: 'missing_build',
+          message: `Barricade "${definition.id}" has no valid EBuild`,
+          id: definition.id,
+        });
+      }
+    } else if (!EConstructSchema.safeParse(definition.construct).success) {
+      issues.push({
+        code: 'missing_construct',
+        message: `Structure "${definition.id}" has no valid EConstruct`,
         id: definition.id,
       });
     }
