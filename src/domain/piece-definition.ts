@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { IdSchema } from './ids';
 import { Vec3Schema } from './primitives';
 import { EConstructSchema } from './build/construct';
+import { EBuildSchema } from './build/ebuild';
 
 /**
  * Piece definitions describe WHAT a buildable part is, independent of whether
@@ -87,6 +88,11 @@ export const PieceDefinitionSchema = z.object({
    * engine derives one from `category` and `name` via `resolveConstruct`.
    */
   construct: EConstructSchema.optional(),
+  /**
+   * Optional explicit Unturned barricade build. When absent the barricade
+   * engine derives one from `category` via `resolveBuild`.
+   */
+  build: EBuildSchema.optional(),
 });
 
 export type PieceDefinition = z.infer<typeof PieceDefinitionSchema>;

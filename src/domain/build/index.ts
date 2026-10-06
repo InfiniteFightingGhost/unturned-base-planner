@@ -18,3 +18,5 @@ export * from './housingGraph';
 export * from './slots';
 export * from './support';
 export * from './validation';
+export * from './ebuild';
+export * from './barricades';
