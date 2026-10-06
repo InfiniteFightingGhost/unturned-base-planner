@@ -22,6 +22,7 @@ import type {
   Prefab,
   Project,
   Vec3,
+  Zone,
 } from '@/domain';
 import { DEFAULT_GRID_CONFIG } from '@/engine';
 import type { GridConfig } from '@/engine';
@@ -33,6 +34,8 @@ import {
   createAddPiecesCommand,
   createDeletePiecesCommand,
   createSetBuildStateCommand,
+  createSetTagsCommand,
+  createSetZoneCommand,
   createTransformPiecesCommand,
 } from './commands';
 import {
@@ -58,7 +61,23 @@ import {
 } from './prefab-commands';
 import { applySelection, selectAll as selectAllIds } from './selection';
 import type { SelectionMode } from './selection';
-import { clonePiece, duplicatePieces, mirrorPiece, rotatePieceY, translatePiece } from './transform';
+import {
+  clonePiece,
+  duplicatePieces,
+  mirrorPiece,
+  rotatePieceY,
+  translatePiece,
+} from './transform';
+import { normalizeTag, normalizeTags } from './tags';
+import {
+  createAddZoneCommand,
+  createDeleteZoneCommand,
+  createRenameZoneCommand,
+  createSetZoneColorCommand,
+  createSetZoneLockedCommand,
+  createSetZoneVisibleCommand,
+} from './zone-commands';
+import { zoneById } from './zones';
 
 export interface EditorState {
   /** The immutable document. Mutated only through commands. */
@@ -77,6 +96,12 @@ export interface EditorState {
    * to reference an existing floor.
    */
   readonly activeFloorId: string;
+
+  /**
+   * The zone highlighted in the zone panel. Transient UI state: never part of
+   * history, always reconciled to reference an existing zone (or `null`).
+   */
+  readonly activeZoneId: string | null;
 
   /**
    * Replace the whole document (project load / new project). LOAD-ONLY: this is
@@ -111,6 +136,25 @@ export interface EditorState {
   setFloorLocked(id: string, locked: boolean): void;
   /** Select the active floor. UI-only; never records history. */
   setActiveFloor(id: string): void;
+
+  /** Add a zone through a command and make it active. */
+  addZone(name?: string): void;
+  /** Delete a zone, clearing its members' `zoneId` in the same undo step. */
+  deleteZone(id: string): void;
+  renameZone(id: string, name: string): void;
+  setZoneColor(id: string, color: string): void;
+  setZoneVisible(id: string, visible: boolean): void;
+  setZoneLocked(id: string, locked: boolean): void;
+  /** Select the active zone. UI-only; never records history. */
+  setActiveZone(id: string | null): void;
+  /** Assign the current selection to a zone (or clear with `null`). Undoable. */
+  assignSelectionToZone(zoneId: string | null): void;
+  /** Replace the tags of every selected piece. Undoable. No-op when empty. */
+  setSelectionTags(tags: string[]): void;
+  /** Add a normalized tag to every selected piece. Undoable. No-op when empty. */
+  addTagToSelection(tag: string): void;
+  /** Remove a tag from every selected piece. Undoable. No-op when empty/unused. */
+  removeTagFromSelection(tag: string): void;
 
   /**
    * Capture the current selection as a prefab and add it to the library through
@@ -180,6 +224,17 @@ export function createEditorStore(initialProject: Project): EditorStore {
         return sortedFloors(project)[0]?.id ?? '';
       };
 
+      /**
+       * Resolve a zone id that definitely exists in `project`, or `null` when
+       * the preferred zone disappeared (or there was none).
+       */
+      const reconcileActiveZoneId = (project: Project, preferred: string | null): string | null => {
+        if (preferred !== null && zoneById(project, preferred) !== undefined) {
+          return preferred;
+        }
+        return null;
+      };
+
       const selectedPieces = (): PlacedPiece[] => {
         const { project, selection } = get();
         if (selection.length === 0) {
@@ -194,7 +249,12 @@ export function createEditorStore(initialProject: Project): EditorStore {
         if (pieces.length === 0) {
           return;
         }
-        execute(createTransformPiecesCommand(pieces.map((piece) => piece.id), fn));
+        execute(
+          createTransformPiecesCommand(
+            pieces.map((piece) => piece.id),
+            fn,
+          ),
+        );
       };
 
       return {
@@ -205,6 +265,7 @@ export function createEditorStore(initialProject: Project): EditorStore {
         canRedo: false,
         grid: { ...DEFAULT_GRID_CONFIG },
         activeFloorId: reconcileActiveFloorId(initialProject),
+        activeZoneId: null,
 
         setProject: (project) => {
           history.clear();
@@ -215,6 +276,7 @@ export function createEditorStore(initialProject: Project): EditorStore {
             canUndo: false,
             canRedo: false,
             activeFloorId: reconcileActiveFloorId(project),
+            activeZoneId: null,
           });
         },
 
@@ -225,7 +287,11 @@ export function createEditorStore(initialProject: Project): EditorStore {
             return;
           }
           const next = history.undo();
-          set({ project: next, activeFloorId: reconcileActiveFloorId(next, get().activeFloorId) });
+          set({
+            project: next,
+            activeFloorId: reconcileActiveFloorId(next, get().activeFloorId),
+            activeZoneId: reconcileActiveZoneId(next, get().activeZoneId),
+          });
           syncHistoryFlags();
         },
 
@@ -234,7 +300,11 @@ export function createEditorStore(initialProject: Project): EditorStore {
             return;
           }
           const next = history.redo();
-          set({ project: next, activeFloorId: reconcileActiveFloorId(next, get().activeFloorId) });
+          set({
+            project: next,
+            activeFloorId: reconcileActiveFloorId(next, get().activeFloorId),
+            activeZoneId: reconcileActiveZoneId(next, get().activeZoneId),
+          });
           syncHistoryFlags();
         },
 
@@ -243,7 +313,9 @@ export function createEditorStore(initialProject: Project): EditorStore {
         },
 
         selectAll: () => {
-          set((state) => ({ selection: selectAllIds(state.project.pieces.map((piece) => piece.id)) }));
+          set((state) => ({
+            selection: selectAllIds(state.project.pieces.map((piece) => piece.id)),
+          }));
         },
 
         clearSelection: () => set({ selection: [] }),
@@ -377,6 +449,134 @@ export function createEditorStore(initialProject: Project): EditorStore {
           set({ activeFloorId: id });
         },
 
+        addZone: (name) => {
+          const { project } = get();
+          const index = project.zones.length;
+          const zone: Zone = {
+            id: createId('zone'),
+            name: name ?? `Zone ${index + 1}`,
+            color: '#3b82f6',
+            visible: true,
+            locked: false,
+          };
+          execute(createAddZoneCommand(zone));
+          set({ activeZoneId: zone.id });
+        },
+
+        deleteZone: (id) => {
+          if (zoneById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createDeleteZoneCommand(id));
+          const next = get().project;
+          set((state) => ({ activeZoneId: reconcileActiveZoneId(next, state.activeZoneId) }));
+        },
+
+        renameZone: (id, name) => {
+          if (zoneById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createRenameZoneCommand(id, name));
+        },
+
+        setZoneColor: (id, color) => {
+          if (zoneById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetZoneColorCommand(id, color));
+        },
+
+        setZoneVisible: (id, visible) => {
+          if (zoneById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetZoneVisibleCommand(id, visible));
+        },
+
+        setZoneLocked: (id, locked) => {
+          if (zoneById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetZoneLockedCommand(id, locked));
+        },
+
+        setActiveZone: (id) => {
+          if (id !== null && zoneById(get().project, id) === undefined) {
+            return;
+          }
+          set({ activeZoneId: id });
+        },
+
+        assignSelectionToZone: (zoneId) => {
+          const { selection, project } = get();
+          if (selection.length === 0) {
+            return;
+          }
+          if (zoneId !== null && zoneById(project, zoneId) === undefined) {
+            return;
+          }
+          execute(createSetZoneCommand(selection, zoneId));
+        },
+
+        setSelectionTags: (tags) => {
+          const { selection } = get();
+          if (selection.length === 0) {
+            return;
+          }
+          execute(createSetTagsCommand(selection, normalizeTags(tags)));
+        },
+
+        addTagToSelection: (tag) => {
+          const pieces = selectedPieces();
+          if (pieces.length === 0) {
+            return;
+          }
+          const normalized = normalizeTag(tag);
+          if (normalized === null) {
+            return;
+          }
+          execute(
+            createTransformPiecesCommand(
+              pieces.map((piece) => piece.id),
+              (piece) => ({
+                ...piece,
+                metadata: {
+                  ...piece.metadata,
+                  tags: normalizeTags([...piece.metadata.tags, normalized]),
+                },
+              }),
+            ),
+          );
+        },
+
+        removeTagFromSelection: (tag) => {
+          const pieces = selectedPieces();
+          if (pieces.length === 0) {
+            return;
+          }
+          const normalized = normalizeTag(tag);
+          if (normalized === null) {
+            return;
+          }
+          if (!pieces.some((piece) => piece.metadata.tags.includes(normalized))) {
+            return;
+          }
+          execute(
+            createTransformPiecesCommand(
+              pieces.map((piece) => piece.id),
+              (piece) => ({
+                ...piece,
+                metadata: {
+                  ...piece.metadata,
+                  tags: normalizeTags(
+                    piece.metadata.tags.filter((existing) => existing !== normalized),
+                  ),
+                },
+              }),
+            ),
+          );
+        },
+
         saveSelectionAsPrefab: (name) => {
           const pieces = selectedPieces();
           if (pieces.length === 0) {
@@ -400,7 +600,8 @@ export function createEditorStore(initialProject: Project): EditorStore {
           if (prefab === undefined) {
             return [];
           }
-          const targetFloor = floorById(project, floorId ?? activeFloorId) ?? sortedFloors(project)[0];
+          const targetFloor =
+            floorById(project, floorId ?? activeFloorId) ?? sortedFloors(project)[0];
           if (targetFloor === undefined) {
             return [];
           }

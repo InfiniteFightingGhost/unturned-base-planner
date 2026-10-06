@@ -37,6 +37,28 @@ export {
   visibleFloors,
 } from './floors';
 
+export {
+  createAddZoneCommand,
+  createDeleteZoneCommand,
+  createRenameZoneCommand,
+  createSetZoneColorCommand,
+  createSetZoneLockedCommand,
+  createSetZoneVisibleCommand,
+} from './zone-commands';
+
+export {
+  isPieceVisible,
+  isZoneHidden,
+  isZoneLocked,
+  piecesInZone,
+  sortedZones,
+  visibleZones,
+  zoneById,
+  zoneStats,
+} from './zones';
+
+export { normalizeTag, normalizeTags } from './tags';
+
 export { EMPTY_SELECTION, applySelection, isSelected, selectAll } from './selection';
 export type { SelectionMode } from './selection';
 

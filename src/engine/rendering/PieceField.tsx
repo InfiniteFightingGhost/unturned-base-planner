@@ -23,8 +23,15 @@
  * Picking
  * -------
  * `pick` raycasts only the batches of visible, UNLOCKED floors, so locked
- * floors can never be selected. Hits are resolved per batch through its
+ * floors can never be selected. Within a floor, pieces assigned to a locked
+ * zone are skipped as well. Hits are resolved per batch through its
  * `batchId -> pieceId` mapping.
+ *
+ * Zone visibility
+ * ---------------
+ * Hidden zones are filtered out before a batch syncs (via `isPieceVisible`), so
+ * their pieces are not rendered; showing the zone again re-syncs and restores
+ * them. Locked zones stay rendered but are non-pickable.
  *
  * Capacity
  * --------
@@ -46,13 +53,15 @@ import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState }
 import { useThree } from '@react-three/fiber';
 import { MeshStandardMaterial, Raycaster } from 'three';
 import type { BatchedMesh, BufferGeometry, Camera, Vector2 } from 'three';
-import type { AssetDescriptor, AssetResolver, Project } from '@/domain';
+import type { AssetDescriptor, AssetResolver, PlacedPiece, Project } from '@/domain';
 import { vec3 } from '@/domain';
 import { createProxyAssetResolver, DATASET } from '@/data';
 import {
   editorStore,
   ghostOpacityForFloor,
   isFloorLocked,
+  isPieceVisible,
+  isZoneLocked,
   piecesOnFloor,
   sortedFloors,
   visibleFloors,
@@ -175,9 +184,12 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       entry.material.dispose();
     };
 
+    const renderableOnFloor = (project: Project, floorId: string): PlacedPiece[] =>
+      piecesOnFloor(project, floorId).filter((piece) => isPieceVisible(piece, project));
+
     const syncPieces = (project: Project): void => {
       for (const [floorId, entry] of batches) {
-        entry.batch.sync(piecesOnFloor(project, floorId));
+        entry.batch.sync(renderableOnFloor(project, floorId));
       }
     };
 
@@ -206,7 +218,7 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
           meshToFloor.set(entry.batch.mesh, floor.id);
         }
         applyOpacity(entry.material, ghostOpacityForFloor(floor, activeFloorId));
-        entry.batch.sync(piecesOnFloor(project, floor.id));
+        entry.batch.sync(renderableOnFloor(project, floor.id));
       }
 
       const nextMeshes: BatchedMesh[] = [];
@@ -239,7 +251,10 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       if (state.project !== previous.project) {
         if (state.project.floors !== previous.project.floors) {
           reconcileFloors(state.project, state.activeFloorId);
-        } else if (state.project.pieces !== previous.project.pieces) {
+        } else if (
+          state.project.pieces !== previous.project.pieces ||
+          state.project.zones !== previous.project.zones
+        ) {
           syncPieces(state.project);
         }
         dirty = true;
@@ -299,16 +314,18 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
           }
           const entry = batchesRef.current.get(floorId);
           const pieceId = entry?.batch.pieceIdForBatch(batchId) ?? null;
-          if (pieceId !== null) {
-            return pieceId;
+          if (pieceId === null) {
+            continue;
           }
+          const piece = project.pieces.find((candidate) => candidate.id === pieceId);
+          if (piece === undefined || isZoneLocked(project, piece.zoneId)) {
+            continue;
+          }
+          return pieceId;
         }
         return null;
       },
-      previewTranslate: (
-        pieceIds: readonly string[],
-        delta: [number, number, number],
-      ): void => {
+      previewTranslate: (pieceIds: readonly string[], delta: [number, number, number]): void => {
         const wanted = new Set(pieceIds);
         const batches = batchesRef.current;
         for (const piece of editorStore.getState().project.pieces) {

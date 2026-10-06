@@ -19,6 +19,7 @@ import type { PieceFieldRef } from '@/editor/tools/PieceFieldContext';
 import { useGlobalShortcuts } from '@/editor/tools/shortcuts';
 import { PieceLibrary } from './PieceLibrary';
 import { FloorSelector } from './FloorSelector';
+import { ZonePanel } from './ZonePanel';
 import { PatternPanel } from './PatternPanel';
 import { PrefabPanel } from './PrefabPanel';
 import { BlueprintPanel } from './BlueprintPanel';
@@ -45,6 +46,7 @@ export function EditorLayout() {
         <div className="editor-sidebar">
           <PieceLibrary />
           <FloorSelector />
+          <ZonePanel />
           <PatternPanel />
           <PrefabPanel />
           <BlueprintPanel />

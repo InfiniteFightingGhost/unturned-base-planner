@@ -23,13 +23,20 @@ export function PropertiesPanel() {
   const selection = useEditorStore((state) => state.selection);
   const pieces = useEditorStore((state) => state.project.pieces);
   const floors = useEditorStore((state) => state.project.floors);
+  const zones = useEditorStore((state) => state.project.zones);
   const setSelectedBuildState = useEditorStore((state) => state.setSelectedBuildState);
 
   const selectedId = selection.length === 1 ? selection[0] : undefined;
   const piece = selectedId === undefined ? undefined : pieces.find((p) => p.id === selectedId);
+  const zone = piece === undefined ? undefined : zones.find((z) => z.id === piece.zoneId);
+  const tags = piece?.metadata.tags ?? [];
 
   return (
-    <aside className="panel properties-panel" data-testid="properties-panel" aria-label="Properties">
+    <aside
+      className="panel properties-panel"
+      data-testid="properties-panel"
+      aria-label="Properties"
+    >
       <div className="panel-header">
         <h2>Properties</h2>
       </div>
@@ -65,7 +72,15 @@ export function PropertiesPanel() {
           </div>
           <div className="property-row">
             <span className="property-label">Zone</span>
-            <span className="property-value">{piece.zoneId ?? '—'}</span>
+            <span className="property-value" data-testid="prop-zone">
+              {zone?.name ?? piece.zoneId ?? '—'}
+            </span>
+          </div>
+          <div className="property-row">
+            <span className="property-label">Tags</span>
+            <span className="property-value" data-testid="prop-tags">
+              {tags.length === 0 ? '—' : tags.join(', ')}
+            </span>
           </div>
           <div className="property-row">
             <span className="property-label">Build state</span>
