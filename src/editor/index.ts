@@ -1,0 +1,50 @@
+/**
+ * Public surface of the editor core (command/state layer).
+ *
+ * The 3D interaction layer should import from `@/editor` rather than reaching
+ * into submodules.
+ */
+
+export {
+  createAddPiecesCommand,
+  createBatchCommand,
+  createDeletePiecesCommand,
+  createSetBuildStateCommand,
+  createSetTagsCommand,
+  createSetZoneCommand,
+  createTransformPiecesCommand,
+} from './commands';
+
+export { EMPTY_SELECTION, applySelection, isSelected, selectAll } from './selection';
+export type { SelectionMode } from './selection';
+
+export {
+  approxEqualVec3,
+  clonePiece,
+  duplicatePieces,
+  gridArray,
+  linearArray,
+  mirrorPiece,
+  rotatePieceY,
+  translatePiece,
+} from './transform';
+
+export {
+  placementIsNoop,
+  resolvePlacement,
+  snapPlacementPosition,
+  wouldCreateDuplicateId,
+} from './placement';
+
+export {
+  canRedo,
+  canUndo,
+  createEditorStore,
+  editorStore,
+  selectCanRedo,
+  selectCanUndo,
+  selectPieceById,
+  selectSelectedPieces,
+  useEditorStore,
+} from './store';
+export type { EditorState, EditorStore } from './store';
