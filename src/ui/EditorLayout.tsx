@@ -17,6 +17,7 @@ import { PieceFieldContext } from '@/editor/tools/PieceFieldContext';
 import type { PieceFieldRef } from '@/editor/tools/PieceFieldContext';
 import { useGlobalShortcuts } from '@/editor/tools/shortcuts';
 import { PieceLibrary } from './PieceLibrary';
+import { FloorSelector } from './FloorSelector';
 import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
@@ -36,7 +37,10 @@ export function EditorLayout() {
       <Toolbar />
 
       <div className="editor-body">
-        <PieceLibrary />
+        <div className="editor-sidebar">
+          <PieceLibrary />
+          <FloorSelector />
+        </div>
 
         <section className="viewport-panel" aria-label="3D viewport">
           <Viewport>

@@ -14,6 +14,7 @@ export function StatusBar() {
   const pieces = useEditorStore((state) => state.project.pieces);
   const selection = useEditorStore((state) => state.selection);
   const floors = useEditorStore((state) => state.project.floors);
+  const activeFloorId = useEditorStore((state) => state.activeFloorId);
 
   const categoryCounts = useMemo(() => {
     const counts = new Map<PieceCategory, number>();
@@ -27,7 +28,7 @@ export function StatusBar() {
     return [...counts].sort((a, b) => a[0].localeCompare(b[0]));
   }, [pieces]);
 
-  const activeFloor = floors[0];
+  const activeFloor = floors.find((floor) => floor.id === activeFloorId);
 
   return (
     <footer className="status-bar" data-testid="status-bar">
@@ -39,7 +40,8 @@ export function StatusBar() {
         Selected: <strong data-testid="selected-count">{selection.length}</strong>
       </span>
       <span className="status-item">
-        Floor: <strong>{activeFloor?.name ?? '—'}</strong>
+        Floor:{' '}
+        <strong data-testid="active-floor">{activeFloor?.name ?? '—'}</strong>
       </span>
       <span className="status-item status-categories" data-testid="category-counts">
         {categoryCounts.length === 0

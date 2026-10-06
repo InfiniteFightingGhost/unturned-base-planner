@@ -1,39 +1,83 @@
 /**
- * `PieceField`: R3F host for the imperative `PieceBatch`.
+ * `PieceField`: R3F host for one imperative `PieceBatch` PER FLOOR.
+ *
+ * Per-floor batching
+ * ------------------
+ * A single `Map<floorId, { batch, material }>` is kept alive in an effect (so
+ * React StrictMode's simulated remount disposes and rebuilds cleanly). Each
+ * visible floor owns its OWN `BatchedMesh` and its OWN `MeshStandardMaterial`
+ * instance, while sharing the globally cached proxy geometries (one buffer per
+ * distinct `model.assetId`) through `descriptorToGeometry`. The shared
+ * geometries are borrowed from the module cache and are NOT disposed per batch;
+ * `disposeGeometryCache()` runs once on field teardown.
+ *
+ * Ghosting
+ * --------
+ * The active floor is opaque (`opacity = 1`, `transparent = false`,
+ * `depthWrite = true`) and therefore visually dominant. Visible non-active
+ * floors are translucent (`opacity = ghostOpacityForFloor(...) = 0.25`,
+ * `transparent = true`, `depthWrite = false`) so they read as context without
+ * occluding the active floor. Hidden floors have no batch at all: their batch
+ * and material are disposed on hide / delete and rebuilt on show.
+ *
+ * Picking
+ * -------
+ * `pick` raycasts only the batches of visible, UNLOCKED floors, so locked
+ * floors can never be selected. Hits are resolved per batch through its
+ * `batchId -> pieceId` mapping.
+ *
+ * Capacity
+ * --------
+ * `maxInstances` is the budget for EACH floor batch (default 4096), so total
+ * capacity scales with the number of visible floors. A single floor exceeding
+ * its budget throws the actionable `PieceBatch` capacity error; growing a batch
+ * at runtime remains tracked as a P53 follow-up.
  *
  * Data flow
  * ---------
- * The batch is created once per mount inside an effect (so React StrictMode's
- * simulated remount disposes and rebuilds cleanly). It then subscribes
- * transiently to the editor store's `project.pieces` and `selection` slices and
- * mutates the `BatchedMesh` directly, calling `invalidate()` exactly once per
- * change. React never renders a per-piece element and never holds transforms in
- * state; the only stateful value is the stable `mesh` object handed to
- * `<primitive>`.
+ * React never renders a per-piece element. A single transient store
+ * subscription mutates the batches directly and calls `invalidate()` only when
+ * `project.floors`, `project.pieces`, `selection` or `activeFloorId` actually
+ * change. The only React state is the list of per-floor meshes handed to
+ * `<primitive>` (structural floor changes only).
  */
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { MeshStandardMaterial, Raycaster } from 'three';
-import type { BatchedMesh, BufferGeometry, Camera, Material, Vector2 } from 'three';
-import type { AssetDescriptor, AssetResolver } from '@/domain';
+import type { BatchedMesh, BufferGeometry, Camera, Vector2 } from 'three';
+import type { AssetDescriptor, AssetResolver, Project } from '@/domain';
 import { vec3 } from '@/domain';
 import { createProxyAssetResolver, DATASET } from '@/data';
-import { editorStore } from '@/editor';
+import {
+  editorStore,
+  ghostOpacityForFloor,
+  isFloorLocked,
+  piecesOnFloor,
+  sortedFloors,
+  visibleFloors,
+} from '@/editor';
 import { descriptorToGeometry, disposeGeometryCache } from './proxyGeometry';
 import { PieceBatch } from './PieceBatch';
 import type { BatchGeometry } from './PieceBatch';
 
 const defaultAssetResolver: AssetResolver = createProxyAssetResolver(DATASET);
 
-/** Instance budget for the default single-batch field. */
+/** Instance budget for each per-floor batch. */
 const DEFAULT_MAX_INSTANCES = 4096;
+
+/** One floor's batch plus its independent material instance. */
+interface FloorBatchEntry {
+  readonly batch: PieceBatch;
+  readonly material: MeshStandardMaterial;
+}
 
 export interface PieceFieldHandle {
   /**
-   * Raycast a normalized device coordinate against the batch and return the
-   * nearest piece id (or `null`). The caller supplies the active camera so the
-   * field stays agnostic to which projection the rig adopted.
+   * Raycast a normalized device coordinate against the visible, unlocked floor
+   * batches and return the nearest piece id (or `null`). The caller supplies the
+   * active camera so the field stays agnostic to which projection the rig
+   * adopted.
    */
   pick(ndc: Vector2, camera: Camera): string | null;
   /**
@@ -48,7 +92,7 @@ export interface PieceFieldHandle {
 export interface PieceFieldProps {
   /** Asset resolver used to size each unique `model.assetId`. */
   assetResolver?: AssetResolver;
-  /** Maximum instances before `add` throws. Defaults to 4096. */
+  /** Maximum instances per floor batch before `add` throws. Defaults to 4096. */
   maxInstances?: number;
 }
 
@@ -80,6 +124,14 @@ function buildGeometries(resolver: AssetResolver): BatchGeometry[] {
   return [...byAssetId].map(([assetId, geometry]) => ({ assetId, geometry }));
 }
 
+/** Apply a ghost opacity to a floor's material, keeping flags consistent. */
+function applyOpacity(material: MeshStandardMaterial, opacity: number): void {
+  material.opacity = opacity;
+  const transparent = opacity < 1;
+  material.transparent = transparent;
+  material.depthWrite = !transparent;
+}
+
 export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function PieceField(
   { assetResolver, maxInstances = DEFAULT_MAX_INSTANCES },
   ref,
@@ -88,49 +140,131 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
   const invalidate = useThree((state) => state.invalidate);
   const raycaster = useMemo(() => new Raycaster(), []);
 
-  const fieldRef = useRef<PieceBatch | null>(null);
-  const [mesh, setMesh] = useState<BatchedMesh | null>(null);
+  const batchesRef = useRef<Map<string, FloorBatchEntry>>(new Map());
+  const meshToFloorRef = useRef<Map<BatchedMesh, string>>(new Map());
+  const [meshes, setMeshes] = useState<BatchedMesh[]>([]);
 
   useEffect(() => {
-    const material: Material = new MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.85,
-      metalness: 0.05,
-    });
-    const batch = new PieceBatch(buildGeometries(resolver), material, {
-      maxInstances,
-      resolveAssetId: (definitionId) => DATASET.definitionById.get(definitionId)?.model.assetId,
-    });
-    fieldRef.current = batch;
-    setMesh(batch.mesh);
+    const geometries = buildGeometries(resolver);
+    const batches = new Map<string, FloorBatchEntry>();
+    const meshToFloor = new Map<BatchedMesh, string>();
+    batchesRef.current = batches;
+    meshToFloorRef.current = meshToFloor;
+
+    const resolveAssetId = (definitionId: string): string | undefined =>
+      DATASET.definitionById.get(definitionId)?.model.assetId;
+
+    const createEntry = (): FloorBatchEntry => {
+      const material = new MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.85,
+        metalness: 0.05,
+      });
+      const batch = new PieceBatch(geometries, material, { maxInstances, resolveAssetId });
+      return { batch, material };
+    };
+
+    const removeBatch = (floorId: string): void => {
+      const entry = batches.get(floorId);
+      if (entry === undefined) {
+        return;
+      }
+      batches.delete(floorId);
+      meshToFloor.delete(entry.batch.mesh);
+      entry.batch.dispose();
+      entry.material.dispose();
+    };
+
+    const syncPieces = (project: Project): void => {
+      for (const [floorId, entry] of batches) {
+        entry.batch.sync(piecesOnFloor(project, floorId));
+      }
+    };
+
+    const applySelection = (selection: readonly string[]): void => {
+      const ids = new Set(selection);
+      for (const entry of batches.values()) {
+        entry.batch.setSelection(ids, 'replace');
+      }
+    };
+
+    const reconcileFloors = (project: Project, activeFloorId: string): void => {
+      const visible = visibleFloors(project);
+      const visibleIds = new Set(visible.map((floor) => floor.id));
+
+      for (const floorId of [...batches.keys()]) {
+        if (!visibleIds.has(floorId)) {
+          removeBatch(floorId);
+        }
+      }
+
+      for (const floor of visible) {
+        let entry = batches.get(floor.id);
+        if (entry === undefined) {
+          entry = createEntry();
+          batches.set(floor.id, entry);
+          meshToFloor.set(entry.batch.mesh, floor.id);
+        }
+        applyOpacity(entry.material, ghostOpacityForFloor(floor, activeFloorId));
+        entry.batch.sync(piecesOnFloor(project, floor.id));
+      }
+
+      const nextMeshes: BatchedMesh[] = [];
+      for (const floor of sortedFloors(project)) {
+        const entry = batches.get(floor.id);
+        if (entry !== undefined) {
+          nextMeshes.push(entry.batch.mesh);
+        }
+      }
+      applySelection(editorStore.getState().selection);
+      setMeshes(nextMeshes);
+    };
+
+    const updateOpacities = (project: Project, activeFloorId: string): void => {
+      for (const floor of project.floors) {
+        const entry = batches.get(floor.id);
+        if (entry !== undefined) {
+          applyOpacity(entry.material, ghostOpacityForFloor(floor, activeFloorId));
+        }
+      }
+    };
 
     const initial = editorStore.getState();
-    batch.sync(initial.project.pieces);
-    batch.setSelection(new Set(initial.selection), 'replace');
+    reconcileFloors(initial.project, initial.activeFloorId);
+    applySelection(initial.selection);
     invalidate();
 
-    const unsubscribePieces = editorStore.subscribe((state, previous) => {
-      if (state.project.pieces === previous.project.pieces) {
-        return;
+    const unsubscribe = editorStore.subscribe((state, previous) => {
+      let dirty = false;
+      if (state.project !== previous.project) {
+        if (state.project.floors !== previous.project.floors) {
+          reconcileFloors(state.project, state.activeFloorId);
+        } else if (state.project.pieces !== previous.project.pieces) {
+          syncPieces(state.project);
+        }
+        dirty = true;
       }
-      batch.sync(state.project.pieces);
-      invalidate();
-    });
-    const unsubscribeSelection = editorStore.subscribe((state, previous) => {
-      if (state.selection === previous.selection) {
-        return;
+      if (state.selection !== previous.selection) {
+        applySelection(state.selection);
+        dirty = true;
       }
-      batch.setSelection(new Set(state.selection), 'replace');
-      invalidate();
+      if (state.activeFloorId !== previous.activeFloorId) {
+        updateOpacities(state.project, state.activeFloorId);
+        dirty = true;
+      }
+      if (dirty) {
+        invalidate();
+      }
     });
 
     return () => {
-      unsubscribePieces();
-      unsubscribeSelection();
-      fieldRef.current = null;
-      setMesh(null);
-      batch.dispose();
-      material.dispose();
+      unsubscribe();
+      for (const floorId of [...batches.keys()]) {
+        removeBatch(floorId);
+      }
+      batchesRef.current = new Map();
+      meshToFloorRef.current = new Map();
+      setMeshes([]);
       disposeGeometryCache();
     };
   }, [resolver, maxInstances, invalidate]);
@@ -139,19 +273,32 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
     ref,
     () => ({
       pick: (ndc: Vector2, camera: Camera): string | null => {
-        const batch = fieldRef.current;
-        if (batch === null) {
+        const project = editorStore.getState().project;
+        const targets: BatchedMesh[] = [];
+        for (const [floorId, entry] of batchesRef.current) {
+          if (!isFloorLocked(project, floorId)) {
+            targets.push(entry.batch.mesh);
+          }
+        }
+        if (targets.length === 0) {
           return null;
         }
         raycaster.setFromCamera(ndc, camera);
-        batch.mesh.updateMatrixWorld();
-        const hits = raycaster.intersectObject(batch.mesh, false);
+        for (const mesh of targets) {
+          mesh.updateMatrixWorld();
+        }
+        const hits = raycaster.intersectObjects(targets, false);
         for (const hit of hits) {
           const batchId = hit.batchId;
           if (batchId === undefined) {
             continue;
           }
-          const pieceId = batch.pieceIdForBatch(batchId);
+          const floorId = meshToFloorRef.current.get(hit.object as BatchedMesh);
+          if (floorId === undefined) {
+            continue;
+          }
+          const entry = batchesRef.current.get(floorId);
+          const pieceId = entry?.batch.pieceIdForBatch(batchId) ?? null;
           if (pieceId !== null) {
             return pieceId;
           }
@@ -162,16 +309,17 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
         pieceIds: readonly string[],
         delta: [number, number, number],
       ): void => {
-        const batch = fieldRef.current;
-        if (batch === null) {
-          return;
-        }
         const wanted = new Set(pieceIds);
+        const batches = batchesRef.current;
         for (const piece of editorStore.getState().project.pieces) {
           if (!wanted.has(piece.id)) {
             continue;
           }
-          batch.update({
+          const entry = batches.get(piece.floorId);
+          if (entry === undefined) {
+            continue;
+          }
+          entry.batch.update({
             ...piece,
             position: vec3(
               piece.position[0] + delta[0],
@@ -183,20 +331,25 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
         invalidate();
       },
       clearPreview: (): void => {
-        const batch = fieldRef.current;
-        if (batch === null) {
-          return;
+        const project = editorStore.getState().project;
+        for (const [floorId, entry] of batchesRef.current) {
+          entry.batch.sync(piecesOnFloor(project, floorId));
         }
-        batch.sync(editorStore.getState().project.pieces);
         invalidate();
       },
     }),
     [raycaster, invalidate],
   );
 
-  if (mesh === null) {
+  if (meshes.length === 0) {
     return null;
   }
 
-  return <primitive object={mesh} />;
+  return (
+    <>
+      {meshes.map((mesh) => (
+        <primitive key={mesh.id} object={mesh} />
+      ))}
+    </>
+  );
 });

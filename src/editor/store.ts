@@ -12,8 +12,8 @@
  * Selection, clipboard and grid updates are UI state and never touch history.
  */
 
-import { createEmptyProject, History } from '@/domain';
-import type { BuildState, Command, PlacedPiece, Project, Vec3 } from '@/domain';
+import { createEmptyProject, createId, History } from '@/domain';
+import type { BuildState, Command, Floor, PlacedPiece, Project, Vec3 } from '@/domain';
 import { DEFAULT_GRID_CONFIG } from '@/engine';
 import type { GridConfig } from '@/engine';
 import { useStore } from 'zustand';
@@ -26,6 +26,15 @@ import {
   createSetBuildStateCommand,
   createTransformPiecesCommand,
 } from './commands';
+import {
+  createAddFloorCommand,
+  createDeleteFloorCommand,
+  createRenameFloorCommand,
+  createSetFloorElevationCommand,
+  createSetFloorLockedCommand,
+  createSetFloorVisibleCommand,
+} from './floor-commands';
+import { floorById, nextFloorElevation, sortedFloors } from './floors';
 import { applySelection, selectAll as selectAllIds } from './selection';
 import type { SelectionMode } from './selection';
 import { clonePiece, duplicatePieces, mirrorPiece, rotatePieceY, translatePiece } from './transform';
@@ -41,6 +50,12 @@ export interface EditorState {
   readonly canRedo: boolean;
   /** Grid mirror for placement/snapping. UI state. */
   readonly grid: GridConfig;
+  /**
+   * The floor new pieces are placed on and existing pieces are ghosted
+   * relative to. Transient UI state: never part of history, always reconciled
+   * to reference an existing floor.
+   */
+  readonly activeFloorId: string;
 
   /**
    * Replace the whole document (project load / new project). LOAD-ONLY: this is
@@ -64,6 +79,17 @@ export interface EditorState {
   mirrorSelected(axis: 'x' | 'z', offset?: number): void;
   setSelectedBuildState(state: BuildState): void;
   setGrid(config: GridConfig): void;
+
+  /** Add a floor through a command and make it active. */
+  addFloor(name?: string, elevation?: number): void;
+  /** Delete a floor (and its pieces) through one command. Rejects the last floor. */
+  deleteFloor(id: string): void;
+  renameFloor(id: string, name: string): void;
+  setFloorElevation(id: string, elevation: number): void;
+  setFloorVisible(id: string, visible: boolean): void;
+  setFloorLocked(id: string, locked: boolean): void;
+  /** Select the active floor. UI-only; never records history. */
+  setActiveFloor(id: string): void;
 }
 
 export type EditorStore = StoreApi<EditorState>;
@@ -99,6 +125,18 @@ export function createEditorStore(initialProject: Project): EditorStore {
         set({ project: next, canUndo: history.canUndo(), canRedo: history.canRedo() });
       };
 
+      /**
+       * Resolve a floor id that definitely exists in `project`. Prefers the
+       * supplied candidate, then the lowest-index floor, then the empty string
+       * for a document with no floors.
+       */
+      const reconcileActiveFloorId = (project: Project, preferred?: string): string => {
+        if (preferred !== undefined && floorById(project, preferred) !== undefined) {
+          return preferred;
+        }
+        return sortedFloors(project)[0]?.id ?? '';
+      };
+
       const selectedPieces = (): PlacedPiece[] => {
         const { project, selection } = get();
         if (selection.length === 0) {
@@ -123,10 +161,18 @@ export function createEditorStore(initialProject: Project): EditorStore {
         canUndo: false,
         canRedo: false,
         grid: { ...DEFAULT_GRID_CONFIG },
+        activeFloorId: reconcileActiveFloorId(initialProject),
 
         setProject: (project) => {
           history.clear();
-          set({ project, selection: [], clipboard: [], canUndo: false, canRedo: false });
+          set({
+            project,
+            selection: [],
+            clipboard: [],
+            canUndo: false,
+            canRedo: false,
+            activeFloorId: reconcileActiveFloorId(project),
+          });
         },
 
         executeCommand: execute,
@@ -135,7 +181,8 @@ export function createEditorStore(initialProject: Project): EditorStore {
           if (!history.canUndo()) {
             return;
           }
-          set({ project: history.undo() });
+          const next = history.undo();
+          set({ project: next, activeFloorId: reconcileActiveFloorId(next, get().activeFloorId) });
           syncHistoryFlags();
         },
 
@@ -143,7 +190,8 @@ export function createEditorStore(initialProject: Project): EditorStore {
           if (!history.canRedo()) {
             return;
           }
-          set({ project: history.redo() });
+          const next = history.redo();
+          set({ project: next, activeFloorId: reconcileActiveFloorId(next, get().activeFloorId) });
           syncHistoryFlags();
         },
 
@@ -221,6 +269,70 @@ export function createEditorStore(initialProject: Project): EditorStore {
         },
 
         setGrid: (grid) => set({ grid }),
+
+        addFloor: (name, elevation) => {
+          const { project } = get();
+          const index = project.floors.length;
+          const floor: Floor = {
+            id: createId('floor'),
+            name: name ?? `Floor ${index + 1}`,
+            index,
+            elevation: elevation ?? nextFloorElevation(project),
+            visible: true,
+            locked: false,
+          };
+          execute(createAddFloorCommand(floor));
+          set({ activeFloorId: floor.id });
+        },
+
+        deleteFloor: (id) => {
+          const { project } = get();
+          if (project.floors.length <= 1 || floorById(project, id) === undefined) {
+            return;
+          }
+          execute(createDeleteFloorCommand(id));
+          const next = get().project;
+          const surviving = new Set(next.pieces.map((piece) => piece.id));
+          set((state) => ({
+            activeFloorId: reconcileActiveFloorId(next, state.activeFloorId),
+            selection: state.selection.filter((pieceId) => surviving.has(pieceId)),
+          }));
+        },
+
+        renameFloor: (id, name) => {
+          if (floorById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createRenameFloorCommand(id, name));
+        },
+
+        setFloorElevation: (id, elevation) => {
+          if (floorById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetFloorElevationCommand(id, elevation));
+        },
+
+        setFloorVisible: (id, visible) => {
+          if (floorById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetFloorVisibleCommand(id, visible));
+        },
+
+        setFloorLocked: (id, locked) => {
+          if (floorById(get().project, id) === undefined) {
+            return;
+          }
+          execute(createSetFloorLockedCommand(id, locked));
+        },
+
+        setActiveFloor: (id) => {
+          if (floorById(get().project, id) === undefined) {
+            return;
+          }
+          set({ activeFloorId: id });
+        },
       };
     }),
   );

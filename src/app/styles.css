@@ -288,3 +288,135 @@ body {
 .status-placeholder {
   margin-left: auto;
 }
+
+/* ------------------------------------------------------------------ */
+/* Floors                                                              */
+/* ------------------------------------------------------------------ */
+
+.editor-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+}
+
+.editor-sidebar > .piece-library {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.floor-panel {
+  flex: 0 0 auto;
+  max-height: 45%;
+  border-top: 1px solid var(--border);
+}
+
+.floor-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.floor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  overflow-y: auto;
+}
+
+.floor-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.floor-item:hover {
+  background: #1e222a;
+}
+
+.floor-item.active {
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.floor-item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.floor-index {
+  min-width: 1.2rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.floor-name-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text);
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.floor-item-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.floor-field {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.floor-field-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.floor-elevation-input {
+  width: 4.5rem;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text);
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.floor-toggle,
+.floor-delete {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.7rem;
+  color: var(--text);
+  background: #1e222a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.floor-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.floor-toggle:hover:not(:disabled),
+.floor-delete:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.floor-delete:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

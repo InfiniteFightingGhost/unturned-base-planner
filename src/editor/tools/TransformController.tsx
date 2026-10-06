@@ -16,6 +16,7 @@ import type { Vec3 } from '@/domain';
 import {
   createTransformPiecesCommand,
   editorStore,
+  floorById,
   snapPlacementPosition,
   translatePiece,
 } from '@/editor';
@@ -42,6 +43,12 @@ export function TransformController() {
     let start: Vec3 | null = null;
     let delta: [number, number, number] = [0, 0, 0];
 
+    /** Drag on the active floor's horizontal plane, so elevated floors work. */
+    const activePlaneY = (): number => {
+      const { project, activeFloorId } = editorStore.getState();
+      return floorById(project, activeFloorId)?.elevation ?? 0;
+    };
+
     const onPointerDown = (event: PointerEvent): void => {
       if (event.button !== 0) {
         return;
@@ -62,7 +69,7 @@ export function TransformController() {
       if (!editor.selection.includes(id)) {
         return;
       }
-      const point = groundPointFromEvent(event, element, camera);
+      const point = groundPointFromEvent(event, element, camera, activePlaneY());
       if (point === null) {
         return;
       }
@@ -78,7 +85,7 @@ export function TransformController() {
       if (!dragging || start === null) {
         return;
       }
-      const point = groundPointFromEvent(event, element, camera);
+      const point = groundPointFromEvent(event, element, camera, activePlaneY());
       if (point === null) {
         return;
       }

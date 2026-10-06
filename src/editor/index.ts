@@ -15,6 +15,28 @@ export {
   createTransformPiecesCommand,
 } from './commands';
 
+export {
+  createAddFloorCommand,
+  createDeleteFloorCommand,
+  createRenameFloorCommand,
+  createSetFloorElevationCommand,
+  createSetFloorLockedCommand,
+  createSetFloorVisibleCommand,
+} from './floor-commands';
+
+export {
+  ACTIVE_FLOOR_OPACITY,
+  GHOST_FLOOR_OPACITY,
+  HIDDEN_FLOOR_OPACITY,
+  floorById,
+  ghostOpacityForFloor,
+  isFloorLocked,
+  nextFloorElevation,
+  piecesOnFloor,
+  sortedFloors,
+  visibleFloors,
+} from './floors';
+
 export { EMPTY_SELECTION, applySelection, isSelected, selectAll } from './selection';
 export type { SelectionMode } from './selection';
 

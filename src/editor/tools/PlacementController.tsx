@@ -14,7 +14,13 @@ import { useThree } from '@react-three/fiber';
 import { BoxGeometry, MeshStandardMaterial } from 'three';
 import type { Mesh } from 'three';
 import type { PieceDefinition } from '@/domain';
-import { createAddPiecesCommand, editorStore, resolvePlacement, snapPlacementPosition } from '@/editor';
+import {
+  createAddPiecesCommand,
+  editorStore,
+  floorById,
+  resolvePlacement,
+  snapPlacementPosition,
+} from '@/editor';
 import { DATASET } from '@/data';
 import { useEngineStore } from '@/engine';
 import { groundPointFromEvent } from './pointer';
@@ -92,11 +98,16 @@ export function PlacementController() {
     const element = gl.domElement;
 
     const computeGhost = (event: MouseEvent): GhostState | null => {
-      const point = groundPointFromEvent(event, element, camera);
+      const { project, activeFloorId } = editorStore.getState();
+      const elevation = floorById(project, activeFloorId)?.elevation ?? 0;
+      const point = groundPointFromEvent(event, element, camera, elevation);
       if (point === null) {
         return null;
       }
       const position = snapPlacementPosition(point, grid);
+      // The active floor's elevation is authoritative on Y (the grid snap only
+      // applies to the plan axes), so pieces always sit exactly on the floor.
+      position[1] = elevation;
       const rotationY = useToolStore.getState().ghost?.rotationY ?? 0;
       return { position, rotationY };
     };
@@ -120,11 +131,12 @@ export function PlacementController() {
       if (ghost === null) {
         return;
       }
-      const floorId = editorStore.getState().project.floors[0]?.id;
-      if (floorId === undefined) {
+      const { project, activeFloorId } = editorStore.getState();
+      const floor = floorById(project, activeFloorId);
+      if (floor === undefined) {
         return;
       }
-      const piece = resolvePlacement(definition, ghost.position, ghost.rotationY, floorId);
+      const piece = resolvePlacement(definition, ghost.position, ghost.rotationY, floor.id);
       editorStore.getState().executeCommand(createAddPiecesCommand([piece]));
       editorStore.getState().select([piece.id], 'replace');
       invalidate();
