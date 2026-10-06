@@ -131,3 +131,6 @@ export type { ValidationIssue } from './validation';
 
 export { migrations, migrate } from './migration';
 export type { Migration } from './migration';
+
+// Unturned structure building engine (pure housing logic).
+export * from './build';

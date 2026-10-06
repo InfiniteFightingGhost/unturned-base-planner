@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { IdSchema } from './ids';
 import { Vec3Schema } from './primitives';
+import { EConstructSchema } from './build/construct';
 
 /**
  * Piece definitions describe WHAT a buildable part is, independent of whether
@@ -81,6 +82,11 @@ export const PieceDefinitionSchema = z.object({
   allowedRotations: z.array(z.number()).default([...DEFAULT_ALLOWED_ROTATIONS]),
   collision: CollisionSchema.default({ enabled: true, shape: 'box' }),
   resourceRecipe: z.string(),
+  /**
+   * Optional explicit Unturned housing construct. When absent the building
+   * engine derives one from `category` and `name` via `resolveConstruct`.
+   */
+  construct: EConstructSchema.optional(),
 });
 
 export type PieceDefinition = z.infer<typeof PieceDefinitionSchema>;
