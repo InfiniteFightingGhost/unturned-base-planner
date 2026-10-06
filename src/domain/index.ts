@@ -91,6 +91,14 @@ export type {
 } from './placed-piece';
 
 export {
+  PrefabPieceSchema,
+  PrefabSchema,
+  canonicalizePrefabPiece,
+  canonicalizePrefab,
+} from './prefab';
+export type { PrefabPiece, Prefab } from './prefab';
+
+export {
   ResourceSchema,
   ResourceAmountSchema,
   RecipeOutputSchema,

@@ -58,8 +58,23 @@ function migrateV0ToV1(raw: Record<string, unknown>): Record<string, unknown> {
   return next;
 }
 
+/**
+ * Version 1 had no prefab library. Version 2 adds `prefabs`, an ordered list of
+ * reusable, identity-free piece groups. The migration is additive: every other
+ * field is preserved untouched.
+ */
+function migrateV1ToV2(raw: Record<string, unknown>): Record<string, unknown> {
+  const next: Record<string, unknown> = { ...raw };
+  if (next.prefabs === undefined) {
+    next.prefabs = [];
+  }
+  next.schemaVersion = 2;
+  return next;
+}
+
 export const migrations: Record<number, Migration> = {
   0: migrateV0ToV1,
+  1: migrateV1ToV2,
 };
 
 function readVersion(raw: Record<string, unknown>): number {

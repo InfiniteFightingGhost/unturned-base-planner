@@ -13,7 +13,7 @@
  */
 
 import { createEmptyProject, createId, History } from '@/domain';
-import type { BuildState, Command, Floor, PlacedPiece, Project, Vec3 } from '@/domain';
+import type { BuildState, Command, Floor, PlacedPiece, Prefab, Project, Vec3 } from '@/domain';
 import { DEFAULT_GRID_CONFIG } from '@/engine';
 import type { GridConfig } from '@/engine';
 import { useStore } from 'zustand';
@@ -35,6 +35,12 @@ import {
   createSetFloorVisibleCommand,
 } from './floor-commands';
 import { floorById, nextFloorElevation, sortedFloors } from './floors';
+import { instantiatePrefab as instantiatePrefabPieces, prefabFromPieces } from './prefab';
+import {
+  createDeletePrefabCommand,
+  createInstantiatePrefabCommand,
+  createSavePrefabCommand,
+} from './prefab-commands';
 import { applySelection, selectAll as selectAllIds } from './selection';
 import type { SelectionMode } from './selection';
 import { clonePiece, duplicatePieces, mirrorPiece, rotatePieceY, translatePiece } from './transform';
@@ -90,6 +96,21 @@ export interface EditorState {
   setFloorLocked(id: string, locked: boolean): void;
   /** Select the active floor. UI-only; never records history. */
   setActiveFloor(id: string): void;
+
+  /**
+   * Capture the current selection as a prefab and add it to the library through
+   * one undoable command. Returns the created prefab, or `null` when nothing is
+   * selected. The selection is left untouched.
+   */
+  saveSelectionAsPrefab(name: string): Prefab | null;
+  /** Delete a prefab from the library. Undoable. Unknown ids are ignored. */
+  deletePrefab(id: string): void;
+  /**
+   * Stamp a prefab's pieces into the document as one undoable step, select the
+   * new pieces and return their fresh ids. Defaults: `position` is the active
+   * floor origin `[0, elevation, 0]` and `floorId` is the active floor.
+   */
+  instantiatePrefab(prefabId: string, position?: Vec3, floorId?: string): string[];
 }
 
 export type EditorStore = StoreApi<EditorState>;
@@ -332,6 +353,41 @@ export function createEditorStore(initialProject: Project): EditorStore {
             return;
           }
           set({ activeFloorId: id });
+        },
+
+        saveSelectionAsPrefab: (name) => {
+          const pieces = selectedPieces();
+          if (pieces.length === 0) {
+            return null;
+          }
+          const prefab = prefabFromPieces(pieces, name);
+          execute(createSavePrefabCommand(prefab));
+          return prefab;
+        },
+
+        deletePrefab: (id) => {
+          if (!get().project.prefabs.some((prefab) => prefab.id === id)) {
+            return;
+          }
+          execute(createDeletePrefabCommand(id));
+        },
+
+        instantiatePrefab: (prefabId, position, floorId) => {
+          const { project, activeFloorId } = get();
+          const prefab = project.prefabs.find((candidate) => candidate.id === prefabId);
+          if (prefab === undefined) {
+            return [];
+          }
+          const targetFloor = floorById(project, floorId ?? activeFloorId) ?? sortedFloors(project)[0];
+          if (targetFloor === undefined) {
+            return [];
+          }
+          const origin: Vec3 = position ?? [0, targetFloor.elevation, 0];
+          const placed = instantiatePrefabPieces(prefab, origin, targetFloor.id);
+          execute(createInstantiatePrefabCommand(placed));
+          const ids = placed.map((piece) => piece.id);
+          set({ selection: ids });
+          return ids;
         },
       };
     }),

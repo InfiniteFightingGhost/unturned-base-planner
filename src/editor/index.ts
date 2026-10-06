@@ -63,6 +63,14 @@ export {
 } from './pattern-commands';
 
 export {
+  createDeletePrefabCommand,
+  createInstantiatePrefabCommand,
+  createSavePrefabCommand,
+} from './prefab-commands';
+
+export { clonePrefab, instantiatePrefab, prefabFromPieces } from './prefab';
+
+export {
   placementIsNoop,
   resolvePlacement,
   snapPlacementPosition,

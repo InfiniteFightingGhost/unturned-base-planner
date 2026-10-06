@@ -516,3 +516,105 @@ body {
   opacity: 0.4;
   cursor: default;
 }
+
+/* ------------------------------------------------------------------ */
+/* Prefabs                                                             */
+/* ------------------------------------------------------------------ */
+
+.prefab-panel {
+  flex: 0 0 auto;
+  max-height: 45%;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.prefab-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prefab-name-input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text);
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.prefab-save {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  background: #1e222a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.prefab-save:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.prefab-save:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.prefab-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.prefab-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prefab-item-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.prefab-item-name {
+  font-size: 0.8rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prefab-item-count {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.prefab-item-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.prefab-action {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.7rem;
+  color: var(--text);
+  background: #1e222a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.prefab-action:hover:not(:disabled) {
+  border-color: var(--accent);
+}

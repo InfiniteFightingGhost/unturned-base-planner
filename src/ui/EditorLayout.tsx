@@ -19,6 +19,7 @@ import { useGlobalShortcuts } from '@/editor/tools/shortcuts';
 import { PieceLibrary } from './PieceLibrary';
 import { FloorSelector } from './FloorSelector';
 import { PatternPanel } from './PatternPanel';
+import { PrefabPanel } from './PrefabPanel';
 import { Toolbar } from './Toolbar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { StatusBar } from './StatusBar';
@@ -42,6 +43,7 @@ export function EditorLayout() {
           <PieceLibrary />
           <FloorSelector />
           <PatternPanel />
+          <PrefabPanel />
         </div>
 
         <section className="viewport-panel" aria-label="3D viewport">

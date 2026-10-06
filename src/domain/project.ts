@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { IdSchema, createId } from './ids';
 import { Vec3Schema } from './primitives';
 import { PlacedPieceSchema, canonicalizePlacedPiece } from './placed-piece';
+import { PrefabSchema, canonicalizePrefab } from './prefab';
 import { migrate } from './migration';
 
 /**
@@ -12,7 +13,7 @@ import { migrate } from './migration';
  * mutates a project in place.
  */
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export const FloorSchema = z.object({
   id: IdSchema,
@@ -95,6 +96,7 @@ export const ProjectSchema = z.object({
   pieces: z.array(PlacedPieceSchema).default([]),
   measurements: z.array(MeasurementSchema).default([]),
   annotations: z.array(AnnotationSchema).default([]),
+  prefabs: z.array(PrefabSchema).default([]),
 });
 
 export type Project = z.infer<typeof ProjectSchema>;
@@ -136,6 +138,7 @@ export function createEmptyProject(name: string, opts: CreateProjectOptions = {}
     pieces: [],
     measurements: [],
     annotations: [],
+    prefabs: [],
   };
   return ProjectSchema.parse(candidate);
 }
@@ -148,6 +151,7 @@ export function serializeProject(project: Project): string {
   const canonical: Project = {
     ...project,
     pieces: project.pieces.map(canonicalizePlacedPiece),
+    prefabs: project.prefabs.map(canonicalizePrefab),
   };
   return JSON.stringify(ProjectSchema.parse(canonical));
 }

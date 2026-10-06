@@ -11,7 +11,7 @@ import { makeDefinition, makePiece } from './domain-fixtures';
 const ISO = '2024-01-01T00:00:00.000Z';
 
 describe('createEmptyProject', () => {
-  it('creates a v1 project with one default floor', () => {
+  it('creates a current-version project with one default floor and no prefabs', () => {
     const project = createEmptyProject('My Base', { id: 'p1', now: ISO });
     expect(project.schemaVersion).toBe(CURRENT_SCHEMA_VERSION);
     expect(project.metadata.id).toBe('p1');
@@ -20,6 +20,7 @@ describe('createEmptyProject', () => {
     expect(project.floors[0]?.index).toBe(0);
     expect(project.settings.gridSize).toBe(1);
     expect(project.pieces).toEqual([]);
+    expect(project.prefabs).toEqual([]);
   });
 });
 
@@ -58,7 +59,7 @@ describe('safeParseProject', () => {
 });
 
 describe('migration', () => {
-  it('migrates a synthetic v0 project to valid v1', () => {
+  it('migrates a synthetic v0 project to the current version', () => {
     const legacy = {
       schemaVersion: 0,
       metadata: { id: 'legacy', name: 'Legacy', createdAt: ISO, updatedAt: ISO },
@@ -67,11 +68,30 @@ describe('migration', () => {
 
     const migrated = parseProject(legacy);
 
-    expect(migrated.schemaVersion).toBe(1);
+    expect(migrated.schemaVersion).toBe(CURRENT_SCHEMA_VERSION);
     expect(migrated.settings.gridSize).toBe(1);
     expect(migrated.annotations).toEqual([]);
     expect(migrated.measurements).toEqual([]);
     expect(migrated.pieces).toEqual([]);
+    expect(migrated.prefabs).toEqual([]);
+  });
+
+  it('migrates a v1 project to v2 by adding an empty prefab library', () => {
+    const legacy = {
+      schemaVersion: 1,
+      metadata: { id: 'legacy', name: 'Legacy', createdAt: ISO, updatedAt: ISO },
+      settings: {},
+      floors: [],
+      zones: [],
+      pieces: [],
+      measurements: [],
+      annotations: [],
+    };
+
+    const migrated = parseProject(legacy);
+
+    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.prefabs).toEqual([]);
   });
 
   it('does not mutate the migration input', () => {
