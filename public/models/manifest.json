@@ -1,0 +1,6432 @@
+{
+  "version": 1,
+  "source": "local-unturned",
+  "models": {
+    "barbedwire": {
+      "file": "models/barbedwire.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.800001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.800001,
+          0.433013,
+          0.25
+        ]
+      }
+    },
+    "barbedwire.ornamental": {
+      "file": "models/barbedwire.ornamental.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.800001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.800001,
+          0.433013,
+          0.25
+        ]
+      }
+    },
+    "barrel.rain": {
+      "file": "models/barrel.rain.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.636787,
+          0.0,
+          -0.636787
+        ],
+        "max": [
+          0.636787,
+          1.499998,
+          0.636787
+        ]
+      }
+    },
+    "barricade.birch": {
+      "file": "models/barricade.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275323,
+          0.0,
+          -0.438119
+        ],
+        "max": [
+          1.275323,
+          2.573552,
+          0.438119
+        ]
+      }
+    },
+    "barricade.maple": {
+      "file": "models/barricade.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275323,
+          0.0,
+          -0.438119
+        ],
+        "max": [
+          1.275323,
+          2.573552,
+          0.438119
+        ]
+      }
+    },
+    "barricade.pine": {
+      "file": "models/barricade.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275323,
+          0.0,
+          -0.438119
+        ],
+        "max": [
+          1.275323,
+          2.573552,
+          0.438119
+        ]
+      }
+    },
+    "beach": {
+      "file": "models/beach.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.blue": {
+      "file": "models/beach.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.green": {
+      "file": "models/beach.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.orange": {
+      "file": "models/beach.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.purple": {
+      "file": "models/beach.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.red": {
+      "file": "models/beach.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beach.yellow": {
+      "file": "models/beach.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.750001
+        ],
+        "max": [
+          1.500001,
+          0.725001,
+          0.750001
+        ]
+      }
+    },
+    "beacon": {
+      "file": "models/beacon.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.837587,
+          0.0,
+          -0.856706
+        ],
+        "max": [
+          0.837587,
+          1.717912,
+          0.856706
+        ]
+      }
+    },
+    "bedroll.black": {
+      "file": "models/bedroll.black.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.blue": {
+      "file": "models/bedroll.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.green": {
+      "file": "models/bedroll.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.orange": {
+      "file": "models/bedroll.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.purple": {
+      "file": "models/bedroll.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.red": {
+      "file": "models/bedroll.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.white": {
+      "file": "models/bedroll.white.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "bedroll.yellow": {
+      "file": "models/bedroll.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.416462,
+          0.0,
+          -0.762507
+        ],
+        "max": [
+          1.416462,
+          0.460106,
+          0.762507
+        ]
+      }
+    },
+    "book": {
+      "file": "models/book.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.262796,
+          0.0,
+          -0.31371
+        ],
+        "max": [
+          0.262796,
+          0.2,
+          0.31371
+        ]
+      }
+    },
+    "cagelight": {
+      "file": "models/cagelight.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.268432,
+          0.0,
+          -0.207267
+        ],
+        "max": [
+          0.268432,
+          0.67108,
+          0.207267
+        ]
+      }
+    },
+    "caltrop": {
+      "file": "models/caltrop.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.193624,
+          0.0,
+          -0.167683
+        ],
+        "max": [
+          0.193624,
+          0.353256,
+          0.167683
+        ]
+      }
+    },
+    "campfire": {
+      "file": "models/campfire.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.121977,
+          0.0,
+          -1.177201
+        ],
+        "max": [
+          1.121977,
+          1.443312,
+          1.177201
+        ]
+      }
+    },
+    "carepackage": {
+      "file": "models/carepackage.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -2.0
+        ],
+        "max": [
+          2.0,
+          4.0,
+          2.0
+        ]
+      }
+    },
+    "charge": {
+      "file": "models/charge.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.206714,
+          0.0,
+          -0.074014
+        ],
+        "max": [
+          0.206714,
+          0.458174,
+          0.074014
+        ]
+      }
+    },
+    "charge.bounce": {
+      "file": "models/charge.bounce.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.231107,
+          0.0,
+          -0.074014
+        ],
+        "max": [
+          0.231107,
+          0.486,
+          0.074014
+        ]
+      }
+    },
+    "charge.precision": {
+      "file": "models/charge.precision.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.545071,
+          0.0,
+          -0.085368
+        ],
+        "max": [
+          0.545071,
+          1.387261,
+          0.085368
+        ]
+      }
+    },
+    "chemistrylab": {
+      "file": "models/chemistrylab.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.621919
+        ],
+        "max": [
+          1.0,
+          1.927139,
+          0.621919
+        ]
+      }
+    },
+    "claim": {
+      "file": "models/claim.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.525,
+          0.0,
+          -0.05
+        ],
+        "max": [
+          0.525,
+          2.75,
+          0.05
+        ]
+      }
+    },
+    "claymore": {
+      "file": "models/claymore.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.05
+        ],
+        "max": [
+          0.25,
+          0.4375,
+          0.05
+        ]
+      }
+    },
+    "clock": {
+      "file": "models/clock.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.062501
+        ],
+        "max": [
+          0.5,
+          1.000001,
+          0.062501
+        ]
+      }
+    },
+    "cooler": {
+      "file": "models/cooler.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.817935,
+          0.0,
+          -0.5
+        ],
+        "max": [
+          0.817935,
+          1.0,
+          0.5
+        ]
+      }
+    },
+    "cot": {
+      "file": "models/cot.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.blue": {
+      "file": "models/cot.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.green": {
+      "file": "models/cot.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.orange": {
+      "file": "models/cot.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.purple": {
+      "file": "models/cot.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.red": {
+      "file": "models/cot.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "cot.yellow": {
+      "file": "models/cot.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.872701,
+          0.0,
+          -0.902757
+        ],
+        "max": [
+          1.872701,
+          0.957669,
+          0.902757
+        ]
+      }
+    },
+    "couch": {
+      "file": "models/couch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.blue": {
+      "file": "models/couch.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.green": {
+      "file": "models/couch.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.orange": {
+      "file": "models/couch.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.purple": {
+      "file": "models/couch.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.red": {
+      "file": "models/couch.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "couch.yellow": {
+      "file": "models/couch.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -0.764961
+        ],
+        "max": [
+          1.500001,
+          1.500001,
+          0.764961
+        ]
+      }
+    },
+    "counter.birch": {
+      "file": "models/counter.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.35,
+          0.5625
+        ]
+      }
+    },
+    "counter.maple": {
+      "file": "models/counter.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.35,
+          0.5625
+        ]
+      }
+    },
+    "counter.metal": {
+      "file": "models/counter.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.35,
+          0.5625
+        ]
+      }
+    },
+    "counter.pine": {
+      "file": "models/counter.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.35,
+          0.5625
+        ]
+      }
+    },
+    "counter.sink.birch": {
+      "file": "models/counter.sink.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.834327,
+          0.5625
+        ]
+      }
+    },
+    "counter.sink.maple": {
+      "file": "models/counter.sink.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.834327,
+          0.5625
+        ]
+      }
+    },
+    "counter.sink.metal": {
+      "file": "models/counter.sink.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.834327,
+          0.5625
+        ]
+      }
+    },
+    "counter.sink.pine": {
+      "file": "models/counter.sink.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          0.75,
+          1.834327,
+          0.5625
+        ]
+      }
+    },
+    "cover": {
+      "file": "models/cover.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.155728,
+          0.0,
+          -0.151599
+        ],
+        "max": [
+          2.155728,
+          4.27758,
+          0.151599
+        ]
+      }
+    },
+    "cover.peaks": {
+      "file": "models/cover.peaks.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.155728,
+          0.0,
+          -0.151599
+        ],
+        "max": [
+          2.155728,
+          4.27758,
+          0.151599
+        ]
+      }
+    },
+    "cover.russia": {
+      "file": "models/cover.russia.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.155728,
+          0.0,
+          -0.151599
+        ],
+        "max": [
+          2.155728,
+          4.27758,
+          0.151599
+        ]
+      }
+    },
+    "crate.birch": {
+      "file": "models/crate.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.83949,
+          0.0,
+          -0.83949
+        ],
+        "max": [
+          0.83949,
+          1.580926,
+          0.83949
+        ]
+      }
+    },
+    "crate.maple": {
+      "file": "models/crate.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.83949,
+          0.0,
+          -0.83949
+        ],
+        "max": [
+          0.83949,
+          1.580926,
+          0.83949
+        ]
+      }
+    },
+    "crate.pine": {
+      "file": "models/crate.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.83949,
+          0.0,
+          -0.83949
+        ],
+        "max": [
+          0.83949,
+          1.580926,
+          0.83949
+        ]
+      }
+    },
+    "dl.carepackage": {
+      "file": "models/dl.carepackage.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.553593,
+          0.0,
+          -2.672085
+        ],
+        "max": [
+          2.553593,
+          1.402464,
+          2.672085
+        ]
+      }
+    },
+    "door.birch": {
+      "file": "models/door.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.225,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "door.jail": {
+      "file": "models/door.jail.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.0,
+          -0.19164
+        ],
+        "max": [
+          1.225,
+          2.8,
+          0.19164
+        ]
+      }
+    },
+    "door.maple": {
+      "file": "models/door.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.225,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "door.metal": {
+      "file": "models/door.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.225,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "door.pine": {
+      "file": "models/door.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.225,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.225,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "door.vault": {
+      "file": "models/door.vault.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.263503,
+          0.0,
+          -0.275001
+        ],
+        "max": [
+          1.263503,
+          2.8,
+          0.275001
+        ]
+      }
+    },
+    "doorframe.birch": {
+      "file": "models/doorframe.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.343633,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          1.343633,
+          3.079052,
+          0.375002
+        ]
+      }
+    },
+    "doorframe.brick": {
+      "file": "models/doorframe.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.343633,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          1.343633,
+          3.079052,
+          0.375002
+        ]
+      }
+    },
+    "doorframe.maple": {
+      "file": "models/doorframe.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.343633,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          1.343633,
+          3.079052,
+          0.375002
+        ]
+      }
+    },
+    "doorframe.metal": {
+      "file": "models/doorframe.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.343633,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          1.343633,
+          3.079052,
+          0.375002
+        ]
+      }
+    },
+    "doorframe.pine": {
+      "file": "models/doorframe.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.343633,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          1.343633,
+          3.079052,
+          0.375002
+        ]
+      }
+    },
+    "doorway.birch": {
+      "file": "models/doorway.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800001,
+          4.264651,
+          0.375002
+        ]
+      }
+    },
+    "doorway.brick": {
+      "file": "models/doorway.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.750001,
+          4.264651,
+          0.375002
+        ]
+      }
+    },
+    "doorway.maple": {
+      "file": "models/doorway.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800001,
+          4.264651,
+          0.375002
+        ]
+      }
+    },
+    "doorway.metal": {
+      "file": "models/doorway.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.750001,
+          4.264651,
+          0.375002
+        ]
+      }
+    },
+    "doorway.pine": {
+      "file": "models/doorway.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800001,
+          4.264651,
+          0.375002
+        ]
+      }
+    },
+    "doubledoor.birch": {
+      "file": "models/doubledoor.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.010026,
+          0.0,
+          -0.1
+        ],
+        "max": [
+          2.010026,
+          3.75,
+          0.1
+        ]
+      }
+    },
+    "doubledoor.maple": {
+      "file": "models/doubledoor.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.010026,
+          0.0,
+          -0.1
+        ],
+        "max": [
+          2.010026,
+          3.75,
+          0.1
+        ]
+      }
+    },
+    "doubledoor.metal": {
+      "file": "models/doubledoor.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.010026,
+          0.0,
+          -0.1
+        ],
+        "max": [
+          2.010026,
+          3.75,
+          0.1
+        ]
+      }
+    },
+    "doubledoor.pine": {
+      "file": "models/doubledoor.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.010026,
+          0.0,
+          -0.1
+        ],
+        "max": [
+          2.010026,
+          3.75,
+          0.1
+        ]
+      }
+    },
+    "dyevat": {
+      "file": "models/dyevat.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.340056,
+          0.0,
+          -0.866424
+        ],
+        "max": [
+          1.340056,
+          1.939276,
+          0.866424
+        ]
+      }
+    },
+    "fence.barbedwire": {
+      "file": "models/fence.barbedwire.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.1,
+          0.0,
+          -0.335357
+        ],
+        "max": [
+          3.1,
+          3.875712,
+          0.335357
+        ]
+      }
+    },
+    "fence.barbedwire.ornamental": {
+      "file": "models/fence.barbedwire.ornamental.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.1,
+          0.0,
+          -0.335357
+        ],
+        "max": [
+          3.1,
+          3.875712,
+          0.335357
+        ]
+      }
+    },
+    "flag.birch": {
+      "file": "models/flag.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.05,
+          0.0,
+          -0.102085
+        ],
+        "max": [
+          2.05,
+          12.0,
+          0.102085
+        ]
+      }
+    },
+    "flag.maple": {
+      "file": "models/flag.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.05,
+          0.0,
+          -0.102085
+        ],
+        "max": [
+          2.05,
+          12.0,
+          0.102085
+        ]
+      }
+    },
+    "flag.metal": {
+      "file": "models/flag.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.05,
+          0.0,
+          -0.102085
+        ],
+        "max": [
+          2.05,
+          12.0,
+          0.102085
+        ]
+      }
+    },
+    "flag.pine": {
+      "file": "models/flag.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.05,
+          0.0,
+          -0.102085
+        ],
+        "max": [
+          2.05,
+          12.0,
+          0.102085
+        ]
+      }
+    },
+    "flare.blue": {
+      "file": "models/flare.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "flare.green": {
+      "file": "models/flare.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "flare.orange": {
+      "file": "models/flare.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "flare.purple": {
+      "file": "models/flare.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "flare.red": {
+      "file": "models/flare.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "flare.yellow": {
+      "file": "models/flare.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.19096,
+          0.0,
+          -0.366491
+        ],
+        "max": [
+          0.19096,
+          0.996717,
+          0.366491
+        ]
+      }
+    },
+    "floor.birch": {
+      "file": "models/floor.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          10.25,
+          3.000001
+        ]
+      }
+    },
+    "floor.birch.triangle": {
+      "file": "models/floor.birch.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          10.249996,
+          2.598003
+        ]
+      }
+    },
+    "floor.brick": {
+      "file": "models/floor.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          10.25,
+          3.000001
+        ]
+      }
+    },
+    "floor.brick.triangle": {
+      "file": "models/floor.brick.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          10.249996,
+          2.598003
+        ]
+      }
+    },
+    "floor.maple": {
+      "file": "models/floor.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          10.25,
+          3.000001
+        ]
+      }
+    },
+    "floor.maple.triangle": {
+      "file": "models/floor.maple.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          10.249996,
+          2.598003
+        ]
+      }
+    },
+    "floor.metal": {
+      "file": "models/floor.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          10.25,
+          3.000001
+        ]
+      }
+    },
+    "floor.metal.triangle": {
+      "file": "models/floor.metal.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          10.249996,
+          2.598003
+        ]
+      }
+    },
+    "floor.pine": {
+      "file": "models/floor.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          10.25,
+          3.000001
+        ]
+      }
+    },
+    "floor.pine.triangle": {
+      "file": "models/floor.pine.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          10.249996,
+          2.598003
+        ]
+      }
+    },
+    "foodprepstation": {
+      "file": "models/foodprepstation.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.5625
+        ],
+        "max": [
+          1.0,
+          1.965896,
+          0.5625
+        ]
+      }
+    },
+    "fortification.bars": {
+      "file": "models/fortification.bars.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.096792,
+          0.0,
+          -0.121976
+        ],
+        "max": [
+          1.096792,
+          2.975908,
+          0.121976
+        ]
+      }
+    },
+    "fortification.birch": {
+      "file": "models/fortification.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.103294,
+          0.0,
+          -0.085145
+        ],
+        "max": [
+          1.103294,
+          2.998647,
+          0.085145
+        ]
+      }
+    },
+    "fortification.maple": {
+      "file": "models/fortification.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.103294,
+          0.0,
+          -0.085145
+        ],
+        "max": [
+          1.103294,
+          2.998647,
+          0.085145
+        ]
+      }
+    },
+    "fortification.pine": {
+      "file": "models/fortification.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.103294,
+          0.0,
+          -0.085145
+        ],
+        "max": [
+          1.103294,
+          2.998647,
+          0.085145
+        ]
+      }
+    },
+    "frame.large.birch": {
+      "file": "models/frame.large.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "frame.large.maple": {
+      "file": "models/frame.large.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "frame.large.pine": {
+      "file": "models/frame.large.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "frame.small.birch": {
+      "file": "models/frame.small.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "frame.small.maple": {
+      "file": "models/frame.small.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "frame.small.pine": {
+      "file": "models/frame.small.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "fridge": {
+      "file": "models/fridge.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.663031,
+          0.0,
+          -0.472943
+        ],
+        "max": [
+          0.663031,
+          2.5,
+          0.472943
+        ]
+      }
+    },
+    "garage.birch": {
+      "file": "models/garage.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.800001,
+          4.26465,
+          0.375003
+        ]
+      }
+    },
+    "garage.brick": {
+      "file": "models/garage.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.750001,
+          4.26465,
+          0.375003
+        ]
+      }
+    },
+    "garage.maple": {
+      "file": "models/garage.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.800001,
+          4.26465,
+          0.375003
+        ]
+      }
+    },
+    "garage.metal": {
+      "file": "models/garage.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.750001,
+          4.26465,
+          0.375003
+        ]
+      }
+    },
+    "garage.pine": {
+      "file": "models/garage.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.800001,
+          4.26465,
+          0.375003
+        ]
+      }
+    },
+    "garageframe.birch": {
+      "file": "models/garageframe.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.086393,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.086393,
+          3.985001,
+          0.375003
+        ]
+      }
+    },
+    "garageframe.brick": {
+      "file": "models/garageframe.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.086393,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.086393,
+          3.985001,
+          0.375003
+        ]
+      }
+    },
+    "garageframe.maple": {
+      "file": "models/garageframe.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.086393,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.086393,
+          3.985001,
+          0.375003
+        ]
+      }
+    },
+    "garageframe.metal": {
+      "file": "models/garageframe.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.086393,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.086393,
+          3.985001,
+          0.375003
+        ]
+      }
+    },
+    "garageframe.pine": {
+      "file": "models/garageframe.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.086393,
+          0.0,
+          -0.375003
+        ],
+        "max": [
+          2.086393,
+          3.985001,
+          0.375003
+        ]
+      }
+    },
+    "gate.birch": {
+      "file": "models/gate.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          2.0,
+          3.75,
+          0.252988
+        ]
+      }
+    },
+    "gate.maple": {
+      "file": "models/gate.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          2.0,
+          3.75,
+          0.252988
+        ]
+      }
+    },
+    "gate.metal": {
+      "file": "models/gate.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          2.0,
+          3.75,
+          0.252988
+        ]
+      }
+    },
+    "gate.pine": {
+      "file": "models/gate.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          2.0,
+          3.75,
+          0.252988
+        ]
+      }
+    },
+    "generator.large": {
+      "file": "models/generator.large.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.55601,
+          0.0,
+          -1.860614
+        ],
+        "max": [
+          1.55601,
+          2.972515,
+          1.860614
+        ]
+      }
+    },
+    "generator.small": {
+      "file": "models/generator.small.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.856706
+        ],
+        "max": [
+          0.75,
+          1.339637,
+          0.856706
+        ]
+      }
+    },
+    "glass.bulletproof": {
+      "file": "models/glass.bulletproof.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.75,
+          2.800001,
+          1e-06
+        ]
+      }
+    },
+    "glass.oneway": {
+      "file": "models/glass.oneway.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.75,
+          2.800001,
+          1e-06
+        ]
+      }
+    },
+    "glass.weak": {
+      "file": "models/glass.weak.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.75,
+          2.800001,
+          1e-06
+        ]
+      }
+    },
+    "hatch.birch": {
+      "file": "models/hatch.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "max": [
+          0.9,
+          0.4,
+          0.9
+        ]
+      }
+    },
+    "hatch.maple": {
+      "file": "models/hatch.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "max": [
+          0.9,
+          0.4,
+          0.9
+        ]
+      }
+    },
+    "hatch.metal": {
+      "file": "models/hatch.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "max": [
+          0.9,
+          0.4,
+          0.9
+        ]
+      }
+    },
+    "hatch.pine": {
+      "file": "models/hatch.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.9,
+          0.0,
+          -0.9
+        ],
+        "max": [
+          0.9,
+          0.4,
+          0.9
+        ]
+      }
+    },
+    "hole.birch": {
+      "file": "models/hole.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.700003,
+          3.000001
+        ]
+      }
+    },
+    "hole.birch.triangle": {
+      "file": "models/hole.birch.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.700003,
+          2.598003
+        ]
+      }
+    },
+    "hole.brick": {
+      "file": "models/hole.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.700003,
+          3.000001
+        ]
+      }
+    },
+    "hole.brick.triangle": {
+      "file": "models/hole.brick.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.700003,
+          2.598003
+        ]
+      }
+    },
+    "hole.maple": {
+      "file": "models/hole.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.700003,
+          3.000001
+        ]
+      }
+    },
+    "hole.maple.triangle": {
+      "file": "models/hole.maple.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.700003,
+          2.598003
+        ]
+      }
+    },
+    "hole.metal": {
+      "file": "models/hole.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.700003,
+          3.000001
+        ]
+      }
+    },
+    "hole.metal.triangle": {
+      "file": "models/hole.metal.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.700003,
+          2.598003
+        ]
+      }
+    },
+    "hole.pine": {
+      "file": "models/hole.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.700003,
+          3.000001
+        ]
+      }
+    },
+    "hole.pine.triangle": {
+      "file": "models/hole.pine.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.700003,
+          2.598003
+        ]
+      }
+    },
+    "kiln": {
+      "file": "models/kiln.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.430851,
+          0.0,
+          -2.14536
+        ],
+        "max": [
+          2.430851,
+          2.174931,
+          2.14536
+        ]
+      }
+    },
+    "ladder.birch": {
+      "file": "models/ladder.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.629414,
+          0.0,
+          -0.093751
+        ],
+        "max": [
+          0.629414,
+          4.25,
+          0.093751
+        ]
+      }
+    },
+    "ladder.maple": {
+      "file": "models/ladder.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.629414,
+          0.0,
+          -0.093751
+        ],
+        "max": [
+          0.629414,
+          4.25,
+          0.093751
+        ]
+      }
+    },
+    "ladder.metal": {
+      "file": "models/ladder.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.629414,
+          0.0,
+          -0.093751
+        ],
+        "max": [
+          0.629414,
+          4.25,
+          0.093751
+        ]
+      }
+    },
+    "ladder.pine": {
+      "file": "models/ladder.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.629414,
+          0.0,
+          -0.093751
+        ],
+        "max": [
+          0.629414,
+          4.25,
+          0.093751
+        ]
+      }
+    },
+    "lamp": {
+      "file": "models/lamp.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.370883,
+          0.0,
+          -0.370883
+        ],
+        "max": [
+          0.370883,
+          2.3,
+          0.370883
+        ]
+      }
+    },
+    "lamp.desk": {
+      "file": "models/lamp.desk.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.152887,
+          0.0,
+          -0.234758
+        ],
+        "max": [
+          0.152887,
+          0.762806,
+          0.234758
+        ]
+      }
+    },
+    "landmine": {
+      "file": "models/landmine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          0.25,
+          0.15,
+          0.25
+        ]
+      }
+    },
+    "library.birch": {
+      "file": "models/library.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.377501,
+          0.0,
+          -0.4375
+        ],
+        "max": [
+          1.377501,
+          2.6,
+          0.4375
+        ]
+      }
+    },
+    "library.maple": {
+      "file": "models/library.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.377501,
+          0.0,
+          -0.4375
+        ],
+        "max": [
+          1.377501,
+          2.6,
+          0.4375
+        ]
+      }
+    },
+    "library.metal": {
+      "file": "models/library.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.377501,
+          0.0,
+          -0.4375
+        ],
+        "max": [
+          1.377501,
+          2.6,
+          0.4375
+        ]
+      }
+    },
+    "library.pine": {
+      "file": "models/library.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.377501,
+          0.0,
+          -0.4375
+        ],
+        "max": [
+          1.377501,
+          2.6,
+          0.4375
+        ]
+      }
+    },
+    "locker": {
+      "file": "models/locker.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.85
+        ],
+        "max": [
+          0.75,
+          1.5,
+          0.85
+        ]
+      }
+    },
+    "loom": {
+      "file": "models/loom.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.869112,
+          0.0,
+          -0.961173
+        ],
+        "max": [
+          0.869112,
+          1.886203,
+          0.961173
+        ]
+      }
+    },
+    "makeshift.vehicle.1.seat": {
+      "file": "models/makeshift.vehicle.1.seat.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.789592,
+          0.0,
+          -1.677928
+        ],
+        "max": [
+          0.789592,
+          1.286811,
+          1.677928
+        ]
+      }
+    },
+    "makeshift.vehicle.4.seats": {
+      "file": "models/makeshift.vehicle.4.seats.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.261058,
+          0.0,
+          -2.759119
+        ],
+        "max": [
+          1.261058,
+          1.296119,
+          2.759119
+        ]
+      }
+    },
+    "makeshift.vehicle.6.seats": {
+      "file": "models/makeshift.vehicle.6.seats.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.261058,
+          0.0,
+          -3.509119
+        ],
+        "max": [
+          1.261058,
+          1.29612,
+          3.509119
+        ]
+      }
+    },
+    "mannequin.cloth": {
+      "file": "models/mannequin.cloth.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.123359,
+          0.0,
+          -0.978289
+        ],
+        "max": [
+          1.123359,
+          0.398844,
+          0.978289
+        ]
+      }
+    },
+    "mannequin.metal": {
+      "file": "models/mannequin.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.123359,
+          0.0,
+          -0.978289
+        ],
+        "max": [
+          1.123359,
+          0.398844,
+          0.978289
+        ]
+      }
+    },
+    "note": {
+      "file": "models/note.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.25,
+          0.0,
+          -0.025
+        ],
+        "max": [
+          0.25,
+          0.666667,
+          0.025
+        ]
+      }
+    },
+    "oil": {
+      "file": "models/oil.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.959747,
+          0.0,
+          -0.625001
+        ],
+        "max": [
+          1.959747,
+          4.812551,
+          0.625001
+        ]
+      }
+    },
+    "oven.brick": {
+      "file": "models/oven.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.791772,
+          0.0,
+          -0.783093
+        ],
+        "max": [
+          0.791772,
+          3.75,
+          0.783093
+        ]
+      }
+    },
+    "oven.electric": {
+      "file": "models/oven.electric.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.855363
+        ],
+        "max": [
+          0.75,
+          1.544034,
+          0.855363
+        ]
+      }
+    },
+    "oxygenator": {
+      "file": "models/oxygenator.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.902858,
+          0.0,
+          -0.856706
+        ],
+        "max": [
+          0.902858,
+          1.592414,
+          0.856706
+        ]
+      }
+    },
+    "pillar.birch": {
+      "file": "models/pillar.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          4.25,
+          0.494974
+        ]
+      }
+    },
+    "pillar.brick": {
+      "file": "models/pillar.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.374998,
+          0.0,
+          -0.375
+        ],
+        "max": [
+          0.374998,
+          4.25,
+          0.375
+        ]
+      }
+    },
+    "pillar.maple": {
+      "file": "models/pillar.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          4.25,
+          0.494974
+        ]
+      }
+    },
+    "pillar.metal": {
+      "file": "models/pillar.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.374998,
+          0.0,
+          -0.375
+        ],
+        "max": [
+          0.374998,
+          4.25,
+          0.375
+        ]
+      }
+    },
+    "pillar.pine": {
+      "file": "models/pillar.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          4.25,
+          0.494974
+        ]
+      }
+    },
+    "pipe.birch": {
+      "file": "models/pipe.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.125,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.125,
+          2.0,
+          0.125001
+        ]
+      }
+    },
+    "pipe.maple": {
+      "file": "models/pipe.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.125,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.125,
+          2.0,
+          0.125001
+        ]
+      }
+    },
+    "pipe.metal": {
+      "file": "models/pipe.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.125,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.125,
+          2.0,
+          0.125001
+        ]
+      }
+    },
+    "pipe.pine": {
+      "file": "models/pipe.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.125,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.125,
+          2.0,
+          0.125001
+        ]
+      }
+    },
+    "placard.birch": {
+      "file": "models/placard.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.075001
+        ],
+        "max": [
+          1.0,
+          1.5,
+          0.075001
+        ]
+      }
+    },
+    "placard.maple": {
+      "file": "models/placard.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.075001
+        ],
+        "max": [
+          1.0,
+          1.5,
+          0.075001
+        ]
+      }
+    },
+    "placard.metal": {
+      "file": "models/placard.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.075001
+        ],
+        "max": [
+          1.0,
+          1.5,
+          0.075001
+        ]
+      }
+    },
+    "placard.pine": {
+      "file": "models/placard.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.075001
+        ],
+        "max": [
+          1.0,
+          1.5,
+          0.075001
+        ]
+      }
+    },
+    "planter": {
+      "file": "models/planter.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.5
+        ],
+        "max": [
+          1.0,
+          1.0,
+          0.5
+        ]
+      }
+    },
+    "plaque.birch": {
+      "file": "models/plaque.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.6,
+          0.0,
+          -0.0875
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0.0875
+        ]
+      }
+    },
+    "plaque.maple": {
+      "file": "models/plaque.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.6,
+          0.0,
+          -0.0875
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0.0875
+        ]
+      }
+    },
+    "plaque.metal": {
+      "file": "models/plaque.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.6,
+          0.0,
+          -0.0875
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0.0875
+        ]
+      }
+    },
+    "plaque.pine": {
+      "file": "models/plaque.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.6,
+          0.0,
+          -0.0875
+        ],
+        "max": [
+          0.6,
+          0.6,
+          0.0875
+        ]
+      }
+    },
+    "plate.ceramic": {
+      "file": "models/plate.ceramic.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.348233,
+          0.0,
+          -0.348233
+        ],
+        "max": [
+          0.348233,
+          0.07,
+          0.348233
+        ]
+      }
+    },
+    "plate.large.birch": {
+      "file": "models/plate.large.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.birch.equilateral": {
+      "file": "models/plate.large.birch.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.999943,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.999943,
+          3.464004,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.birch.right": {
+      "file": "models/plate.large.birch.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.000001,
+          0.0,
+          -0.125002
+        ],
+        "max": [
+          2.000001,
+          4.0,
+          0.125002
+        ]
+      }
+    },
+    "plate.large.maple": {
+      "file": "models/plate.large.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.maple.equilateral": {
+      "file": "models/plate.large.maple.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.999943,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.999943,
+          3.464004,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.maple.right": {
+      "file": "models/plate.large.maple.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.000001,
+          0.0,
+          -0.125002
+        ],
+        "max": [
+          2.000001,
+          4.0,
+          0.125002
+        ]
+      }
+    },
+    "plate.large.metal": {
+      "file": "models/plate.large.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.999513,
+          0.0,
+          -0.062503
+        ],
+        "max": [
+          1.999513,
+          4.000001,
+          0.062503
+        ]
+      }
+    },
+    "plate.large.pine": {
+      "file": "models/plate.large.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.pine.equilateral": {
+      "file": "models/plate.large.pine.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.999943,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.999943,
+          3.464004,
+          0.125001
+        ]
+      }
+    },
+    "plate.large.pine.right": {
+      "file": "models/plate.large.pine.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.000001,
+          0.0,
+          -0.125002
+        ],
+        "max": [
+          2.000001,
+          4.0,
+          0.125002
+        ]
+      }
+    },
+    "plate.large.slip": {
+      "file": "models/plate.large.slip.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.0,
+          0.0,
+          -3e-06
+        ],
+        "max": [
+          2.0,
+          4.000001,
+          3e-06
+        ]
+      }
+    },
+    "plate.porcelain": {
+      "file": "models/plate.porcelain.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.348233,
+          0.0,
+          -0.348233
+        ],
+        "max": [
+          0.348233,
+          0.07,
+          0.348233
+        ]
+      }
+    },
+    "plate.small.birch": {
+      "file": "models/plate.small.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.birch.equilateral": {
+      "file": "models/plate.small.birch.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.999983,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.999983,
+          1.732022,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.birch.right": {
+      "file": "models/plate.small.birch.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.glass.bulletproof": {
+      "file": "models/plate.small.glass.bulletproof.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.0,
+          2.0,
+          1e-06
+        ]
+      }
+    },
+    "plate.small.glass.oneway": {
+      "file": "models/plate.small.glass.oneway.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.0,
+          2.0,
+          1e-06
+        ]
+      }
+    },
+    "plate.small.glass.weak": {
+      "file": "models/plate.small.glass.weak.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.0,
+          2.0,
+          1e-06
+        ]
+      }
+    },
+    "plate.small.maple": {
+      "file": "models/plate.small.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.maple.equilateral": {
+      "file": "models/plate.small.maple.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.999983,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.999983,
+          1.732022,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.maple.right": {
+      "file": "models/plate.small.maple.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.metal": {
+      "file": "models/plate.small.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -1e-06
+        ],
+        "max": [
+          1.0,
+          2.0,
+          1e-06
+        ]
+      }
+    },
+    "plate.small.pine": {
+      "file": "models/plate.small.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.pine.equilateral": {
+      "file": "models/plate.small.pine.equilateral.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.999983,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          0.999983,
+          1.732022,
+          0.125001
+        ]
+      }
+    },
+    "plate.small.pine.right": {
+      "file": "models/plate.small.pine.right.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.000001,
+          0.125001
+        ]
+      }
+    },
+    "plot": {
+      "file": "models/plot.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -2.75
+        ],
+        "max": [
+          2.750001,
+          0.3,
+          2.75
+        ]
+      }
+    },
+    "post.birch": {
+      "file": "models/post.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          1.864896,
+          0.494974
+        ]
+      }
+    },
+    "post.brick": {
+      "file": "models/post.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.374998,
+          0.0,
+          -0.375
+        ],
+        "max": [
+          0.374998,
+          1.864896,
+          0.375
+        ]
+      }
+    },
+    "post.maple": {
+      "file": "models/post.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          1.864896,
+          0.494974
+        ]
+      }
+    },
+    "post.metal": {
+      "file": "models/post.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.374998,
+          0.0,
+          -0.375
+        ],
+        "max": [
+          0.374998,
+          1.864896,
+          0.375
+        ]
+      }
+    },
+    "post.pine": {
+      "file": "models/post.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.494974,
+          0.0,
+          -0.494974
+        ],
+        "max": [
+          0.494974,
+          1.864896,
+          0.494974
+        ]
+      }
+    },
+    "pumpkin": {
+      "file": "models/pumpkin.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.358305,
+          0.0,
+          -0.361518
+        ],
+        "max": [
+          0.358305,
+          0.693558,
+          0.361518
+        ]
+      }
+    },
+    "rack.birch": {
+      "file": "models/rack.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.485265,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.485265,
+          0.4,
+          0.125
+        ]
+      }
+    },
+    "rack.maple": {
+      "file": "models/rack.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.485265,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.485265,
+          0.4,
+          0.125
+        ]
+      }
+    },
+    "rack.metal": {
+      "file": "models/rack.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.485265,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.485265,
+          0.4,
+          0.125
+        ]
+      }
+    },
+    "rack.pine": {
+      "file": "models/rack.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.485265,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.485265,
+          0.4,
+          0.125
+        ]
+      }
+    },
+    "ramp.birch": {
+      "file": "models/ramp.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.0,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "ramp.brick": {
+      "file": "models/ramp.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.0,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "ramp.maple": {
+      "file": "models/ramp.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.0,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "ramp.metal": {
+      "file": "models/ramp.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.0,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "ramp.pine": {
+      "file": "models/ramp.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.0,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "rampart.birch": {
+      "file": "models/rampart.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354177
+        ],
+        "max": [
+          2.800001,
+          1.479611,
+          0.354177
+        ]
+      }
+    },
+    "rampart.brick": {
+      "file": "models/rampart.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          1.51072,
+          0.25
+        ]
+      }
+    },
+    "rampart.maple": {
+      "file": "models/rampart.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354177
+        ],
+        "max": [
+          2.800001,
+          1.479611,
+          0.354177
+        ]
+      }
+    },
+    "rampart.metal": {
+      "file": "models/rampart.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          1.51072,
+          0.25
+        ]
+      }
+    },
+    "rampart.pine": {
+      "file": "models/rampart.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354177
+        ],
+        "max": [
+          2.800001,
+          1.479611,
+          0.354177
+        ]
+      }
+    },
+    "resource.fuel": {
+      "file": "models/resource.fuel.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5,
+          0.0,
+          -1.649519
+        ],
+        "max": [
+          1.5,
+          3.75,
+          1.649519
+        ]
+      }
+    },
+    "resource.water": {
+      "file": "models/resource.water.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5,
+          0.0,
+          -1.649519
+        ],
+        "max": [
+          1.5,
+          3.75,
+          1.649519
+        ]
+      }
+    },
+    "roof.birch": {
+      "file": "models/roof.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.5,
+          3.000001
+        ]
+      }
+    },
+    "roof.birch.triangle": {
+      "file": "models/roof.birch.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.5,
+          2.598003
+        ]
+      }
+    },
+    "roof.brick": {
+      "file": "models/roof.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.5,
+          3.000001
+        ]
+      }
+    },
+    "roof.brick.triangle": {
+      "file": "models/roof.brick.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.5,
+          2.598003
+        ]
+      }
+    },
+    "roof.maple": {
+      "file": "models/roof.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.5,
+          3.000001
+        ]
+      }
+    },
+    "roof.maple.triangle": {
+      "file": "models/roof.maple.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.5,
+          2.598003
+        ]
+      }
+    },
+    "roof.metal": {
+      "file": "models/roof.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.5,
+          3.000001
+        ]
+      }
+    },
+    "roof.metal.triangle": {
+      "file": "models/roof.metal.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.5,
+          2.598003
+        ]
+      }
+    },
+    "roof.pine": {
+      "file": "models/roof.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.000001
+        ],
+        "max": [
+          3.000001,
+          0.5,
+          3.000001
+        ]
+      }
+    },
+    "roof.pine.triangle": {
+      "file": "models/roof.pine.triangle.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.999915,
+          0.0,
+          -2.598003
+        ],
+        "max": [
+          2.999915,
+          0.5,
+          2.598003
+        ]
+      }
+    },
+    "safezone": {
+      "file": "models/safezone.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.837587,
+          0.0,
+          -0.856706
+        ],
+        "max": [
+          0.837587,
+          1.717912,
+          0.856706
+        ]
+      }
+    },
+    "sandbag": {
+      "file": "models/sandbag.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.977559,
+          0.0,
+          -0.237609
+        ],
+        "max": [
+          0.977559,
+          1.122478,
+          0.237609
+        ]
+      }
+    },
+    "seed.amber": {
+      "file": "models/seed.amber.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.carrot": {
+      "file": "models/seed.carrot.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.corn": {
+      "file": "models/seed.corn.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          1.5,
+          0.265165
+        ]
+      }
+    },
+    "seed.hanu": {
+      "file": "models/seed.hanu.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.indigo": {
+      "file": "models/seed.indigo.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.jade": {
+      "file": "models/seed.jade.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.lettuce": {
+      "file": "models/seed.lettuce.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.mauve": {
+      "file": "models/seed.mauve.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.mushroom.brown": {
+      "file": "models/seed.mushroom.brown.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.2,
+          0.0,
+          -0.190095
+        ],
+        "max": [
+          0.2,
+          0.45,
+          0.190095
+        ]
+      }
+    },
+    "seed.mushroom.red": {
+      "file": "models/seed.mushroom.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.2,
+          0.0,
+          -0.171917
+        ],
+        "max": [
+          0.2,
+          0.45,
+          0.171917
+        ]
+      }
+    },
+    "seed.potato": {
+      "file": "models/seed.potato.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.pumpkin": {
+      "file": "models/seed.pumpkin.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.rice": {
+      "file": "models/seed.rice.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          1.5,
+          0.265165
+        ]
+      }
+    },
+    "seed.russet": {
+      "file": "models/seed.russet.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.sugarcane": {
+      "file": "models/seed.sugarcane.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          1.5,
+          0.265165
+        ]
+      }
+    },
+    "seed.taro": {
+      "file": "models/seed.taro.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.teal": {
+      "file": "models/seed.teal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.tomato": {
+      "file": "models/seed.tomato.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.vermillion": {
+      "file": "models/seed.vermillion.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          0.75,
+          0.265165
+        ]
+      }
+    },
+    "seed.wheat": {
+      "file": "models/seed.wheat.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.265166,
+          0.0,
+          -0.265165
+        ],
+        "max": [
+          0.265166,
+          1.5,
+          0.265165
+        ]
+      }
+    },
+    "sentry": {
+      "file": "models/sentry.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.577172,
+          0.0,
+          -0.576681
+        ],
+        "max": [
+          0.577172,
+          2.017179,
+          0.576681
+        ]
+      }
+    },
+    "sentry.friendly": {
+      "file": "models/sentry.friendly.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.577172,
+          0.0,
+          -0.576681
+        ],
+        "max": [
+          0.577172,
+          2.017179,
+          0.576681
+        ]
+      }
+    },
+    "sentry.hostile": {
+      "file": "models/sentry.hostile.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.577172,
+          0.0,
+          -0.576681
+        ],
+        "max": [
+          0.577172,
+          2.017179,
+          0.576681
+        ]
+      }
+    },
+    "sewingtable": {
+      "file": "models/sewingtable.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.253431,
+          0.0,
+          -0.5
+        ],
+        "max": [
+          1.253431,
+          2.130165,
+          0.5
+        ]
+      }
+    },
+    "shutter.birch": {
+      "file": "models/shutter.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.75,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "shutter.maple": {
+      "file": "models/shutter.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.75,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "shutter.metal": {
+      "file": "models/shutter.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.75,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "shutter.pine": {
+      "file": "models/shutter.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.75,
+          0.0,
+          -0.252988
+        ],
+        "max": [
+          1.75,
+          2.8,
+          0.252988
+        ]
+      }
+    },
+    "siding.birch": {
+      "file": "models/siding.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.5,
+          1.0,
+          0.125
+        ]
+      }
+    },
+    "siding.maple": {
+      "file": "models/siding.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.5,
+          1.0,
+          0.125
+        ]
+      }
+    },
+    "siding.metal": {
+      "file": "models/siding.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          0.0
+        ],
+        "max": [
+          0.5,
+          1.0,
+          0.0
+        ]
+      }
+    },
+    "siding.pine": {
+      "file": "models/siding.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.125
+        ],
+        "max": [
+          0.5,
+          1.0,
+          0.125
+        ]
+      }
+    },
+    "sign.birch": {
+      "file": "models/sign.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.25,
+          0.125001
+        ]
+      }
+    },
+    "sign.maple": {
+      "file": "models/sign.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.25,
+          0.125001
+        ]
+      }
+    },
+    "sign.metal": {
+      "file": "models/sign.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.25,
+          0.125001
+        ]
+      }
+    },
+    "sign.picket": {
+      "file": "models/sign.picket.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.024601,
+          0.0,
+          -0.109375
+        ],
+        "max": [
+          1.024601,
+          2.244378,
+          0.109375
+        ]
+      }
+    },
+    "sign.pine": {
+      "file": "models/sign.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.125001
+        ],
+        "max": [
+          1.0,
+          2.25,
+          0.125001
+        ]
+      }
+    },
+    "snare": {
+      "file": "models/snare.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.403553,
+          0.0,
+          -0.353553
+        ],
+        "max": [
+          0.403553,
+          0.225,
+          0.353553
+        ]
+      }
+    },
+    "spikes.birch": {
+      "file": "models/spikes.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.583365,
+          0.0,
+          -0.632017
+        ],
+        "max": [
+          0.583365,
+          0.695846,
+          0.632017
+        ]
+      }
+    },
+    "spikes.maple": {
+      "file": "models/spikes.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.583365,
+          0.0,
+          -0.632017
+        ],
+        "max": [
+          0.583365,
+          0.695846,
+          0.632017
+        ]
+      }
+    },
+    "spikes.pine": {
+      "file": "models/spikes.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.583365,
+          0.0,
+          -0.632017
+        ],
+        "max": [
+          0.583365,
+          0.695846,
+          0.632017
+        ]
+      }
+    },
+    "spinningwheel": {
+      "file": "models/spinningwheel.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.953272,
+          0.0,
+          -0.477417
+        ],
+        "max": [
+          0.953272,
+          1.761591,
+          0.477417
+        ]
+      }
+    },
+    "spotlight": {
+      "file": "models/spotlight.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.811977,
+          0.0,
+          -0.560914
+        ],
+        "max": [
+          0.811977,
+          2.687579,
+          0.560914
+        ]
+      }
+    },
+    "stack.bar": {
+      "file": "models/stack.bar.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.239383,
+          0.0,
+          -0.243108
+        ],
+        "max": [
+          0.239383,
+          0.617568,
+          0.243108
+        ]
+      }
+    },
+    "stack.bricks": {
+      "file": "models/stack.bricks.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.53125,
+          0.0,
+          -0.53125
+        ],
+        "max": [
+          0.53125,
+          1.09337,
+          0.53125
+        ]
+      }
+    },
+    "stack.cloth": {
+      "file": "models/stack.cloth.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.299592,
+          0.0,
+          -0.310419
+        ],
+        "max": [
+          0.299592,
+          0.579236,
+          0.310419
+        ]
+      }
+    },
+    "stack.log.birch": {
+      "file": "models/stack.log.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.168503,
+          0.0,
+          -0.487293
+        ],
+        "max": [
+          1.168503,
+          1.207161,
+          0.487293
+        ]
+      }
+    },
+    "stack.log.maple": {
+      "file": "models/stack.log.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.168503,
+          0.0,
+          -0.487293
+        ],
+        "max": [
+          1.168503,
+          1.207161,
+          0.487293
+        ]
+      }
+    },
+    "stack.log.pine": {
+      "file": "models/stack.log.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.168503,
+          0.0,
+          -0.487293
+        ],
+        "max": [
+          1.168503,
+          1.207161,
+          0.487293
+        ]
+      }
+    },
+    "stack.plank.birch": {
+      "file": "models/stack.plank.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.547188,
+          0.0,
+          -0.520923
+        ],
+        "max": [
+          0.547188,
+          0.417341,
+          0.520923
+        ]
+      }
+    },
+    "stack.plank.maple": {
+      "file": "models/stack.plank.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.547188,
+          0.0,
+          -0.520923
+        ],
+        "max": [
+          0.547188,
+          0.417341,
+          0.520923
+        ]
+      }
+    },
+    "stack.plank.pine": {
+      "file": "models/stack.plank.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.547188,
+          0.0,
+          -0.520923
+        ],
+        "max": [
+          0.547188,
+          0.417341,
+          0.520923
+        ]
+      }
+    },
+    "stack.rope": {
+      "file": "models/stack.rope.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.349253,
+          0.0,
+          -0.326955
+        ],
+        "max": [
+          0.349253,
+          0.597023,
+          0.326955
+        ]
+      }
+    },
+    "stack.scrap": {
+      "file": "models/stack.scrap.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.399534,
+          0.0,
+          -0.399534
+        ],
+        "max": [
+          0.399534,
+          0.81375,
+          0.399534
+        ]
+      }
+    },
+    "stack.sheet": {
+      "file": "models/stack.sheet.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.415956,
+          0.0,
+          -0.412535
+        ],
+        "max": [
+          0.415956,
+          0.179222,
+          0.412535
+        ]
+      }
+    },
+    "stack.stick.birch": {
+      "file": "models/stack.stick.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.241561,
+          0.0,
+          -0.245895
+        ],
+        "max": [
+          0.241561,
+          0.749641,
+          0.245895
+        ]
+      }
+    },
+    "stack.stick.maple": {
+      "file": "models/stack.stick.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.241561,
+          0.0,
+          -0.245895
+        ],
+        "max": [
+          0.241561,
+          0.749641,
+          0.245895
+        ]
+      }
+    },
+    "stack.stick.pine": {
+      "file": "models/stack.stick.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.241561,
+          0.0,
+          -0.245895
+        ],
+        "max": [
+          0.241561,
+          0.749641,
+          0.245895
+        ]
+      }
+    },
+    "stack.wire": {
+      "file": "models/stack.wire.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.408854,
+          0.0,
+          -0.40714
+        ],
+        "max": [
+          0.408854,
+          0.39689,
+          0.40714
+        ]
+      }
+    },
+    "stairs.birch": {
+      "file": "models/stairs.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.000001,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "stairs.brick": {
+      "file": "models/stairs.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.000001,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "stairs.maple": {
+      "file": "models/stairs.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.000001,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "stairs.metal": {
+      "file": "models/stairs.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.000001,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "stairs.pine": {
+      "file": "models/stairs.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -3.000001,
+          0.0,
+          -3.0
+        ],
+        "max": [
+          3.000001,
+          4.75,
+          3.0
+        ]
+      }
+    },
+    "stereo": {
+      "file": "models/stereo.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.5,
+          0.0,
+          -0.268855
+        ],
+        "max": [
+          0.5,
+          1.068631,
+          0.268855
+        ]
+      }
+    },
+    "table.cir.birch": {
+      "file": "models/table.cir.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5625,
+          0.0,
+          -1.5625
+        ],
+        "max": [
+          1.5625,
+          1.1875,
+          1.5625
+        ]
+      }
+    },
+    "table.cir.maple": {
+      "file": "models/table.cir.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5625,
+          0.0,
+          -1.5625
+        ],
+        "max": [
+          1.5625,
+          1.1875,
+          1.5625
+        ]
+      }
+    },
+    "table.cir.metal": {
+      "file": "models/table.cir.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5625,
+          0.0,
+          -1.5625
+        ],
+        "max": [
+          1.5625,
+          1.1875,
+          1.5625
+        ]
+      }
+    },
+    "table.cir.pine": {
+      "file": "models/table.cir.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.5625,
+          0.0,
+          -1.5625
+        ],
+        "max": [
+          1.5625,
+          1.1875,
+          1.5625
+        ]
+      }
+    },
+    "table.rect.birch": {
+      "file": "models/table.rect.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.250001,
+          0.0,
+          -0.9375
+        ],
+        "max": [
+          1.250001,
+          1.1875,
+          0.9375
+        ]
+      }
+    },
+    "table.rect.maple": {
+      "file": "models/table.rect.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.250001,
+          0.0,
+          -0.9375
+        ],
+        "max": [
+          1.250001,
+          1.1875,
+          0.9375
+        ]
+      }
+    },
+    "table.rect.metal": {
+      "file": "models/table.rect.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.250001,
+          0.0,
+          -0.9375
+        ],
+        "max": [
+          1.250001,
+          1.1875,
+          0.9375
+        ]
+      }
+    },
+    "table.rect.pine": {
+      "file": "models/table.rect.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.250001,
+          0.0,
+          -0.9375
+        ],
+        "max": [
+          1.250001,
+          1.1875,
+          0.9375
+        ]
+      }
+    },
+    "table.sqr.birch": {
+      "file": "models/table.sqr.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.87945,
+          0.0,
+          -0.839977
+        ],
+        "max": [
+          0.87945,
+          1.1875,
+          0.839977
+        ]
+      }
+    },
+    "table.sqr.maple": {
+      "file": "models/table.sqr.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.87945,
+          0.0,
+          -0.839977
+        ],
+        "max": [
+          0.87945,
+          1.1875,
+          0.839977
+        ]
+      }
+    },
+    "table.sqr.metal": {
+      "file": "models/table.sqr.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.87945,
+          0.0,
+          -0.839977
+        ],
+        "max": [
+          0.87945,
+          1.1875,
+          0.839977
+        ]
+      }
+    },
+    "table.sqr.pine": {
+      "file": "models/table.sqr.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.87945,
+          0.0,
+          -0.839977
+        ],
+        "max": [
+          0.87945,
+          1.1875,
+          0.839977
+        ]
+      }
+    },
+    "tanktrap": {
+      "file": "models/tanktrap.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.795495,
+          0.0,
+          -0.919734
+        ],
+        "max": [
+          0.795495,
+          1.445315,
+          0.919734
+        ]
+      }
+    },
+    "torch.birch": {
+      "file": "models/torch.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.127307,
+          0.0,
+          -0.254967
+        ],
+        "max": [
+          0.127307,
+          0.892453,
+          0.254967
+        ]
+      }
+    },
+    "torch.maple": {
+      "file": "models/torch.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.127307,
+          0.0,
+          -0.254967
+        ],
+        "max": [
+          0.127307,
+          0.892453,
+          0.254967
+        ]
+      }
+    },
+    "torch.pine": {
+      "file": "models/torch.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.127307,
+          0.0,
+          -0.254967
+        ],
+        "max": [
+          0.127307,
+          0.892453,
+          0.254967
+        ]
+      }
+    },
+    "trophy.birch": {
+      "file": "models/trophy.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275321,
+          0.0,
+          -0.500001
+        ],
+        "max": [
+          1.275321,
+          2.407077,
+          0.500001
+        ]
+      }
+    },
+    "trophy.maple": {
+      "file": "models/trophy.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275321,
+          0.0,
+          -0.500001
+        ],
+        "max": [
+          1.275321,
+          2.407077,
+          0.500001
+        ]
+      }
+    },
+    "trophy.metal": {
+      "file": "models/trophy.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275321,
+          0.0,
+          -0.500001
+        ],
+        "max": [
+          1.275321,
+          2.407077,
+          0.500001
+        ]
+      }
+    },
+    "trophy.pine": {
+      "file": "models/trophy.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.275321,
+          0.0,
+          -0.500001
+        ],
+        "max": [
+          1.275321,
+          2.407077,
+          0.500001
+        ]
+      }
+    },
+    "umbrella": {
+      "file": "models/umbrella.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.blue": {
+      "file": "models/umbrella.blue.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.green": {
+      "file": "models/umbrella.green.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.orange": {
+      "file": "models/umbrella.orange.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.purple": {
+      "file": "models/umbrella.purple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.red": {
+      "file": "models/umbrella.red.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "umbrella.yellow": {
+      "file": "models/umbrella.yellow.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.875,
+          0.0,
+          -1.875
+        ],
+        "max": [
+          1.875,
+          3.125,
+          1.875
+        ]
+      }
+    },
+    "wall.birch": {
+      "file": "models/wall.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          4.25,
+          0.354179
+        ]
+      }
+    },
+    "wall.brick": {
+      "file": "models/wall.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          4.25,
+          0.25
+        ]
+      }
+    },
+    "wall.maple": {
+      "file": "models/wall.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          4.25,
+          0.354179
+        ]
+      }
+    },
+    "wall.metal": {
+      "file": "models/wall.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          4.25,
+          0.25
+        ]
+      }
+    },
+    "wall.pine": {
+      "file": "models/wall.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          4.25,
+          0.354179
+        ]
+      }
+    },
+    "wall_ramp.birch": {
+      "file": "models/wall_ramp.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          5.728273,
+          0.354179
+        ]
+      }
+    },
+    "wall_ramp.brick": {
+      "file": "models/wall_ramp.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          5.728272,
+          0.25
+        ]
+      }
+    },
+    "wall_ramp.maple": {
+      "file": "models/wall_ramp.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          5.728273,
+          0.354179
+        ]
+      }
+    },
+    "wall_ramp.metal": {
+      "file": "models/wall_ramp.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.25
+        ],
+        "max": [
+          2.750001,
+          5.728272,
+          0.25
+        ]
+      }
+    },
+    "wall_ramp.pine": {
+      "file": "models/wall_ramp.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800001,
+          0.0,
+          -0.354179
+        ],
+        "max": [
+          2.800001,
+          5.728273,
+          0.354179
+        ]
+      }
+    },
+    "wardrobe.birch": {
+      "file": "models/wardrobe.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.034999,
+          0.0,
+          -0.545376
+        ],
+        "max": [
+          1.034999,
+          2.6,
+          0.545376
+        ]
+      }
+    },
+    "wardrobe.maple": {
+      "file": "models/wardrobe.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.034999,
+          0.0,
+          -0.545376
+        ],
+        "max": [
+          1.034999,
+          2.6,
+          0.545376
+        ]
+      }
+    },
+    "wardrobe.metal": {
+      "file": "models/wardrobe.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.034999,
+          0.0,
+          -0.545376
+        ],
+        "max": [
+          1.034999,
+          2.6,
+          0.545376
+        ]
+      }
+    },
+    "wardrobe.pine": {
+      "file": "models/wardrobe.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.034999,
+          0.0,
+          -0.545376
+        ],
+        "max": [
+          1.034999,
+          2.6,
+          0.545376
+        ]
+      }
+    },
+    "window.birch": {
+      "file": "models/window.birch.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800002,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800002,
+          4.25,
+          0.375002
+        ]
+      }
+    },
+    "window.brick": {
+      "file": "models/window.brick.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.750001,
+          4.250001,
+          0.375002
+        ]
+      }
+    },
+    "window.maple": {
+      "file": "models/window.maple.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800002,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800002,
+          4.25,
+          0.375002
+        ]
+      }
+    },
+    "window.metal": {
+      "file": "models/window.metal.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.750001,
+          4.250001,
+          0.375002
+        ]
+      }
+    },
+    "window.pine": {
+      "file": "models/window.pine.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.800002,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          2.800002,
+          4.25,
+          0.375002
+        ]
+      }
+    },
+    "workbench": {
+      "file": "models/workbench.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.0,
+          0.0,
+          -0.725483
+        ],
+        "max": [
+          1.0,
+          2.200001,
+          0.725483
+        ]
+      }
+    },
+    "xmas.castle.00": {
+      "file": "models/xmas.castle.00.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.274369,
+          0.0,
+          -0.290418
+        ],
+        "max": [
+          0.274369,
+          0.65,
+          0.290418
+        ]
+      }
+    },
+    "xmas.castle.01": {
+      "file": "models/xmas.castle.01.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.742561,
+          0.0,
+          -0.7616
+        ],
+        "max": [
+          0.742561,
+          1.15,
+          0.7616
+        ]
+      }
+    },
+    "xmas.lights": {
+      "file": "models/xmas.lights.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -1.500001,
+          0.0,
+          -2e-06
+        ],
+        "max": [
+          1.500001,
+          0.750004,
+          2e-06
+        ]
+      }
+    },
+    "xmas.present.00": {
+      "file": "models/xmas.present.00.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.375,
+          0.0,
+          -0.375
+        ],
+        "max": [
+          0.375,
+          0.833087,
+          0.375
+        ]
+      }
+    },
+    "xmas.present.01": {
+      "file": "models/xmas.present.01.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          0.750001,
+          0.833087,
+          0.375002
+        ]
+      }
+    },
+    "xmas.present.02": {
+      "file": "models/xmas.present.02.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.75
+        ],
+        "max": [
+          0.75,
+          0.833087,
+          0.75
+        ]
+      }
+    },
+    "xmas.present.03": {
+      "file": "models/xmas.present.03.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.75,
+          0.0,
+          -0.75
+        ],
+        "max": [
+          0.75,
+          1.611485,
+          0.75
+        ]
+      }
+    },
+    "xmas.present.04": {
+      "file": "models/xmas.present.04.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.750001,
+          0.0,
+          -0.375002
+        ],
+        "max": [
+          0.750001,
+          1.593256,
+          0.375002
+        ]
+      }
+    },
+    "xmas.stocking": {
+      "file": "models/xmas.stocking.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.291611,
+          0.0,
+          -0.151789
+        ],
+        "max": [
+          0.291611,
+          0.926942,
+          0.151789
+        ]
+      }
+    },
+    "xmas.tree": {
+      "file": "models/xmas.tree.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -2.185665,
+          0.0,
+          -2.067634
+        ],
+        "max": [
+          2.185665,
+          3.869542,
+          2.067634
+        ]
+      }
+    },
+    "xmas.wreath": {
+      "file": "models/xmas.wreath.obj",
+      "pivot": "base-center",
+      "up": "Y",
+      "bounds": {
+        "min": [
+          -0.550112,
+          0.0,
+          -0.309952
+        ],
+        "max": [
+          0.550112,
+          1.091686,
+          0.309952
+        ]
+      }
+    }
+  }
+}

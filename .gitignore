@@ -12,3 +12,13 @@ blob-report/
 .env
 .env.*
 !.env.example
+
+# Locally extracted Unturned art (generated from the user's own game install,
+# personal use only, NOT redistributed). The manifest is small metadata and is
+# intentionally kept tracked.
+public/models/*.obj
+public/models/*.mtl
+public/models/*.bin
+public/models/*.png
+public/models/*.jpg
+public/models/*.jpeg

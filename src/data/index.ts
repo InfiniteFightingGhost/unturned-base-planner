@@ -26,3 +26,4 @@ export {
   createProxyAssetResolver,
   UNKNOWN_ASSET_DIMENSIONS,
 } from './asset-resolver';
+export { modelManifestCandidates } from './model-manifest-ids';

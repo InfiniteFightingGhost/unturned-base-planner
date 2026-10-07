@@ -28,8 +28,8 @@ function makeBatch(): { batch: PieceBatch; geometries: BufferGeometry[]; materia
   const boxA = new BoxGeometry(1, 1, 1);
   const boxB = new BoxGeometry(2, 1, 1);
   const entries: BatchGeometry[] = [
-    { assetId: 'asset.a', geometry: boxA },
-    { assetId: 'asset.b', geometry: boxB },
+    { definitionId: 'asset.a', geometry: boxA },
+    { definitionId: 'asset.b', geometry: boxB },
   ];
   const material = new MeshBasicMaterial({ color: 0xffffff });
   const batch = new PieceBatch(entries, material, { maxInstances: 16 });
@@ -159,7 +159,7 @@ describe('PieceBatch', () => {
   it('applies a per-definition base colour when a resolver is provided', () => {
     const geometry = new BoxGeometry(1, 1, 1);
     const material = new MeshBasicMaterial();
-    const batch = new PieceBatch([{ assetId: 'asset.a', geometry }], material, {
+    const batch = new PieceBatch([{ definitionId: 'asset.a', geometry }], material, {
       maxInstances: 4,
       resolveBaseColor: (definitionId) => (definitionId === 'asset.a' ? 0xff0000 : 0x00ff00),
     });
@@ -227,7 +227,7 @@ describe('PieceBatch', () => {
   it('throws a clear error when the instance budget is exceeded', () => {
     const geometry = new BoxGeometry(1, 1, 1);
     const material = new MeshBasicMaterial();
-    const batch = new PieceBatch([{ assetId: 'asset.a', geometry }], material, {
+    const batch = new PieceBatch([{ definitionId: 'asset.a', geometry }], material, {
       maxInstances: 1,
     });
     try {

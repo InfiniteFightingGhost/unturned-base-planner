@@ -63,7 +63,9 @@ export function StatusBar() {
           {placementMessage}
         </span>
       )}
-      <span className="status-item status-placeholder mono">Materials: pending raw expansion</span>
+      <span className="status-item status-disclaimer" data-testid="disclaimer">
+        Fan tool · not affiliated with or endorsed by Smartly Dressed Games
+      </span>
     </footer>
   );
 }

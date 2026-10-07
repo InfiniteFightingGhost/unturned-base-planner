@@ -146,7 +146,7 @@ describe('pieceProxyGeometry', () => {
       }
       seen.add(assetId);
       entries.push({
-        assetId,
+        definitionId: assetId,
         geometry: pieceProxyGeometry({
           assetId,
           category: definition.category,

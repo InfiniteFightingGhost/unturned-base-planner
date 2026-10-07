@@ -43,9 +43,13 @@ import { BatchedMesh, Color, Matrix4, Quaternion, Vector3 } from 'three';
 import type { BufferGeometry, Material } from 'three';
 import type { PlacedPiece } from '@/domain';
 
-/** One unique geometry, keyed by the asset id every placed piece resolves to. */
+/**
+ * One geometry, keyed by the piece definition id that uses it. Definitions are
+ * the granularity at which real models are chosen (different tiers can carry
+ * different meshes), so the batch never resolves through `model.assetId`.
+ */
 export interface BatchGeometry {
-  readonly assetId: string;
+  readonly definitionId: string;
   readonly geometry: BufferGeometry;
 }
 
@@ -56,11 +60,6 @@ export interface PieceBatchOptions {
   readonly vertexHeadroom?: number;
   /** Multiplier applied to the summed index counts. Defaults to 1.2. */
   readonly indexHeadroom?: number;
-  /**
-   * Maps a piece's `definitionId` to its `model.assetId`. Defaults to identity,
-   * which is convenient for tests whose pieces already carry an asset id.
-   */
-  readonly resolveAssetId?: (definitionId: string) => string | undefined;
   /** Tint applied to selected instances. Defaults to a blue accent. */
   readonly selectedColor?: number;
   /** Tint applied to every non-selected instance. Defaults to white. */
@@ -119,8 +118,7 @@ function geometryIndexCount(geometry: BufferGeometry): number {
 export class PieceBatch {
   readonly mesh: BatchedMesh;
 
-  private readonly geometryIdByAssetId = new Map<string, number>();
-  private readonly resolveAssetId: (definitionId: string) => string | undefined;
+  private readonly geometryIdByDefinitionId = new Map<string, number>();
   private readonly resolveBaseColor: ((definitionId: string) => number) | undefined;
   private readonly instanceByPiece = new Map<string, number>();
   private readonly definitionIdByPiece = new Map<string, string>();
@@ -163,7 +161,6 @@ export class PieceBatch {
     this.mesh.sortObjects = false;
 
     this.uniqueGeometryCount = geometries.length;
-    this.resolveAssetId = options.resolveAssetId ?? ((definitionId) => definitionId);
     this.resolveBaseColor = options.resolveBaseColor;
     this.selectedColor = options.selectedColor ?? DEFAULT_SELECTED_COLOR;
     this.baseColor = options.baseColor ?? DEFAULT_BASE_COLOR;
@@ -177,7 +174,7 @@ export class PieceBatch {
         continue;
       }
       const geometryId = this.mesh.addGeometry(entry.geometry);
-      this.geometryIdByAssetId.set(entry.assetId, geometryId);
+      this.geometryIdByDefinitionId.set(entry.definitionId, geometryId);
     }
   }
 
@@ -192,17 +189,15 @@ export class PieceBatch {
   }
 
   /**
-   * Resolve the geometry id for a piece. Unknown definitions fall back to the
-   * first geometry so a malformed reference renders as *something* instead of
-   * corrupting the batch; callers should keep the resolver in sync with data.
+   * Resolve the geometry id for a piece from its `definitionId`. Unknown
+   * definitions fall back to the first geometry so a malformed reference renders
+   * as *something* instead of corrupting the batch; callers should keep the
+   * geometry map in sync with the dataset.
    */
   private geometryIdForPiece(piece: PlacedPiece): number {
-    const assetId = this.resolveAssetId(piece.definitionId);
-    if (assetId !== undefined) {
-      const geometryId = this.geometryIdByAssetId.get(assetId);
-      if (geometryId !== undefined) {
-        return geometryId;
-      }
+    const geometryId = this.geometryIdByDefinitionId.get(piece.definitionId);
+    if (geometryId !== undefined) {
+      return geometryId;
     }
     return 0;
   }

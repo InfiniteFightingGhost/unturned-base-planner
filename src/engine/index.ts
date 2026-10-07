@@ -59,6 +59,19 @@ export type {
 export { PieceField } from './rendering/PieceField';
 export type { PieceFieldHandle, PieceFieldProps, PieceSurfaceHit } from './rendering/PieceField';
 
+export {
+  emptyManifest,
+  loadModelManifest,
+  parseModelManifest,
+} from './assets/modelManifest';
+export type { ModelBounds, ModelManifest, ModelManifestEntry } from './assets/modelManifest';
+export { ModelLibrary, getSharedModelLibrary, normalizeObjGeometry } from './assets/ModelLibrary';
+export type {
+  ModelLibraryListener,
+  ModelLibraryOptions,
+  ObjLoaderLike,
+} from './assets/ModelLibrary';
+
 export { BlueprintOverlay } from './blueprint/BlueprintOverlay';
 export { activeFloorPieces, boxEdgesFor } from './blueprint/blueprintMath';
 export type { Segment } from './blueprint/blueprintMath';

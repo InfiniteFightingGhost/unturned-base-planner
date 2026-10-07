@@ -6,10 +6,18 @@
  * A single `Map<floorId, { batch, material }>` is kept alive in an effect (so
  * React StrictMode's simulated remount disposes and rebuilds cleanly). Each
  * visible floor owns its OWN `BatchedMesh` and its OWN `MeshStandardMaterial`
- * instance, while sharing the globally cached proxy geometries (one buffer per
- * distinct `model.assetId`) through `pieceProxyGeometry`. The shared
- * geometries are borrowed from the module cache and are NOT disposed per batch;
- * `disposeGeometryCache()` runs once on field teardown.
+ * instance, while sharing the globally cached proxy geometries through
+ * `pieceProxyGeometry`. The shared geometries are borrowed from the module cache
+ * and are NOT disposed per batch; `disposeGeometryCache()` runs once on field
+ * teardown.
+ *
+ * Real models
+ * -----------
+ * `buildGeometries` asks the `ModelLibrary` for a real mesh per definition and
+ * falls back to the proxy. The library is loaded asynchronously (never blocking
+ * first paint); when it reports readiness the effect rebuilds once with the real
+ * meshes. Definitions whose file is absent or fails to parse keep their proxy
+ * permanently, so the editor never breaks on missing assets.
  *
  * Ghosting
  * --------
@@ -55,7 +63,7 @@ import { Matrix4, MeshStandardMaterial, Raycaster } from 'three';
 import type { BatchedMesh, BufferGeometry, Camera, Vector2 } from 'three';
 import type { AssetDescriptor, AssetResolver, PlacedPiece, Project } from '@/domain';
 import { vec3 } from '@/domain';
-import { createProxyAssetResolver, DATASET } from '@/data';
+import { createProxyAssetResolver, DATASET, modelManifestCandidates } from '@/data';
 import {
   editorStore,
   ghostOpacityForFloor,
@@ -72,8 +80,24 @@ import { SelectionEdges } from './selectionEdges';
 import type { SelectionEdgeItem } from './selectionEdges';
 import { PieceBatch, composePieceMatrix } from './PieceBatch';
 import type { BatchGeometry } from './PieceBatch';
+import { getSharedModelLibrary } from '../assets/ModelLibrary';
+import type { ModelLibrary } from '../assets/ModelLibrary';
 
 const defaultAssetResolver: AssetResolver = createProxyAssetResolver(DATASET);
+
+/**
+ * Every manifest key any dataset definition can resolve to. Used to preload only
+ * the models the planner actually uses instead of the whole extracted pack.
+ */
+const RELEVANT_MANIFEST_IDS: ReadonlySet<string> = (() => {
+  const ids = new Set<string>();
+  for (const definition of DATASET.definitions) {
+    for (const candidate of modelManifestCandidates(definition.id)) {
+      ids.add(candidate);
+    }
+  }
+  return ids;
+})();
 
 /** Instance budget for each per-floor batch. */
 const DEFAULT_MAX_INSTANCES = 4096;
@@ -116,10 +140,12 @@ export interface PieceFieldHandle {
 }
 
 export interface PieceFieldProps {
-  /** Asset resolver used to size each unique `model.assetId`. */
+  /** Asset resolver used to size each definition's proxy fallback. */
   assetResolver?: AssetResolver;
   /** Maximum instances per floor batch before `add` throws. Defaults to 4096. */
   maxInstances?: number;
+  /** Model provider override (tests / embedding). Defaults to the shared one. */
+  modelLibrary?: ModelLibrary;
 }
 
 function resolveDescriptor(
@@ -131,36 +157,41 @@ function resolveDescriptor(
   return sync ?? fallback;
 }
 
-/** One geometry per distinct `model.assetId` in the dataset. */
-function buildGeometries(resolver: AssetResolver): {
+/**
+ * One geometry per dataset definition. A definition whose real model is loaded
+ * uses that mesh; every other definition (no manifest entry, file missing, still
+ * loading or parse failure) gets the shared proxy geometry. Keying by
+ * `definitionId` — rather than `model.assetId` — is what lets tiers diverge.
+ */
+function buildGeometries(
+  resolver: AssetResolver,
+  library: ModelLibrary,
+): {
   entries: BatchGeometry[];
-  byAssetId: Map<string, BufferGeometry>;
+  byDefinitionId: Map<string, BufferGeometry>;
 } {
-  const byAssetId = new Map<string, BufferGeometry>();
+  const byDefinitionId = new Map<string, BufferGeometry>();
+  const entries: BatchGeometry[] = [];
   for (const definition of DATASET.definitions) {
-    const assetId = definition.model.assetId;
-    if (byAssetId.has(assetId)) {
-      continue;
-    }
-    const fallback: AssetDescriptor = {
-      id: assetId,
-      kind: 'box',
-      dimensions: { ...definition.dimensions },
-    };
-    const descriptor = resolveDescriptor(resolver, assetId, fallback);
-    byAssetId.set(
-      assetId,
-      pieceProxyGeometry({
+    let geometry = library.getGeometry(definition.id);
+    if (geometry === undefined) {
+      const assetId = definition.model.assetId;
+      const fallback: AssetDescriptor = {
+        id: assetId,
+        kind: 'box',
+        dimensions: { ...definition.dimensions },
+      };
+      const descriptor = resolveDescriptor(resolver, assetId, fallback);
+      geometry = pieceProxyGeometry({
         assetId,
         category: definition.category,
         dimensions: descriptor.dimensions,
-      }),
-    );
+      });
+    }
+    byDefinitionId.set(definition.id, geometry);
+    entries.push({ definitionId: definition.id, geometry });
   }
-  return {
-    entries: [...byAssetId].map(([assetId, geometry]) => ({ assetId, geometry })),
-    byAssetId,
-  };
+  return { entries, byDefinitionId };
 }
 
 /** Apply a ghost opacity to a floor's material, keeping flags consistent. */
@@ -172,26 +203,55 @@ function applyOpacity(material: MeshStandardMaterial, opacity: number): void {
 }
 
 export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function PieceField(
-  { assetResolver, maxInstances = DEFAULT_MAX_INSTANCES },
+  { assetResolver, maxInstances = DEFAULT_MAX_INSTANCES, modelLibrary },
   ref,
 ) {
   const resolver = useMemo(() => assetResolver ?? defaultAssetResolver, [assetResolver]);
+  const library = useMemo(
+    () => modelLibrary ?? getSharedModelLibrary((manifestId) => RELEVANT_MANIFEST_IDS.has(manifestId)),
+    [modelLibrary],
+  );
   const invalidate = useThree((state) => state.invalidate);
   const raycaster = useMemo(() => new Raycaster(), []);
 
   const batchesRef = useRef<Map<string, FloorBatchEntry>>(new Map());
   const meshToFloorRef = useRef<Map<BatchedMesh, string>>(new Map());
   const [meshes, setMeshes] = useState<BatchedMesh[]>([]);
+  // Bumped once the model library finishes so the effect below rebuilds the
+  // batches with real meshes (or keeps proxies where a model is unavailable).
+  const [modelVersion, setModelVersion] = useState(0);
 
   useEffect(() => {
-    const { entries, byAssetId } = buildGeometries(resolver);
+    let cancelled = false;
+    let bumped = false;
+    const bump = (): void => {
+      if (!cancelled && !bumped) {
+        bumped = true;
+        setModelVersion((version) => version + 1);
+      }
+    };
+    const unsubscribe = library.subscribe(() => {
+      if (library.isLoaded) {
+        bump();
+      }
+    });
+    void library.load().then(() => {
+      if (library.isLoaded) {
+        bump();
+      }
+    });
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [library]);
+
+  useEffect(() => {
+    const { entries, byDefinitionId } = buildGeometries(resolver, library);
     const batches = new Map<string, FloorBatchEntry>();
     const meshToFloor = new Map<BatchedMesh, string>();
     batchesRef.current = batches;
     meshToFloorRef.current = meshToFloor;
-
-    const resolveAssetId = (definitionId: string): string | undefined =>
-      DATASET.definitionById.get(definitionId)?.model.assetId;
 
     const createEntry = (): FloorBatchEntry => {
       const material = new MeshStandardMaterial({
@@ -201,7 +261,6 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       });
       const batch = new PieceBatch(entries, material, {
         maxInstances,
-        resolveAssetId,
         resolveBaseColor: tierColorForDefinition,
       });
       const edges = new SelectionEdges();
@@ -233,11 +292,7 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
           if (!selection.has(piece.id)) {
             continue;
           }
-          const assetId = resolveAssetId(piece.definitionId);
-          if (assetId === undefined) {
-            continue;
-          }
-          const geometry = byAssetId.get(assetId);
+          const geometry = byDefinitionId.get(piece.definitionId);
           if (geometry === undefined) {
             continue;
           }
@@ -344,7 +399,7 @@ export const PieceField = forwardRef<PieceFieldHandle, PieceFieldProps>(function
       setMeshes([]);
       disposeGeometryCache();
     };
-  }, [resolver, maxInstances, invalidate]);
+  }, [resolver, library, maxInstances, invalidate, modelVersion]);
 
   useImperativeHandle(
     ref,
